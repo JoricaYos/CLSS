@@ -1,0 +1,15 @@
+# Enable URL rewriting
+RewriteEngine On
+
+# Ensure that .htaccess file is being used
+RewriteBase /htdocs/
+
+# Redirect all requests to the index.php controller, except for existing files and directories
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# Allow access to CSS files
+<FilesMatch "\.(css)$">
+    Allow from all
+</FilesMatch>
