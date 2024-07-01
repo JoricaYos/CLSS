@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 01, 2024 at 09:34 AM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: Jul 01, 2024 at 11:03 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -40,8 +40,8 @@ CREATE TABLE `personnel` (
 --
 
 INSERT INTO `personnel` (`id`, `name`, `role`, `username`, `password`) VALUES
-(1, 'Mark Tahimik Lang', 'Ambot', 'sample', '$2y$10$Co85bUsBaDeiQ2VJ8bx5keOhwyDBwjcBGqWfLpdOfkaJ.qiS8V3Na'),
-(2, 'Jehn', 'Botam', 'sam', '$2y$10$vSZWoedKZSPpgcoukUz/a.uOYfI0caYqpLJheuhjumfwpn3wGYRZq');
+(1, 'Imong Nawng', 'Admin', 'sample', '$2y$10$Co85bUsBaDeiQ2VJ8bx5keOhwyDBwjcBGqWfLpdOfkaJ.qiS8V3Na'),
+(2, '', '', 'sam', '$2y$10$vSZWoedKZSPpgcoukUz/a.uOYfI0caYqpLJheuhjumfwpn3wGYRZq');
 
 -- --------------------------------------------------------
 
@@ -60,8 +60,20 @@ CREATE TABLE `schedules` (
   `all_day` tinyint(1) DEFAULT NULL,
   `start_time` time DEFAULT NULL,
   `end_time` time DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `type` varchar(255) NOT NULL,
+  `lab` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `schedules`
+--
+
+INSERT INTO `schedules` (`id`, `title`, `description`, `repeat_weekly`, `days`, `start_date`, `end_date`, `all_day`, `start_time`, `end_time`, `created_at`, `type`, `lab`) VALUES
+(52, 'sample', 'sample', 1, 'Tue', '2024-07-02', '2024-07-30', 0, '07:00:00', '10:00:00', '2024-07-01 20:59:51', '', ''),
+(53, 'sample daily with time', 'asd', 0, '', '2024-07-03', '2024-07-08', 0, '10:00:00', '12:00:00', '2024-07-01 21:00:55', '', ''),
+(54, 'sample', 'sample', 0, '', '2024-08-01', '2024-08-04', 1, NULL, NULL, '2024-07-01 21:01:34', '', ''),
+(55, 'sample new', 'sample', 1, 'Wed', '2024-09-04', '2024-09-25', 1, NULL, NULL, '2024-07-01 21:02:27', '', '');
 
 --
 -- Indexes for dumped tables
@@ -93,7 +105,7 @@ ALTER TABLE `personnel`
 -- AUTO_INCREMENT for table `schedules`
 --
 ALTER TABLE `schedules`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

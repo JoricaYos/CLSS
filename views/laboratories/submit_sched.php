@@ -16,9 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->bind_param("ssissssss", $title, $description, $repeatWeekly, $days, $startDate, $endDate, $allDay, $startTime, $endTime);
 
     if ($stmt->execute()) {
-        echo "New schedule added successfully";
+        echo json_encode(['success' => true]);
     } else {
-        echo "Error: " . $stmt->error;
+        echo json_encode(['success' => false, 'error' => $stmt->error]);
     }
 
     $stmt->close();

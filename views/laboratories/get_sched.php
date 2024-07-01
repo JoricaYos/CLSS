@@ -17,19 +17,33 @@ $schedules = array();
 while ($row = $result->fetch_assoc()) {
     $startDate = new DateTime($row['start']);
     $endDate = new DateTime($row['end']);
-    $event = array(
-        'title' => $row['title'],
-        'start' => $row['start'],
-        'end' => $row['end']
-    );
 
-    if (!$row['all_day']) {
-        $event['start'] .= 'T' . $row['start_time'];
-        $event['end'] .= 'T' . $row['end_time'];
-    }
+    if (!$row['repeat_weekly']) {
+        if ($row['all_day']) {
+            $event = array(
+                'title' => $row['title'],
+                'start' => $row['start'],
+                'end' => $row['end'],
+                'allDay' => true
+            );
+            $schedules[] = $event;
+        } else {
+            $currentDate = clone $startDate;
+            $interval = new DateInterval('P1D');
 
-    $schedules[] = $event;
-    if ($row['repeat_weekly']) {
+            while ($currentDate <= $endDate) {
+                $event = array(
+                    'title' => $row['title'],
+                    'start' => $currentDate->format('Y-m-d') . 'T' . $row['start_time'],
+                    'end' => $currentDate->format('Y-m-d') . 'T' . $row['end_time'],
+                    'allDay' => false
+                );
+                $schedules[] = $event;
+                $currentDate->add($interval);
+            }
+        }
+    } else {
+        // Handle repeating events
         $daysOfWeek = explode(',', $row['days']);
         $daysOfWeek = array_map('trim', $daysOfWeek);
         
@@ -41,8 +55,9 @@ while ($row = $result->fetch_assoc()) {
                 if ($currentDate->format('D') == $day) {
                     $recurringEvent = array(
                         'title' => $row['title'],
-                        'start' => $currentDate->format('Y-m-d') . (!$row['all_day'] ? 'T' . $row['start_time'] : ''),
-                        'end' => $currentDate->format('Y-m-d') . (!$row['all_day'] ? 'T' . $row['end_time'] : '')
+                        'start' => $row['all_day'] ? $currentDate->format('Y-m-d') : $currentDate->format('Y-m-d') . 'T' . $row['start_time'],
+                        'end' => $row['all_day'] ? $currentDate->format('Y-m-d') : $currentDate->format('Y-m-d') . 'T' . $row['end_time'],
+                        'allDay' => $row['all_day'] ? true : false
                     );
 
                     $schedules[] = $recurringEvent;

@@ -35,12 +35,10 @@
                     <h1 class="text-left">Computer Laboratory 1</h1>
                     <br>
                     <div id="calendar"></div>
-
                 </div>
             </div>
         </div>
         <!-- Main Content -->
-
     </div>
 
     <!-- Add Schedule Modal -->
@@ -141,16 +139,15 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>New schedule added successfully.</p>
+                    Schedule was successfully added.
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
     <script src="../../js/popper.js"></script>
     <script src="../../js/bootstrap.min.js"></script>
@@ -225,18 +222,53 @@
             });
 
             $('#addScheduleForm').submit(function (event) {
+                event.preventDefault();
+
+                var startDate = new Date($('#startDate').val());
+                var endDate = new Date($('#endDate').val());
                 var allDayChecked = $('#allDay').prop('checked');
+                var repeatWeeklyChecked = $('#repeatWeekly').prop('checked');
+
+                if (startDate > endDate) {
+                    alert("End date must be equal to or later than start date.");
+                    return;
+                }
+
                 if (!allDayChecked) {
                     var startTime = $('#startTime').val();
                     var endTime = $('#endTime').val();
                     if (startTime >= endTime) {
-                        alert("Start time must be earlier than end time.");
-                        event.preventDefault();
+                        alert("End time must be later than start time.");
+                        return;
                     }
                 }
+
+                var formData = $(this).serialize();
+
+                $.ajax({
+                    url: 'submit_sched.php',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        var result = JSON.parse(response);
+                        if (result.success) {
+                            $('#addScheduleModal').modal('hide');
+                            $('#successModal').modal('show');
+                            calendar.refetchEvents();
+                        } else {
+                            alert("Error: " + result.error);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('AJAX error:', status, error);
+                        alert("An error occurred while submitting the schedule.");
+                    }
+                });
             });
+
         });
     </script>
+
 </body>
 
 </html>
