@@ -82,7 +82,7 @@
                                         <input type="checkbox" name="days[]" value="Tue" autocomplete="off"> T
                                     </label>
                                     <label class="btn btn-secondary active">
-                                        <input type="checkbox" name="days[]" value="Wd" autocomplete="off"> W
+                                        <input type="checkbox" name="days[]" value="Wed" autocomplete="off"> W
                                     </label>
                                     <label class="btn btn-secondary active">
                                         <input type="checkbox" name="days[]" value="Thur" autocomplete="off"> T

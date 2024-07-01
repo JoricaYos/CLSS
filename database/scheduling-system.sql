@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 30, 2024 at 08:13 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- Generation Time: Jul 01, 2024 at 09:34 AM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,6 +20,28 @@ SET time_zone = "+00:00";
 --
 -- Database: `scheduling-system`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `personnel`
+--
+
+CREATE TABLE `personnel` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `role` varchar(255) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `personnel`
+--
+
+INSERT INTO `personnel` (`id`, `name`, `role`, `username`, `password`) VALUES
+(1, 'Mark Tahimik Lang', 'Ambot', 'sample', '$2y$10$Co85bUsBaDeiQ2VJ8bx5keOhwyDBwjcBGqWfLpdOfkaJ.qiS8V3Na'),
+(2, 'Jehn', 'Botam', 'sam', '$2y$10$vSZWoedKZSPpgcoukUz/a.uOYfI0caYqpLJheuhjumfwpn3wGYRZq');
 
 -- --------------------------------------------------------
 
@@ -42,16 +64,14 @@ CREATE TABLE `schedules` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `schedules`
---
-
-INSERT INTO `schedules` (`id`, `title`, `description`, `repeat_weekly`, `days`, `start_date`, `end_date`, `all_day`, `start_time`, `end_time`, `created_at`) VALUES
-(20, 'sa', 'as', 0, '', '2024-07-01', '2024-07-01', 1, NULL, NULL, '2024-06-30 18:10:13'),
-(21, 'asd', 'asd', 1, 's', '2024-07-01', '2024-07-20', 0, '06:10:00', '08:10:00', '2024-06-30 18:10:58');
-
---
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `personnel`
+--
+ALTER TABLE `personnel`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `schedules`
@@ -64,10 +84,16 @@ ALTER TABLE `schedules`
 --
 
 --
+-- AUTO_INCREMENT for table `personnel`
+--
+ALTER TABLE `personnel`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
 -- AUTO_INCREMENT for table `schedules`
 --
 ALTER TABLE `schedules`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

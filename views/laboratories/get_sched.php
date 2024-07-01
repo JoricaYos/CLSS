@@ -17,8 +17,6 @@ $schedules = array();
 while ($row = $result->fetch_assoc()) {
     $startDate = new DateTime($row['start']);
     $endDate = new DateTime($row['end']);
-    
-    // Create the initial event
     $event = array(
         'title' => $row['title'],
         'start' => $row['start'],
@@ -31,8 +29,6 @@ while ($row = $result->fetch_assoc()) {
     }
 
     $schedules[] = $event;
-
-    // Handle weekly recurrence
     if ($row['repeat_weekly']) {
         $daysOfWeek = explode(',', $row['days']);
         $daysOfWeek = array_map('trim', $daysOfWeek);
