@@ -73,25 +73,25 @@
                                 <label>Repeat on:</label><br>
                                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                     <label class="btn btn-secondary active">
-                                        <input type="checkbox" name="days[]" value="s" autocomplete="off"> S
+                                        <input type="checkbox" name="days[]" value="Sun" autocomplete="off"> S
                                     </label>
                                     <label class="btn btn-secondary active">
-                                        <input type="checkbox" name="days[]" value="m" autocomplete="off"> M
+                                        <input type="checkbox" name="days[]" value="Mon" autocomplete="off"> M
                                     </label>
                                     <label class="btn btn-secondary active">
-                                        <input type="checkbox" name="days[]" value="t" autocomplete="off"> T
+                                        <input type="checkbox" name="days[]" value="Tue" autocomplete="off"> T
                                     </label>
                                     <label class="btn btn-secondary active">
-                                        <input type="checkbox" name="days[]" value="w" autocomplete="off"> W
+                                        <input type="checkbox" name="days[]" value="Wd" autocomplete="off"> W
                                     </label>
                                     <label class="btn btn-secondary active">
-                                        <input type="checkbox" name="days[]" value="th" autocomplete="off"> T
+                                        <input type="checkbox" name="days[]" value="Thur" autocomplete="off"> T
                                     </label>
                                     <label class="btn btn-secondary active">
-                                        <input type="checkbox" name="days[]" value="f" autocomplete="off"> F
+                                        <input type="checkbox" name="days[]" value="Fri" autocomplete="off"> F
                                     </label>
                                     <label class="btn btn-secondary active">
-                                        <input type="checkbox" name="days[]" value="s" autocomplete="off"> S
+                                        <input type="checkbox" name="days[]" value="Sat" autocomplete="off"> S
                                     </label>
                                 </div>
                             </div>
