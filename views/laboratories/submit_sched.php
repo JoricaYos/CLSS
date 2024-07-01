@@ -11,9 +11,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $allDay = isset($_POST['allDay']) ? 1 : 0;
     $startTime = $allDay ? null : $_POST['startTime'];
     $endTime = $allDay ? null : $_POST['endTime'];
+    $lab = $_POST['lab'];
+    $type = $_POST['type']; 
 
-    $stmt = $conn->prepare("INSERT INTO schedules (title, description, repeat_weekly, days, start_date, end_date, all_day, start_time, end_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssissssss", $title, $description, $repeatWeekly, $days, $startDate, $endDate, $allDay, $startTime, $endTime);
+    $stmt = $conn->prepare("INSERT INTO schedules (title, description, repeat_weekly, days, start_date, end_date, all_day, start_time, end_time, lab, type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssissssssss", $title, $description, $repeatWeekly, $days, $startDate, $endDate, $allDay, $startTime, $endTime, $lab, $type);
 
     if ($stmt->execute()) {
         echo json_encode(['success' => true]);

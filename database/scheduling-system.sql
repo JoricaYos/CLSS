@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 01, 2024 at 11:03 PM
+-- Generation Time: Jul 02, 2024 at 01:03 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -70,10 +70,11 @@ CREATE TABLE `schedules` (
 --
 
 INSERT INTO `schedules` (`id`, `title`, `description`, `repeat_weekly`, `days`, `start_date`, `end_date`, `all_day`, `start_time`, `end_time`, `created_at`, `type`, `lab`) VALUES
-(52, 'sample', 'sample', 1, 'Tue', '2024-07-02', '2024-07-30', 0, '07:00:00', '10:00:00', '2024-07-01 20:59:51', '', ''),
-(53, 'sample daily with time', 'asd', 0, '', '2024-07-03', '2024-07-08', 0, '10:00:00', '12:00:00', '2024-07-01 21:00:55', '', ''),
-(54, 'sample', 'sample', 0, '', '2024-08-01', '2024-08-04', 1, NULL, NULL, '2024-07-01 21:01:34', '', ''),
-(55, 'sample new', 'sample', 1, 'Wed', '2024-09-04', '2024-09-25', 1, NULL, NULL, '2024-07-01 21:02:27', '', '');
+(72, 'sad', 'sad', 1, 'Tue', '2024-07-02', '2024-07-30', 1, NULL, NULL, '2024-07-01 22:58:03', 'schedule', 'lab1'),
+(73, 'sad', 'sad', 1, 'Wed', '2024-07-03', '2024-08-07', 0, '09:58:00', '11:58:00', '2024-07-01 22:58:36', 'schedule', 'lab1'),
+(74, 'sad', 'sad', 0, 'Wed', '2024-07-06', '2024-07-06', 1, NULL, NULL, '2024-07-01 22:59:05', 'schedule', 'lab1'),
+(75, 'aaa', 'aaaa', 0, '', '2024-07-05', '2024-07-05', 1, NULL, NULL, '2024-07-01 22:59:50', 'reserve', 'lab1'),
+(76, 'asd', 'asd', 0, '', '2024-07-12', '2024-07-12', 1, NULL, NULL, '2024-07-01 23:01:30', 'reserve', 'lab1');
 
 --
 -- Indexes for dumped tables
@@ -105,7 +106,7 @@ ALTER TABLE `personnel`
 -- AUTO_INCREMENT for table `schedules`
 --
 ALTER TABLE `schedules`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

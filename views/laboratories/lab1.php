@@ -53,7 +53,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="addScheduleForm" method="POST" action="submit_sched.php">
+                    <form id="addScheduleForm" method="POST" action="submit_sched.php" data-type="schedule">
                         <div class="form-group">
                             <label for="scheduleTitle">Schedule Title</label>
                             <input type="text" class="form-control" id="scheduleTitle" name="scheduleTitle" required>
@@ -120,7 +120,7 @@
                                 <input type="time" class="form-control" id="endTime" name="endTime">
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary">Save Schedule</button>
+                        <button type="submit" class="btn btn-primary" id="saveScheduleButton">Save Schedule</button>
                     </form>
                 </div>
             </div>
@@ -191,12 +191,18 @@
                     addScheduleButton: {
                         text: 'Add Schedule',
                         click: function () {
+                            $('#addScheduleModalLabel').text('Add Schedule');
+                            $('#saveScheduleButton').text('Save Schedule');
+                            $('#addScheduleForm').attr('data-type', 'schedule');
                             $('#addScheduleModal').modal('show');
                         }
                     },
                     addReservationButton: {
                         text: 'Add Reservation',
                         click: function () {
+                            $('#addScheduleModalLabel').text('Add Reservation');
+                            $('#saveScheduleButton').text('Save Reservation');
+                            $('#addScheduleForm').attr('data-type', 'reserve');
                             $('#addScheduleModal').modal('show');
                         }
                     }
@@ -206,19 +212,11 @@
             calendar.render();
 
             $('#repeatWeekly').change(function () {
-                if (this.checked) {
-                    $('#weeklyDays').show();
-                } else {
-                    $('#weeklyDays').hide();
-                }
+                $('#weeklyDays').toggle(this.checked);
             });
 
             $('#allDay').change(function () {
-                if (this.checked) {
-                    $('#timeSection').hide();
-                } else {
-                    $('#timeSection').show();
-                }
+                $('#timeSection').toggle(!this.checked);
             });
 
             $('#addScheduleForm').submit(function (event) {
@@ -228,6 +226,11 @@
                 var endDate = new Date($('#endDate').val());
                 var allDayChecked = $('#allDay').prop('checked');
                 var repeatWeeklyChecked = $('#repeatWeekly').prop('checked');
+
+                var formData = $(this).serialize();
+
+                var type = ($(this).data('type') === 'schedule') ? 'schedule' : 'reserve';
+                formData += '&lab=' + encodeURIComponent('lab1') + '&type=' + encodeURIComponent(type);
 
                 if (startDate > endDate) {
                     alert("End date must be equal to or later than start date.");
@@ -242,8 +245,6 @@
                         return;
                     }
                 }
-
-                var formData = $(this).serialize();
 
                 $.ajax({
                     url: 'submit_sched.php',
@@ -265,7 +266,6 @@
                     }
                 });
             });
-
         });
     </script>
 
