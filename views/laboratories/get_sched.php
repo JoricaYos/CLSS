@@ -5,7 +5,7 @@ error_reporting(E_ALL);
 
 include '../../models/database.php';
 
-$sql = "SELECT id, title, description, repeat_weekly, days, start_date AS start, end_date AS end, all_day, start_time, end_time FROM schedules";
+$sql = "SELECT id, title, description, repeat_weekly, days, start_date AS start, end_date AS end, all_day, start_time, end_time, type FROM schedules";
 $result = $conn->query($sql);
 
 if ($result === false) {
@@ -24,6 +24,7 @@ while ($row = $result->fetch_assoc()) {
                 'title' => $row['title'],
                 'start' => $row['start'],
                 'end' => $row['end'],
+                'type'=> $row['type'],
                 'allDay' => true
             );
             $schedules[] = $event;
@@ -36,6 +37,7 @@ while ($row = $result->fetch_assoc()) {
                     'title' => $row['title'],
                     'start' => $currentDate->format('Y-m-d') . 'T' . $row['start_time'],
                     'end' => $currentDate->format('Y-m-d') . 'T' . $row['end_time'],
+                    'type'=> $row['type'],
                     'allDay' => false
                 );
                 $schedules[] = $event;
@@ -43,7 +45,6 @@ while ($row = $result->fetch_assoc()) {
             }
         }
     } else {
-        // Handle repeating events
         $daysOfWeek = explode(',', $row['days']);
         $daysOfWeek = array_map('trim', $daysOfWeek);
         
@@ -57,6 +58,7 @@ while ($row = $result->fetch_assoc()) {
                         'title' => $row['title'],
                         'start' => $row['all_day'] ? $currentDate->format('Y-m-d') : $currentDate->format('Y-m-d') . 'T' . $row['start_time'],
                         'end' => $row['all_day'] ? $currentDate->format('Y-m-d') : $currentDate->format('Y-m-d') . 'T' . $row['end_time'],
+                        'type'=> $row['type'],
                         'allDay' => $row['all_day'] ? true : false
                     );
 

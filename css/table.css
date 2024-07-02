@@ -103,7 +103,7 @@ table.dataTable {
   border-width: 2px;
   border-radius: 20px;
   display: inline-block;
-  background-color: white;
+  background-color: #071952;
   padding: 10px 20px;
   border-radius: 5px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -114,17 +114,6 @@ table.dataTable {
   transform: translateY(-5px);
 }
 
-.circle-container {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background-color: #071952;
-  color: white;
-  
-  font-weight: bold;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
 .letter {
   display: flex;
   justify-content: center;
@@ -133,9 +122,8 @@ table.dataTable {
 }
 
 .user-name {
-  color: #071952;
+  color: white;
   margin-left: 10px;
-  
   font-weight: bold;
 }
 
@@ -154,13 +142,13 @@ table.dataTable {
   font-weight: bold;
   width: 40px;
   height: 40px;
-  background-color: #071952;
+  background-color: white;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #fff;
-  font-size: 18px;
+  color: #071952;
+  font-size: 25px;
 }
 
 .circle-dropdown-container {
