@@ -14,8 +14,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $lab = $_POST['lab'];
     $type = $_POST['type']; 
 
-    $stmt = $conn->prepare("INSERT INTO schedules (title, description, repeat_weekly, days, start_date, end_date, all_day, start_time, end_time, lab, type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssissssssss", $title, $description, $repeatWeekly, $days, $startDate, $endDate, $allDay, $startTime, $endTime, $lab, $type);
+    $personnel = null;
+
+    //submission sa account name / personnel name is only applicable lang to non admin accounts: pang personnel for tracking sa addition of reservation since adding of schedules are only accessible for admin role accounts
+    if ($type == 'reserve') {
+        session_start();
+        $personnel = $_SESSION['name'];
+    } else {
+        $personnel = '';
+    }
+
+    $stmt = $conn->prepare("INSERT INTO schedules (title, description, repeat_weekly, days, start_date, end_date, all_day, start_time, end_time, lab, type, personnel) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssisssssssss", $title, $description, $repeatWeekly, $days, $startDate, $endDate, $allDay, $startTime, $endTime, $lab, $type, $personnel);
 
     if ($stmt->execute()) {
         echo json_encode(['success' => true]);

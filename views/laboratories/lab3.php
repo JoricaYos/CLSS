@@ -152,126 +152,128 @@
     <script src="../../js/main.js"></script>
     <script src="../../js/table.js"></script>
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var calendarEl = document.getElementById('calendar');
+  document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
 
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            height: '650px',
-            events: function (fetchInfo, successCallback, failureCallback) {
-                $.ajax({
-                    url: '/views/laboratories/get_sched.php',
-                    type: 'GET',
-                    success: function (data) {
-                        var events = JSON.parse(data);
-                        successCallback(events);
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('AJAX error:', status, error);
-                        failureCallback([]);
-                    }
-                });
-            },
-            headerToolbar: {
-                left: 'prev,next today dayGridMonth timeGridWeek',
-                center: 'title',
-                right: 'addScheduleButton addReservationButton'
-            },
-            views: {
-                timeGridWeek: {
-                    type: 'timeGridWeek',
-                    buttonText: 'Weekly'
-                }
-            },
-            customButtons: {
-                addScheduleButton: {
-                    text: 'Add Schedule',
-                    click: function () {
-                        $('#addScheduleModalLabel').text('Add Schedule');
-                        $('#saveScheduleButton').text('Save Schedule');
-                        $('#addScheduleForm').attr('data-type', 'schedule');
-                        $('#addScheduleModal').modal('show');
-                    }
-                },
-                addReservationButton: {
-                    text: 'Add Reservation',
-                    click: function () {
-                        $('#addScheduleModalLabel').text('Add Reservation');
-                        $('#saveScheduleButton').text('Save Reservation');
-                        $('#addScheduleForm').attr('data-type', 'reserve');
-                        $('#addScheduleModal').modal('show');
-                    }
-                }
-            },
-            eventDidMount: function (info) {
-                if (info.event.extendedProps.type === 'schedule') {
-                    info.el.style.backgroundColor = 'blue';
-                } else if (info.event.extendedProps.type === 'reserve') {
-                    info.el.style.backgroundColor = 'green'; 
-                }
-            }
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      height: '650px',
+      events: function(fetchInfo, successCallback, failureCallback) {
+        $.ajax({
+          url: '/views/laboratories/get_sched.php',
+          type: 'GET',
+          data: {
+            lab: 'lab3'
+          },
+          success: function(data) {
+            var events = JSON.parse(data);
+            successCallback(events);
+          },
+          error: function(xhr, status, error) {
+            console.error('AJAX error:', status, error);
+            failureCallback([]);
+          }
         });
-
-        calendar.render();
-
-        $('#repeatWeekly').change(function () {
-            $('#weeklyDays').toggle(this.checked);
-        });
-
-        $('#allDay').change(function () {
-            $('#timeSection').toggle(!this.checked);
-        });
-
-        $('#addScheduleForm').submit(function (event) {
-            event.preventDefault();
-
-            var startDate = new Date($('#startDate').val());
-            var endDate = new Date($('#endDate').val());
-            var allDayChecked = $('#allDay').prop('checked');
-            var repeatWeeklyChecked = $('#repeatWeekly').prop('checked');
-
-            var formData = $(this).serialize();
-
-            var type = ($(this).data('type') === 'schedule') ? 'schedule' : 'reserve';
-            formData += '&lab=' + encodeURIComponent('lab3') + '&type=' + encodeURIComponent(type);
-
-            if (startDate > endDate) {
-                alert("End date must be equal to or later than start date.");
-                return;
-            }
-
-            if (!allDayChecked) {
-                var startTime = $('#startTime').val();
-                var endTime = $('#endTime').val();
-                if (startTime >= endTime) {
-                    alert("End time must be later than start time.");
-                    return;
-                }
-            }
-
-            $.ajax({
-                url: 'submit_sched.php',
-                type: 'POST',
-                data: formData,
-                success: function (response) {
-                    var result = JSON.parse(response);
-                    if (result.success) {
-                        $('#addScheduleModal').modal('hide');
-                        $('#successModal').modal('show');
-                        calendar.refetchEvents();
-                    } else {
-                        alert("Error: " + result.error);
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error('AJAX error:', status, error);
-                    alert("An error occurred while submitting the schedule.");
-                }
-            });
-        });
+      },
+      headerToolbar: {
+        left: 'prev,next today dayGridMonth timeGridWeek',
+        center: 'title',
+        right: 'addScheduleButton addReservationButton'
+      },
+      views: {
+        timeGridWeek: {
+          type: 'timeGridWeek',
+          buttonText: 'Weekly'
+        }
+      },
+      customButtons: {
+        addScheduleButton: {
+          text: 'Add Schedule',
+          click: function() {
+            $('#addScheduleModalLabel').text('Add Schedule');
+            $('#saveScheduleButton').text('Save Schedule');
+            $('#addScheduleForm').attr('data-type', 'schedule');
+            $('#addScheduleModal').modal('show');
+          }
+        },
+        addReservationButton: {
+          text: 'Add Reservation',
+          click: function() {
+            $('#addScheduleModalLabel').text('Add Reservation');
+            $('#saveScheduleButton').text('Save Reservation');
+            $('#addScheduleForm').attr('data-type', 'reserve');
+            $('#addScheduleModal').modal('show');
+          }
+        }
+      },
+      eventDidMount: function(info) {
+        if (info.event.extendedProps.type === 'schedule') {
+          info.el.style.backgroundColor = 'blue';
+        } else if (info.event.extendedProps.type === 'reserve') {
+          info.el.style.backgroundColor = 'green';
+        }
+      }
     });
-</script>
 
+    calendar.render();
+
+    $('#repeatWeekly').change(function() {
+      $('#weeklyDays').toggle(this.checked);
+    });
+
+    $('#allDay').change(function() {
+      $('#timeSection').toggle(!this.checked);
+    });
+
+    $('#addScheduleForm').submit(function(event) {
+      event.preventDefault();
+
+      var startDate = new Date($('#startDate').val());
+      var endDate = new Date($('#endDate').val());
+      var allDayChecked = $('#allDay').prop('checked');
+      var repeatWeeklyChecked = $('#repeatWeekly').prop('checked');
+
+      var formData = $(this).serialize();
+
+      var type = ($(this).data('type') === 'schedule') ? 'schedule' : 'reserve';
+      formData += '&lab=' + encodeURIComponent('lab3') + '&type=' + encodeURIComponent(type);
+
+      if (startDate > endDate) {
+        alert("End date must be equal to or later than start date.");
+        return;
+      }
+
+      if (!allDayChecked) {
+        var startTime = $('#startTime').val();
+        var endTime = $('#endTime').val();
+        if (startTime >= endTime) {
+          alert("End time must be later than start time.");
+          return;
+        }
+      }
+
+      $.ajax({
+        url: 'submit_sched.php',
+        type: 'POST',
+        data: formData,
+        success: function(response) {
+          var result = JSON.parse(response);
+          if (result.success) {
+            $('#addScheduleModal').modal('hide');
+            $('#successModal').modal('show');
+            calendar.refetchEvents();
+          } else {
+            alert("Error: " + result.error);
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error('AJAX error:', status, error);
+          alert("An error occurred while submitting the schedule.");
+        }
+      });
+    });
+  });
+</script>
 
 </body>
 
