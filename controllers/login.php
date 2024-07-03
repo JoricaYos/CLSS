@@ -16,9 +16,7 @@ if ($result->num_rows > 0) {
         $_SESSION['name'] = $row['name'];
         $_SESSION['id'] = $row['id'];
 
-        if ($row['role'] == 'Admin') {
-            header("Location: ../views/dashboard/dashboard.php");
-        } elseif ($row['role'] == 'Personnel') {
+        if ($row['role'] == 'Admin' || $row['role'] == 'Personnel') {
             header("Location: ../views/dashboard/dashboard.php");
         } elseif ($row['role'] == 'View1') {
             header("Location: ../views/view-only/view1.php");
@@ -33,10 +31,10 @@ if ($result->num_rows > 0) {
         }
         exit();
     } else {
-        echo "Invalid password.";
+        header("Location: ../index.php?error=invalid_password");
     }
 } else {
-    echo "No user found.";
+    header("Location: ../index.php?error=no_user");
 }
 $conn->close();
 ?>

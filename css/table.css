@@ -199,3 +199,9 @@ table.dataTable {
 .form-control-with-border {
   border: 1px solid #ced4da;
 }
+
+.modal-content .form-control {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}

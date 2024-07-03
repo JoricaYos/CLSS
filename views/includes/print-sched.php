@@ -15,38 +15,62 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
+
+    <style>
+        @media print {
+            @page {
+                size: landscape;
+            }
+
+            body * {
+                visibility: hidden;
+            }
+
+            #calendar, #calendar * {
+                visibility: visible;
+            }
+
+            #calendar {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+            }
+        }
+    </style>
 </head>
 
 <body style="background-color: #EBF4F6">
-    <div class="wrapper d-flex align-items-stretch">
+    <div class="wrapper d-flex align-items-stretch justify-content-center">
         <div id="content" class="p-4 p-md-5 pt-5">
-            <div class="row mt-4">
-                <div class="col-md-2 mx-auto text-right">
-                    <img src="/assets/smcc-logo.png" alt="SMCC-LOGO" width="50px" height="50px">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div style="display: inline-block; text-align: center;">
+                    <img src="../../assets/smcc-logo.png" alt="SMCC Logo" style="width: 70px; height: 70px;">
                 </div>
-                <div class="col-md-5 mx-auto text-center">
-                    <h1>Saint Michael College of Caraga</h1>
-                    <h5>Brgy. 4, Atupan Street, Nasipit, Agusan del Norte</h5>
-                    <h5>www.smccnasipit.edu.ph</h5>
-                    <h5>+63 085 343-3251 / +63 085 283-3113</h5>
+                <div style="display: inline-block; vertical-align: top; margin-left: 20px; text-align: left;">
+                    <h2 style="margin-top: 0;">Saint Michael College of Caraga</h2>
+                    <h6 class="text-center">Brgy. 4, Nasipit, Agusan del Norte</h6>
                 </div>
-                <div class="col-md-2 mx-auto text-left">
-                    <img src="/assets/iso.jpg" alt="SMCC-LOGO" width="80px" height="50px">
+                <div style="display: inline-block; vertical-align: top; margin-left: 20px;">
+                    <img src="../../assets/iso.jpg" alt="Second Image" style="width: 100px; height: 70px;">
                 </div>
             </div>
-            <br>
+            <br><br><br><br>
+            <h6 style="text-align: center;">COMPUTER LABORATORY 1 SCHEDULE</h6>
+            <br><br><br><br>
             <div class="row">
                 <div class="col-md-12">
+                    <button id="printButton" class="btn btn-primary mb-3">Print Calendar</button>
                     <div id="calendar"></div>
                 </div>
             </div>
         </div>
     </div>
 
-
-    <!-- Schedule Details Modal  Ni-->
-    <div class="modal fade" id="scheduleDetailsModal" tabindex="-1" role="dialog"
-        aria-labelledby="scheduleDetailsModalLabel" aria-hidden="true">
+    <!-- Schedule Details Modal -->
+    <div class="modal fade" id="scheduleDetailsModal" tabindex="-1" role="dialog" aria-labelledby="scheduleDetailsModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -78,7 +102,9 @@
 
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'timeGridWeek',
-                height: '800px',
+                height: 'auto',
+                width: '500px',
+                contentHeight: 'auto',
                 slotDuration: '00:30:00',
                 slotMinTime: '08:00:00',
                 slotMaxTime: '21:00:00',
@@ -100,7 +126,7 @@
                     });
                 },
                 headerToolbar: {
-                    left: 'dayGridMonth timeGridWeek',
+                    left: 'dayGridMonth,timeGridWeek',
                     center: 'title',
                 },
                 views: {
@@ -183,6 +209,10 @@
                         alert("An error occurred while submitting the schedule.");
                     }
                 });
+            });
+
+            $('#printButton').click(function () {
+                window.print();
             });
         });
     </script>
