@@ -233,9 +233,9 @@ document.addEventListener('DOMContentLoaded', function() {
     },
     eventDidMount: function(info) {
       if (info.event.extendedProps.type === 'schedule') {
-        info.el.style.backgroundColor = 'blue';
+        info.el.style.backgroundColor = '#071952';
       } else if (info.event.extendedProps.type === 'reserve') {
-        info.el.style.backgroundColor = 'green';
+        info.el.style.backgroundColor = '#136927';
       }
     },
     eventClick: function(info) {

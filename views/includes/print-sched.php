@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-    <title>Computer lab 1</title>
     <meta charset="utf-8">
     <link rel="icon" href="../../assets/smcc-logo.png" type="image/png">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -20,19 +19,30 @@
 
 <body style="background-color: #EBF4F6">
     <div class="wrapper d-flex align-items-stretch">
-
         <div id="content" class="p-4 p-md-5 pt-5">
-            <?php include '../includes/user-container.php'; ?>
             <div class="row mt-4">
+                <div class="col-md-2 mx-auto text-right">
+                    <img src="/assets/smcc-logo.png" alt="SMCC-LOGO" width="50px" height="50px">
+                </div>
+                <div class="col-md-5 mx-auto text-center">
+                    <h1>Saint Michael College of Caraga</h1>
+                    <h5>Brgy. 4, Atupan Street, Nasipit, Agusan del Norte</h5>
+                    <h5>www.smccnasipit.edu.ph</h5>
+                    <h5>+63 085 343-3251 / +63 085 283-3113</h5>
+                </div>
+                <div class="col-md-2 mx-auto text-left">
+                    <img src="/assets/iso.jpg" alt="SMCC-LOGO" width="80px" height="50px">
+                </div>
+            </div>
+            <br>
+            <div class="row">
                 <div class="col-md-12">
-                    <p>Currently Viewing</p>
-                    <h1 class="text-left">Computer Laboratory 1 Schedules</h1>
-                    <br>
                     <div id="calendar"></div>
                 </div>
             </div>
         </div>
     </div>
+
 
     <!-- Schedule Details Modal  Ni-->
     <div class="modal fade" id="scheduleDetailsModal" tabindex="-1" role="dialog"

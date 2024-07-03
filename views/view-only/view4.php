@@ -121,9 +121,9 @@ document.addEventListener('DOMContentLoaded', function() {
     },
     eventDidMount: function(info) {
       if (info.event.extendedProps.type === 'schedule') {
-        info.el.style.backgroundColor = 'blue';
+        info.el.style.backgroundColor = '#071952';
       } else if (info.event.extendedProps.type === 'reserve') {
-        info.el.style.backgroundColor = 'green';
+        info.el.style.backgroundColor = '#136927';
       }
     },
     eventClick: function(info) {
@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
       var endTime = $('#endTime').val();
       
       if (startTime < '08:00' || startTime >= endTime || endTime > '21:00') {
-        alert("Time must start at least 8:00 AM and end no later than 9:00 PM, and end time must be later than start time.");
+        alert("Schedule starting time must not be earlier than 8:00 AM / Schedule End time must not exceed 9:00 PM / Starting time must be earlier than the end time");
         return;
       }
     }

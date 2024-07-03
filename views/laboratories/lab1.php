@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function() {
     headerToolbar: {
       left: 'prev,next today dayGridMonth timeGridWeek',
       center: 'title',
-      right: 'addScheduleButton addReservationButton'
+      right: 'printScheduleButton addScheduleButton addReservationButton'
     },
     views: {
       timeGridWeek: {
@@ -229,13 +229,19 @@ document.addEventListener('DOMContentLoaded', function() {
           $('#addScheduleForm').attr('data-type', 'reserve');
           $('#addScheduleModal').modal('show');
         }
-      }
+      },
+      printScheduleButton: {
+        text: 'Print',
+        click: function() {
+         
+        }
+      },
     },
     eventDidMount: function(info) {
       if (info.event.extendedProps.type === 'schedule') {
-        info.el.style.backgroundColor = 'blue';
+        info.el.style.backgroundColor = '#071952';
       } else if (info.event.extendedProps.type === 'reserve') {
-        info.el.style.backgroundColor = 'green';
+        info.el.style.backgroundColor = '#136927';
       }
     },
     eventClick: function(info) {
