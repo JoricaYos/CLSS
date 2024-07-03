@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>Computer lab 1</title>
+  <title>Computer lab 2</title>
   <meta charset="utf-8">
   <link rel="icon" href="../../assets/smcc-logo.png" type="image/png">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -21,17 +21,12 @@
 
 <body style="background-color: #EBF4F6">
   <div class="wrapper d-flex align-items-stretch">
-
-    <!-- Sidebar -->
-    <?php include ($_SERVER['DOCUMENT_ROOT'] . '/views/includes/nav.php'); ?>
-    <!-- Sidebar -->
-
     <div id="content" class="p-4 p-md-5 pt-5">
-      <?php include '../includes/user-container.php'; ?>
+    <?php include '../includes/user-container.php'; ?>
       <div class="row mt-4">
         <div class="col-md-12">
           <p>Currently Viewing</p>
-          <h1 class="text-left">Computer Laboratory 1</h1>
+          <h1 class="text-left">Computer Laboratory 2 Schedules</h1>
           <br>
           <div id="calendar"></div>
         </div>
@@ -188,7 +183,7 @@ document.addEventListener('DOMContentLoaded', function() {
         url: '/views/laboratories/get_sched.php',
         type: 'GET',
         data: {
-          lab: 'lab1'
+          lab: 'lab2'
         },
         success: function(data) {
           var events = JSON.parse(data);
@@ -201,34 +196,14 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     },
     headerToolbar: {
-      left: 'prev,next today dayGridMonth timeGridWeek',
+      left: 'dayGridMonth timeGridWeek',
       center: 'title',
-      right: 'addScheduleButton addReservationButton'
+      right: 'prev,next today'
     },
     views: {
       timeGridWeek: {
         type: 'timeGridWeek',
         buttonText: 'Weekly'
-      }
-    },
-    customButtons: {
-      addScheduleButton: {
-        text: 'Add Schedule',
-        click: function() {
-          $('#addScheduleModalLabel').text('Add Schedule');
-          $('#saveScheduleButton').text('Save Schedule');
-          $('#addScheduleForm').attr('data-type', 'schedule');
-          $('#addScheduleModal').modal('show');
-        }
-      },
-      addReservationButton: {
-        text: 'Add Reservation',
-        click: function() {
-          $('#addScheduleModalLabel').text('Add Reservation');
-          $('#saveScheduleButton').text('Save Reservation');
-          $('#addScheduleForm').attr('data-type', 'reserve');
-          $('#addScheduleModal').modal('show');
-        }
       }
     },
     eventDidMount: function(info) {
@@ -245,7 +220,6 @@ document.addEventListener('DOMContentLoaded', function() {
       $('#modalDate').text(event.start.toLocaleDateString() + ' - ' + (event.end ? event.end.toLocaleDateString() : ''));
       $('#modalTime').text(event.allDay ? 'All Day' : event.start.toLocaleTimeString() + ' - ' + (event.end ? event.end.toLocaleTimeString() : ''));
       $('#modalDescription').text(event.extendedProps.description || 'No description');
-
       $('#scheduleDetailsModal').modal('show');
     }
   });
@@ -271,7 +245,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var formData = $(this).serialize();
 
     var type = ($(this).data('type') === 'schedule') ? 'schedule' : 'reserve';
-    formData += '&lab=' + encodeURIComponent('lab1') + '&type=' + encodeURIComponent(type);
+    formData += '&lab=' + encodeURIComponent('lab2') + '&type=' + encodeURIComponent(type);
 
     if (startDate > endDate) {
       alert("End date must be equal to or later than start date.");
@@ -310,7 +284,5 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 </script>
-
 </body>
-
 </html>

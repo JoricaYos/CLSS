@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>Computer lab 1</title>
+  <title>Computer lab 4</title>
   <meta charset="utf-8">
   <link rel="icon" href="../../assets/smcc-logo.png" type="image/png">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -21,126 +21,14 @@
 
 <body style="background-color: #EBF4F6">
   <div class="wrapper d-flex align-items-stretch">
-
-    <!-- Sidebar -->
-    <?php include ($_SERVER['DOCUMENT_ROOT'] . '/views/includes/nav.php'); ?>
-    <!-- Sidebar -->
-
     <div id="content" class="p-4 p-md-5 pt-5">
-      <?php include '../includes/user-container.php'; ?>
+    <?php include '../includes/user-container.php'; ?>
       <div class="row mt-4">
         <div class="col-md-12">
           <p>Currently Viewing</p>
-          <h1 class="text-left">Computer Laboratory 1</h1>
+          <h1 class="text-left">Computer Laboratory 4 Schedules</h1>
           <br>
           <div id="calendar"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- form modal ni -->
-  <div class="modal fade" id="addScheduleModal" tabindex="-1" role="dialog" aria-labelledby="addScheduleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="addScheduleModalLabel">Add Schedule</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form id="addScheduleForm" method="POST" action="submit_sched.php" data-type="schedule">
-            <div class="form-group">
-              <label for="scheduleTitle">Schedule Title</label>
-              <input type="text" class="form-control" id="scheduleTitle" name="scheduleTitle" required>
-            </div>
-            <div class="form-group">
-              <label for="description">Description</label>
-              <textarea class="form-control" id="description" name="description" rows="3"></textarea>
-            </div>
-            <div class="form-group form-check">
-              <input type="checkbox" class="form-check-input" id="repeatWeekly" name="repeatWeekly">
-              <label class="form-check-label" for="repeatWeekly">Repeat Weekly?</label>
-            </div>
-            <div id="weeklyDays" style="display: none;">
-              <div class="form-group">
-                <label>Repeat on:</label><br>
-                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                  <label class="btn btn-secondary">
-                    <input type="checkbox" name="days[]" value="Sun" autocomplete="off"> S
-                  </label>
-                  <label class="btn btn-secondary">
-                    <input type="checkbox" name="days[]" value="Mon" autocomplete="off"> M
-                  </label>
-                  <label class="btn btn-secondary">
-                    <input type="checkbox" name="days[]" value="Tue" autocomplete="off"> T
-                  </label>
-                  <label class="btn btn-secondary">
-                    <input type="checkbox" name="days[]" value="Wed" autocomplete="off"> W
-                  </label>
-                  <label class="btn btn-secondary">
-                    <input type="checkbox" name="days[]" value="Thu" autocomplete="off"> T
-                  </label>
-                  <label class="btn btn-secondary">
-                    <input type="checkbox" name="days[]" value="Fri" autocomplete="off"> F
-                  </label>
-                  <label class="btn btn-secondary">
-                    <input type="checkbox" name="days[]" value="Sat" autocomplete="off"> S
-                  </label>
-                </div>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="startDate">Start Date</label>
-              <input type="date" class="form-control" id="startDate" name="startDate" required>
-            </div>
-            <div class="form-group">
-              <label for="endDate">End Date</label>
-              <input type="date" class="form-control" id="endDate" name="endDate" required>
-            </div>
-            <div class="form-group">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="allDay" name="allDay" checked>
-                <label class="form-check-label" for="allDay">
-                  All Day
-                </label>
-              </div>
-            </div>
-            <div id="timeSection" style="display: none;">
-              <div class="form-group">
-                <label for="startTime">Start Time</label>
-                <input type="time" class="form-control" id="startTime" name="startTime">
-              </div>
-              <div class="form-group">
-                <label for="endTime">End Time</label>
-                <input type="time" class="form-control" id="endTime" name="endTime">
-              </div>
-            </div>
-            <button type="submit" class="btn btn-primary" id="saveScheduleButton">Save Schedule</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- basta modal -->
-  <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="successModalLabel">Success</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          Schedule was successfully added.
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
         </div>
       </div>
     </div>
@@ -188,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
         url: '/views/laboratories/get_sched.php',
         type: 'GET',
         data: {
-          lab: 'lab1'
+          lab: 'lab4'
         },
         success: function(data) {
           var events = JSON.parse(data);
@@ -271,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var formData = $(this).serialize();
 
     var type = ($(this).data('type') === 'schedule') ? 'schedule' : 'reserve';
-    formData += '&lab=' + encodeURIComponent('lab1') + '&type=' + encodeURIComponent(type);
+    formData += '&lab=' + encodeURIComponent('lab4') + '&type=' + encodeURIComponent(type);
 
     if (startDate > endDate) {
       alert("End date must be equal to or later than start date.");

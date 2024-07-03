@@ -26,12 +26,13 @@ $schedules = array();
 while ($row = $result->fetch_assoc()) {
     $startDate = new DateTime($row['start']);
     $endDate = new DateTime($row['end']);
-    $endDate->modify('+1 day'); // Add one day to the end date for FullCalendar
+    $endDate->modify('+1 day');
 
     if (!$row['repeat_weekly']) {
         if ($row['all_day']) {
             $event = array(
                 'title' => $row['title'],
+                'description' => $row['description'],
                 'start' => $row['start'],
                 'end' => $endDate->format('Y-m-d'),
                 'type' => $row['type'],
@@ -45,6 +46,7 @@ while ($row = $result->fetch_assoc()) {
             while ($currentDate < $endDate) {
                 $event = array(
                     'title' => $row['title'],
+                    'description' => $row['description'],
                     'start' => $currentDate->format('Y-m-d') . 'T' . $row['start_time'],
                     'end' => $currentDate->format('Y-m-d') . 'T' . $row['end_time'],
                     'type' => $row['type'],
@@ -66,6 +68,7 @@ while ($row = $result->fetch_assoc()) {
                 if ($currentDate->format('D') == $day) {
                     $recurringEvent = array(
                         'title' => $row['title'],
+                        'description' => $row['description'],
                         'start' => $row['all_day'] ? $currentDate->format('Y-m-d') : $currentDate->format('Y-m-d') . 'T' . $row['start_time'],
                         'end' => $row['all_day'] ? $currentDate->format('Y-m-d') : $currentDate->format('Y-m-d') . 'T' . $row['end_time'],
                         'type' => $row['type'],
