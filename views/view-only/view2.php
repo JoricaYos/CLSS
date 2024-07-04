@@ -196,7 +196,7 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     },
     headerToolbar: {
-      left: 'dayGridMonth timeGridWeek',
+      left: 'dayGridMonth timeGridWeek list',
       center: 'title',
       right: 'prev,next today'
     },

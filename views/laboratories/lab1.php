@@ -201,14 +201,14 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     },
     headerToolbar: {
-      left: 'prev,next today dayGridMonth timeGridWeek',
+      left: 'prev,next today dayGridMonth timeGridWeek list',
       center: 'title',
-      right: 'printScheduleButton addScheduleButton addReservationButton'
+      right: 'addScheduleButton addReservationButton'
     },
     views: {
       timeGridWeek: {
         type: 'timeGridWeek',
-        buttonText: 'Weekly'
+        buttonText: 'weekly'
       }
     },
     customButtons: {
@@ -229,13 +229,7 @@ document.addEventListener('DOMContentLoaded', function() {
           $('#addScheduleForm').attr('data-type', 'reserve');
           $('#addScheduleModal').modal('show');
         }
-      },
-      printScheduleButton: {
-        text: 'Print',
-        click: function() {
-         
-        }
-      },
+      }
     },
     eventDidMount: function(info) {
       if (info.event.extendedProps.type === 'schedule') {

@@ -201,7 +201,7 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     },
     headerToolbar: {
-      left: 'prev,next today dayGridMonth timeGridWeek',
+      left: 'prev,next today dayGridMonth timeGridWeek list',
       center: 'title',
       right: 'addScheduleButton addReservationButton'
     },

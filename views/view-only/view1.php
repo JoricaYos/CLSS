@@ -90,7 +90,7 @@
                     });
                 },
                 headerToolbar: {
-                    left: 'dayGridMonth timeGridWeek',
+                    left: 'dayGridMonth timeGridWeek list',
                     center: 'title',
                 },
                 views: {
