@@ -146,8 +146,9 @@
     </div>
   </div>
 
-  <!-- Schedule Details Modal -->
-  <div class="modal fade" id="scheduleDetailsModal" tabindex="-1" role="dialog" aria-labelledby="scheduleDetailsModalLabel" aria-hidden="true">
+  <!-- sched Detalyeheehee Modal -->
+  <div class="modal fade" id="scheduleDetailsModal" tabindex="-1" role="dialog"
+    aria-labelledby="scheduleDetailsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -174,27 +175,27 @@
   <script src="../../js/main.js"></script>
   <script src="../../js/table.js"></script>
   <script>
-document.addEventListener('DOMContentLoaded', function() {
+   $(document).ready(function () {
   var calendarEl = document.getElementById('calendar');
 
   var calendar = new FullCalendar.Calendar(calendarEl, {
     initialView: 'timeGridWeek',
     height: '800px',
     slotDuration: '00:30:00',
-    slotMinTime: '08:00:00', 
-    slotMaxTime: '21:00:00', 
-    events: function(fetchInfo, successCallback, failureCallback) {
+    slotMinTime: '08:00:00',
+    slotMaxTime: '21:00:00',
+    events: function (fetchInfo, successCallback, failureCallback) {
       $.ajax({
         url: '/views/laboratories/get_sched.php',
         type: 'GET',
         data: {
           lab: 'lab1'
         },
-        success: function(data) {
+        success: function (data) {
           var events = JSON.parse(data);
           successCallback(events);
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
           console.error('AJAX error:', status, error);
           failureCallback([]);
         }
@@ -203,7 +204,7 @@ document.addEventListener('DOMContentLoaded', function() {
     headerToolbar: {
       left: 'prev,next today dayGridMonth timeGridWeek list',
       center: 'title',
-      right: 'addScheduleButton addReservationButton'
+      right: 'printButton addScheduleButton addReservationButton'
     },
     views: {
       timeGridWeek: {
@@ -214,7 +215,7 @@ document.addEventListener('DOMContentLoaded', function() {
     customButtons: {
       addScheduleButton: {
         text: 'Add Schedule',
-        click: function() {
+        click: function () {
           $('#addScheduleModalLabel').text('Add Schedule');
           $('#saveScheduleButton').text('Save Schedule');
           $('#addScheduleForm').attr('data-type', 'schedule');
@@ -223,22 +224,28 @@ document.addEventListener('DOMContentLoaded', function() {
       },
       addReservationButton: {
         text: 'Add Reservation',
-        click: function() {
+        click: function () {
           $('#addScheduleModalLabel').text('Add Reservation');
           $('#saveScheduleButton').text('Save Reservation');
           $('#addScheduleForm').attr('data-type', 'reserve');
           $('#addScheduleModal').modal('show');
         }
+      },
+      printButton: {
+        text: 'Print',
+        click: function () {
+          window.location.href = '../includes/print-sched.php?lab=lab1';
+        }
       }
     },
-    eventDidMount: function(info) {
+    eventDidMount: function (info) {
       if (info.event.extendedProps.type === 'schedule') {
         info.el.style.backgroundColor = '#071952';
       } else if (info.event.extendedProps.type === 'reserve') {
         info.el.style.backgroundColor = '#136927';
       }
     },
-    eventClick: function(info) {
+    eventClick: function (info) {
       var event = info.event;
 
       $('#modalTitle').text(event.title);
@@ -252,15 +259,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
   calendar.render();
 
-  $('#repeatWeekly').change(function() {
+  $('#repeatWeekly').change(function () {
     $('#weeklyDays').toggle(this.checked);
   });
 
-  $('#allDay').change(function() {
+  $('#allDay').change(function () {
     $('#timeSection').toggle(!this.checked);
   });
 
-  $('#addScheduleForm').submit(function(event) {
+  $('#addScheduleForm').submit(function (event) {
     event.preventDefault();
 
     var startDate = new Date($('#startDate').val());
@@ -281,7 +288,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!allDayChecked) {
       var startTime = $('#startTime').val();
       var endTime = $('#endTime').val();
-      
+
       if (startTime < '08:00' || startTime >= endTime || endTime > '21:00') {
         alert("Time must start at least 8:00 AM and end no later than 9:00 PM, and end time must be later than start time.");
         return;
@@ -292,24 +299,36 @@ document.addEventListener('DOMContentLoaded', function() {
       url: 'submit_sched.php',
       type: 'POST',
       data: formData,
-      success: function(response) {
+      success: function (response) {
         var result = JSON.parse(response);
         if (result.success) {
           $('#addScheduleModal').modal('hide');
           $('#successModal').modal('show');
           calendar.refetchEvents();
+
+          setTimeout(function () {
+            location.reload();
+          }, 2000);
         } else {
           alert("Error: " + result.error);
         }
       },
-      error: function(xhr, status, error) {
+      error: function (xhr, status, error) {
         console.error('AJAX error:', status, error);
         alert("An error occurred while submitting the schedule.");
       }
     });
   });
+
+  $('#addScheduleModal').on('hidden.bs.modal', function () {
+    $('#addScheduleForm')[0].reset();
+    $('#weeklyDays').hide();
+    $('#timeSection').hide();
+    $('#addScheduleForm').attr('data-type', ''); 
+  });
 });
-</script>
+
+  </script>
 
 </body>
 

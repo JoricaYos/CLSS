@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -15,6 +15,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
 
     <style>
         @media print {
@@ -26,22 +28,42 @@
                 visibility: hidden;
             }
 
-            #calendar, #calendar * {
+            #content,
+            #content * {
                 visibility: visible;
             }
 
-            #calendar {
+            #content {
                 position: absolute;
                 left: 0;
                 top: 0;
                 width: 100%;
                 height: 100%;
             }
+
+            #printButton {
+                display: none !important;
+            }
+        }
+
+        .approval-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .approval-section .left,
+        .approval-section .right {
+            text-align: center;
         }
     </style>
 </head>
 
 <body style="background-color: #EBF4F6">
+    <div class="pl-5">
+        <button id="printButton" class="btn btn-primary mt-3 px-4 py-2">Print Calendar</button>
+    </div>
+
     <div class="wrapper d-flex align-items-stretch justify-content-center">
         <div id="content" class="p-4 p-md-5 pt-5">
             <div style="text-align: center; margin-bottom: 20px;">
@@ -51,26 +73,39 @@
                 <div style="display: inline-block; vertical-align: top; margin-left: 20px; text-align: left;">
                     <h2 style="margin-top: 0;">Saint Michael College of Caraga</h2>
                     <h6 class="text-center">Brgy. 4, Nasipit, Agusan del Norte</h6>
+                    <h6 class="text-center">www.smccnasipit.edu.ph</h6>
+                    <h6 class="text-center">+63 085 343-3251 / +63 085 283-3113</h6>
                 </div>
                 <div style="display: inline-block; vertical-align: top; margin-left: 20px;">
                     <img src="../../assets/iso.jpg" alt="Second Image" style="width: 100px; height: 70px;">
                 </div>
             </div>
-            <br><br><br><br>
-            <h6 style="text-align: center;">COMPUTER LABORATORY 1 SCHEDULE</h6>
-            <br><br><br><br>
+            <br>
+            <h4 id="lab-schedule-title" style="text-align: center;">COMPUTER LABORATORY 1 SCHEDULE</h4>
+            <br><br>
             <div class="row">
                 <div class="col-md-12">
-                    <button id="printButton" class="btn btn-primary mb-3">Print Calendar</button>
                     <div id="calendar"></div>
+                    <br><br><br>
+                    <div class="approval-section">
+                        <div class="left">
+                            <p>Prepared by: <span style="font-weight: bold; text-decoration: underline;">Name
+                                    here</span><br><span style="font-weight: bold;">Position here</span></p>
+                        </div>
+                        <div class="right">
+                            <p>Approved by: <span style="font-weight: bold; text-decoration: underline;">NAME
+                                    here</span><br><span style="font-weight: bold;">Position here</span></p>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Schedule Details Modal -->
-    <div class="modal fade" id="scheduleDetailsModal" tabindex="-1" role="dialog" aria-labelledby="scheduleDetailsModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="scheduleDetailsModal" tabindex="-1" role="dialog"
+        aria-labelledby="scheduleDetailsModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -98,6 +133,11 @@
     <script src="../../js/table.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            var urlParams = new URLSearchParams(window.location.search);
+            var lab = urlParams.get('lab') || 'lab1';
+            var labScheduleTitle = document.getElementById('lab-schedule-title');
+            labScheduleTitle.textContent = 'COMPUTER LABORATORY ' + lab.charAt(lab.length - 1) + ' SCHEDULE';
+
             var calendarEl = document.getElementById('calendar');
 
             var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -113,11 +153,13 @@
                         url: '/views/laboratories/get_sched.php',
                         type: 'GET',
                         data: {
-                            lab: 'lab1'
+                            lab: lab
                         },
                         success: function (data) {
                             var events = JSON.parse(data);
-                            successCallback(events);
+                            // Filter out 'reserve' type events
+                            var filteredEvents = events.filter(event => event.type !== 'reserve');
+                            successCallback(filteredEvents);
                         },
                         error: function (xhr, status, error) {
                             console.error('AJAX error:', status, error);
@@ -126,20 +168,20 @@
                     });
                 },
                 headerToolbar: {
-                    left: 'dayGridMonth,timeGridWeek',
-                    center: 'title',
+                    left: '',
+                    center: '',
+                    right: ''
                 },
                 views: {
                     timeGridWeek: {
                         type: 'timeGridWeek',
-                        buttonText: 'Weekly'
+                        buttonText: 'Weekly',
+                        dayHeaderFormat: { weekday: 'long' }
                     }
                 },
                 eventDidMount: function (info) {
                     if (info.event.extendedProps.type === 'schedule') {
                         info.el.style.backgroundColor = '#071952';
-                    } else if (info.event.extendedProps.type === 'reserve') {
-                        info.el.style.backgroundColor = '#136927';
                     }
                 },
                 eventClick: function (info) {
@@ -154,67 +196,27 @@
 
             calendar.render();
 
-            $('#repeatWeekly').change(function () {
-                $('#weeklyDays').toggle(this.checked);
-            });
-
-            $('#allDay').change(function () {
-                $('#timeSection').toggle(!this.checked);
-            });
-
-            $('#addScheduleForm').submit(function (event) {
-                event.preventDefault();
-
-                var startDate = new Date($('#startDate').val());
-                var endDate = new Date($('#endDate').val());
-                var allDayChecked = $('#allDay').prop('checked');
-                var repeatWeeklyChecked = $('#repeatWeekly').prop('checked');
-
-                var formData = $(this).serialize();
-
-                var type = ($(this).data('type') === 'schedule') ? 'schedule' : 'reserve';
-                formData += '&lab=' + encodeURIComponent('lab1') + '&type=' + encodeURIComponent(type);
-
-                if (startDate > endDate) {
-                    alert("End date must be equal to or later than start date.");
-                    return;
-                }
-
-                if (!allDayChecked) {
-                    var startTime = $('#startTime').val();
-                    var endTime = $('#endTime').val();
-
-                    if (startTime < '08:00' || startTime >= endTime || endTime > '21:00') {
-                        alert("Time must start at least 8:00 AM and end no later than 9:00 PM, and end time must be later than start time.");
-                        return;
-                    }
-                }
-
-                $.ajax({
-                    url: 'submit_sched.php',
-                    type: 'POST',
-                    data: formData,
-                    success: function (response) {
-                        var result = JSON.parse(response);
-                        if (result.success) {
-                            $('#addScheduleModal').modal('hide');
-                            $('#successModal').modal('show');
-                            calendar.refetchEvents();
-                        } else {
-                            alert("Error: " + result.error);
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('AJAX error:', status, error);
-                        alert("An error occurred while submitting the schedule.");
-                    }
+            $('#printButton').click(function () {
+                html2canvas(document.querySelector('#content')).then(canvas => {
+                    const { jsPDF } = window.jspdf;
+                    var imgData = canvas.toDataURL('image/png');
+                    var doc = new jsPDF('landscape');
+                    var imgWidth = doc.internal.pageSize.getWidth();
+                    var imgHeight = canvas.height * imgWidth / canvas.width;
+                    doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                    doc.save('calendar.pdf');
                 });
             });
 
-            $('#printButton').click(function () {
-                window.print();
-            });
+            window.onbeforeprint = function () {
+                document.getElementById('printButton').style.display = 'none';
+            };
+
+            window.onafterprint = function () {
+                document.getElementById('printButton').style.display = 'block';
+            };
         });
+
     </script>
 </body>
 

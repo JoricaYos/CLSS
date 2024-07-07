@@ -147,7 +147,8 @@
   </div>
 
   <!-- Schedule Details Modal -->
-  <div class="modal fade" id="scheduleDetailsModal" tabindex="-1" role="dialog" aria-labelledby="scheduleDetailsModalLabel" aria-hidden="true">
+  <div class="modal fade" id="scheduleDetailsModal" tabindex="-1" role="dialog"
+    aria-labelledby="scheduleDetailsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -174,142 +175,148 @@
   <script src="../../js/main.js"></script>
   <script src="../../js/table.js"></script>
   <script>
-document.addEventListener('DOMContentLoaded', function() {
-  var calendarEl = document.getElementById('calendar');
+    document.addEventListener('DOMContentLoaded', function () {
+      var calendarEl = document.getElementById('calendar');
 
-  var calendar = new FullCalendar.Calendar(calendarEl, {
-    initialView: 'timeGridWeek',
-    height: '800px',
-    slotDuration: '00:30:00',
-    slotMinTime: '08:00:00', 
-    slotMaxTime: '21:00:00', 
-    events: function(fetchInfo, successCallback, failureCallback) {
-      $.ajax({
-        url: '/views/laboratories/get_sched.php',
-        type: 'GET',
-        data: {
-          lab: 'lab4'
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'timeGridWeek',
+        height: '800px',
+        slotDuration: '00:30:00',
+        slotMinTime: '08:00:00',
+        slotMaxTime: '21:00:00',
+        events: function (fetchInfo, successCallback, failureCallback) {
+          $.ajax({
+            url: '/views/laboratories/get_sched.php',
+            type: 'GET',
+            data: {
+              lab: 'lab4'
+            },
+            success: function (data) {
+              var events = JSON.parse(data);
+              successCallback(events);
+            },
+            error: function (xhr, status, error) {
+              console.error('AJAX error:', status, error);
+              failureCallback([]);
+            }
+          });
         },
-        success: function(data) {
-          var events = JSON.parse(data);
-          successCallback(events);
+        headerToolbar: {
+          left: 'prev,next today dayGridMonth timeGridWeek list',
+          center: 'title',
+          right: 'printButton addScheduleButton addReservationButton'
         },
-        error: function(xhr, status, error) {
-          console.error('AJAX error:', status, error);
-          failureCallback([]);
+        views: {
+          timeGridWeek: {
+            type: 'timeGridWeek',
+            buttonText: 'Weekly'
+          }
+        },
+        customButtons: {
+          addScheduleButton: {
+            text: 'Add Schedule',
+            click: function () {
+              $('#addScheduleModalLabel').text('Add Schedule');
+              $('#saveScheduleButton').text('Save Schedule');
+              $('#addScheduleForm').attr('data-type', 'schedule');
+              $('#addScheduleModal').modal('show');
+            }
+          },
+          addReservationButton: {
+            text: 'Add Reservation',
+            click: function () {
+              $('#addScheduleModalLabel').text('Add Reservation');
+              $('#saveScheduleButton').text('Save Reservation');
+              $('#addScheduleForm').attr('data-type', 'reserve');
+              $('#addScheduleModal').modal('show');
+            }
+          },
+          printButton: {
+            text: 'Print',
+            click: function () {
+              window.location.href = '../includes/print-sched.php?lab=lab4';
+            }
+          }
+        },
+        eventDidMount: function (info) {
+          if (info.event.extendedProps.type === 'schedule') {
+            info.el.style.backgroundColor = '#071952';
+          } else if (info.event.extendedProps.type === 'reserve') {
+            info.el.style.backgroundColor = '#136927';
+          }
+        },
+        eventClick: function (info) {
+          var event = info.event;
+
+          $('#modalTitle').text(event.title);
+          $('#modalDate').text(event.start.toLocaleDateString() + ' - ' + (event.end ? event.end.toLocaleDateString() : ''));
+          $('#modalTime').text(event.allDay ? 'All Day' : event.start.toLocaleTimeString() + ' - ' + (event.end ? event.end.toLocaleTimeString() : ''));
+          $('#modalDescription').text(event.extendedProps.description || 'No description');
+
+          $('#scheduleDetailsModal').modal('show');
         }
       });
-    },
-    headerToolbar: {
-      left: 'prev,next today dayGridMonth timeGridWeek list',
-      center: 'title',
-      right: 'addScheduleButton addReservationButton'
-    },
-    views: {
-      timeGridWeek: {
-        type: 'timeGridWeek',
-        buttonText: 'Weekly'
-      }
-    },
-    customButtons: {
-      addScheduleButton: {
-        text: 'Add Schedule',
-        click: function() {
-          $('#addScheduleModalLabel').text('Add Schedule');
-          $('#saveScheduleButton').text('Save Schedule');
-          $('#addScheduleForm').attr('data-type', 'schedule');
-          $('#addScheduleModal').modal('show');
+
+      calendar.render();
+
+      $('#repeatWeekly').change(function () {
+        $('#weeklyDays').toggle(this.checked);
+      });
+
+      $('#allDay').change(function () {
+        $('#timeSection').toggle(!this.checked);
+      });
+
+      $('#addScheduleForm').submit(function (event) {
+        event.preventDefault();
+
+        var startDate = new Date($('#startDate').val());
+        var endDate = new Date($('#endDate').val());
+        var allDayChecked = $('#allDay').prop('checked');
+        var repeatWeeklyChecked = $('#repeatWeekly').prop('checked');
+
+        var formData = $(this).serialize();
+
+        var type = ($(this).data('type') === 'schedule') ? 'schedule' : 'reserve';
+        formData += '&lab=' + encodeURIComponent('lab4') + '&type=' + encodeURIComponent(type);
+
+        if (startDate > endDate) {
+          alert("End date must be equal to or later than start date.");
+          return;
         }
-      },
-      addReservationButton: {
-        text: 'Add Reservation',
-        click: function() {
-          $('#addScheduleModalLabel').text('Add Reservation');
-          $('#saveScheduleButton').text('Save Reservation');
-          $('#addScheduleForm').attr('data-type', 'reserve');
-          $('#addScheduleModal').modal('show');
+
+        if (!allDayChecked) {
+          var startTime = $('#startTime').val();
+          var endTime = $('#endTime').val();
+
+          if (startTime < '08:00' || startTime >= endTime || endTime > '21:00') {
+            alert("Time must start at least 8:00 AM and end no later than 9:00 PM, and end time must be later than start time.");
+            return;
+          }
         }
-      }
-    },
-    eventDidMount: function(info) {
-      if (info.event.extendedProps.type === 'schedule') {
-        info.el.style.backgroundColor = '#071952';
-      } else if (info.event.extendedProps.type === 'reserve') {
-        info.el.style.backgroundColor = '#136927';
-      }
-    },
-    eventClick: function(info) {
-      var event = info.event;
 
-      $('#modalTitle').text(event.title);
-      $('#modalDate').text(event.start.toLocaleDateString() + ' - ' + (event.end ? event.end.toLocaleDateString() : ''));
-      $('#modalTime').text(event.allDay ? 'All Day' : event.start.toLocaleTimeString() + ' - ' + (event.end ? event.end.toLocaleTimeString() : ''));
-      $('#modalDescription').text(event.extendedProps.description || 'No description');
-
-      $('#scheduleDetailsModal').modal('show');
-    }
-  });
-
-  calendar.render();
-
-  $('#repeatWeekly').change(function() {
-    $('#weeklyDays').toggle(this.checked);
-  });
-
-  $('#allDay').change(function() {
-    $('#timeSection').toggle(!this.checked);
-  });
-
-  $('#addScheduleForm').submit(function(event) {
-    event.preventDefault();
-
-    var startDate = new Date($('#startDate').val());
-    var endDate = new Date($('#endDate').val());
-    var allDayChecked = $('#allDay').prop('checked');
-    var repeatWeeklyChecked = $('#repeatWeekly').prop('checked');
-
-    var formData = $(this).serialize();
-
-    var type = ($(this).data('type') === 'schedule') ? 'schedule' : 'reserve';
-    formData += '&lab=' + encodeURIComponent('lab4') + '&type=' + encodeURIComponent(type);
-
-    if (startDate > endDate) {
-      alert("End date must be equal to or later than start date.");
-      return;
-    }
-
-    if (!allDayChecked) {
-      var startTime = $('#startTime').val();
-      var endTime = $('#endTime').val();
-      
-      if (startTime < '08:00' || startTime >= endTime || endTime > '21:00') {
-        alert("Time must start at least 8:00 AM and end no later than 9:00 PM, and end time must be later than start time.");
-        return;
-      }
-    }
-
-    $.ajax({
-      url: 'submit_sched.php',
-      type: 'POST',
-      data: formData,
-      success: function(response) {
-        var result = JSON.parse(response);
-        if (result.success) {
-          $('#addScheduleModal').modal('hide');
-          $('#successModal').modal('show');
-          calendar.refetchEvents();
-        } else {
-          alert("Error: " + result.error);
-        }
-      },
-      error: function(xhr, status, error) {
-        console.error('AJAX error:', status, error);
-        alert("An error occurred while submitting the schedule.");
-      }
+        $.ajax({
+          url: 'submit_sched.php',
+          type: 'POST',
+          data: formData,
+          success: function (response) {
+            var result = JSON.parse(response);
+            if (result.success) {
+              $('#addScheduleModal').modal('hide');
+              $('#successModal').modal('show');
+              calendar.refetchEvents();
+            } else {
+              alert("Error: " + result.error);
+            }
+          },
+          error: function (xhr, status, error) {
+            console.error('AJAX error:', status, error);
+            alert("An error occurred while submitting the schedule.");
+          }
+        });
+      });
     });
-  });
-});
-</script>
+  </script>
 
 </body>
 

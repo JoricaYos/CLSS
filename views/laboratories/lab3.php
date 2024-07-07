@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function() {
     headerToolbar: {
       left: 'prev,next today dayGridMonth timeGridWeek list',
       center: 'title',
-      right: 'addScheduleButton addReservationButton'
+      right: 'printButton addScheduleButton addReservationButton'
     },
     views: {
       timeGridWeek: {
@@ -229,7 +229,13 @@ document.addEventListener('DOMContentLoaded', function() {
           $('#addScheduleForm').attr('data-type', 'reserve');
           $('#addScheduleModal').modal('show');
         }
-      }
+      },
+      printButton: {
+            text: 'Print',
+            click: function () {
+              window.location.href = '../includes/print-sched.php?lab=lab3';
+            }
+          }
     },
     eventDidMount: function(info) {
       if (info.event.extendedProps.type === 'schedule') {
