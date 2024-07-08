@@ -9,30 +9,24 @@
     <link rel="icon" href="../../assets/smcc-logo.png" type="image/png">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- External CSS -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/table.css">
-
-    <!-- barChart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <style>
-    #profile-image-container {
-        position: relative;
-        width: 100%;
-        height: auto;
-        overflow: hidden;
-    }
+        #profile-image-container {
+            position: relative;
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+        }
 
-    #profile-image {
-        display: block;
-        width: 100%;
-        height: auto;
-        object-fit: cover;
-    }
+        #profile-image {
+            display: block;
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
     </style>
 </head>
 
@@ -42,7 +36,7 @@
         <?php include ($_SERVER['DOCUMENT_ROOT'] . '/views/includes/nav.php'); ?>
         <!-- Sidebar inclusion lagee -->
 
-        <!-- Main Content -->
+        <!-- Main kontint / Main divvvv -->
         <div id="content" class="p-4 p-md-5 pt-5">
             <?php include '../includes/user-container.php'; ?>
             <div id="profile-section">
@@ -75,7 +69,8 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="password">Full Name:</label>
-                            <input type="text" class="form-control" id="full-name" value="<?php echo $_SESSION['name']; ?>"disabled>
+                            <input type="text" class="form-control" id="full-name"
+                                value="<?php echo $_SESSION['name']; ?>" disabled>
                         </div>
                         <div class="form-group">
                             <label for="confirm-password">Username:</label>
@@ -105,52 +100,49 @@
     <script src="../../js/popper.js"></script>
     <script src="../../js/bootstrap.min.js"></script>
     <script src="../../js/main.js"></script>
-    <script src="../../js/table.js"></script>
     <script>
-    $(document).ready(function() {
-        $('#edit-profile-btn').click(function() {
-            $('#full-name').prop('disabled', false);
-            $('#password').prop('disabled', false);
-            $('#confirm-password').prop('disabled', false);
-            $('#profile-image-input').show();
+        $(document).ready(function () {
+            $('#edit-profile-btn').click(function () {
+                $('#full-name').prop('disabled', false);
+                $('#password').prop('disabled', false);
+                $('#confirm-password').prop('disabled', false);
+                $('#profile-image-input').show();
 
-            $('#button-group-edit').hide();
-            $('#button-group-save-cancel').show();
+                $('#button-group-edit').hide();
+                $('#button-group-save-cancel').show();
+            });
+
+            $('#cancel-profile-btn').click(function () {
+                $('#full-name').prop('disabled', true);
+                $('#password').prop('disabled', true);
+                $('#confirm-password').prop('disabled', true);
+                $('#profile-image-input').hide();
+
+                $('#button-group-edit').show();
+                $('#button-group-save-cancel').hide();
+            });
+
+            $('#save-profile-btn').click(function () {
+                $('#full-name').prop('disabled', true);
+                $('#password').prop('disabled', true);
+                $('#confirm-password').prop('disabled', true);
+                $('#profile-image-input').hide();
+
+                $('#button-group-edit').show();
+                $('#button-group-save-cancel').hide();
+            });
+
+            $('#profile-image-input').change(function () {
+                var input = this;
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#profile-image').attr('src', e.target.result);
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                }
+            });
         });
-
-        $('#cancel-profile-btn').click(function() {
-            $('#full-name').prop('disabled', true);
-            $('#password').prop('disabled', true);
-            $('#confirm-password').prop('disabled', true);
-            $('#profile-image-input').hide();
-
-            $('#button-group-edit').show();
-            $('#button-group-save-cancel').hide();
-        });
-
-        $('#save-profile-btn').click(function() {
-            // Add code to save changes here (e.g., submit form via AJAX)
-            // After saving, disable fields and hide buttons
-            $('#full-name').prop('disabled', true);
-            $('#password').prop('disabled', true);
-            $('#confirm-password').prop('disabled', true);
-            $('#profile-image-input').hide();
-
-            $('#button-group-edit').show();
-            $('#button-group-save-cancel').hide();
-        });
-
-        $('#profile-image-input').change(function() {
-            var input = this;
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    $('#profile-image').attr('src', e.target.result);
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
-        });
-    });
     </script>
 
 </body>
