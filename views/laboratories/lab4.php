@@ -54,11 +54,13 @@
           <form id="addScheduleForm" method="POST" action="submit_sched.php" data-type="schedule">
             <div class="form-group">
               <label for="scheduleTitle">Schedule Title</label>
-              <input type="text" class="form-control" id="scheduleTitle" name="scheduleTitle" required>
+              <input type="text" class="form-control" id="scheduleTitle" name="scheduleTitle" required
+                style="border: 1px solid #ced4da;">
             </div>
             <div class="form-group">
               <label for="description">Description</label>
-              <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+              <textarea class="form-control" id="description" name="description" rows="3"
+                style="border: 1px solid #ced4da;"></textarea>
             </div>
             <div class="form-group form-check">
               <input type="checkbox" class="form-check-input" id="repeatWeekly" name="repeatWeekly">
@@ -94,11 +96,13 @@
             </div>
             <div class="form-group">
               <label for="startDate">Start Date</label>
-              <input type="date" class="form-control" id="startDate" name="startDate" required>
+              <input type="date" class="form-control" id="startDate" name="startDate" required
+                style="border: 1px solid #ced4da;">
             </div>
             <div class="form-group">
               <label for="endDate">End Date</label>
-              <input type="date" class="form-control" id="endDate" name="endDate" required>
+              <input type="date" class="form-control" id="endDate" name="endDate" required
+                style="border: 1px solid #ced4da;">
             </div>
             <div class="form-group">
               <div class="form-check">
@@ -111,11 +115,12 @@
             <div id="timeSection" style="display: none;">
               <div class="form-group">
                 <label for="startTime">Start Time</label>
-                <input type="time" class="form-control" id="startTime" name="startTime">
+                <input type="time" class="form-control" id="startTime" name="startTime"
+                  style="border: 1px solid #ced4da;">
               </div>
               <div class="form-group">
                 <label for="endTime">End Time</label>
-                <input type="time" class="form-control" id="endTime" name="endTime">
+                <input type="time" class="form-control" id="endTime" name="endTime" style="border: 1px solid #ced4da;">
               </div>
             </div>
             <button type="submit" class="btn btn-primary" id="saveScheduleButton">Save Schedule</button>
@@ -305,6 +310,10 @@
               $('#addScheduleModal').modal('hide');
               $('#successModal').modal('show');
               calendar.refetchEvents();
+
+              setTimeout(function () {
+                location.reload();
+              }, 1000);
             } else {
               alert("Error: " + result.error);
             }

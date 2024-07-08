@@ -82,7 +82,7 @@
             </div>
             <br>
             <h4 id="lab-schedule-title" style="text-align: center;">COMPUTER LABORATORY 1 SCHEDULE</h4>
-            <br><br>
+            <br>
             <div class="row">
                 <div class="col-md-12">
                     <div id="calendar"></div>
@@ -90,14 +90,13 @@
                     <div class="approval-section">
                         <div class="left">
                             <p>Prepared by: <span style="font-weight: bold; text-decoration: underline;">Name
-                                    here</span><br><span style="font-weight: bold;">Position here</span></p>
+                                    here</span><br><span style="font-weight: bold;">Position 69</span></p>
                         </div>
                         <div class="right">
                             <p>Approved by: <span style="font-weight: bold; text-decoration: underline;">NAME
-                                    here</span><br><span style="font-weight: bold;">Position here</span></p>
+                                    here</span><br><span style="font-weight: bold;">Position 69</span></p>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>

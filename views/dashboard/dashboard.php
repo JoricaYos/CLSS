@@ -29,7 +29,7 @@
             <?php include '../includes/user-container.php'; ?>
             <div class="row mt-4">
                 <div class="col-md-8">
-                    <h1 class="text-left">Hello <?php echo htmlspecialchars($_SESSION['name']); ?>,</h1>
+                    <h1 class="text-left">Hello <?php echo htmlspecialchars(current(explode(' ', $_SESSION['name']))); ?>,</h1>
                     <p>This is what we've got for you today.</p>
                 </div>
             </div>

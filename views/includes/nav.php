@@ -15,7 +15,10 @@
             </div>
         </a>
         <ul class="list-unstyled components mb-5">
-            <li class="active">
+            <li>
+                <a href="/views/profile/profile.php"><i class="fa fa-user"></i> PROFILE</a>
+            </li>
+            <li>
                 <a href="/views/accounts/accounts.php"><i class="fa fa-user"></i> USER ACCOUNTS</a>
             </li>
             <li>
@@ -33,6 +36,7 @@
         <div class="mb-5 text-center justify-content-center">
             <div>
                 <h2 class="h6">Computer Laboratory Scheduling System</h2>
+                <p>VERSION 1.0</p>
             </div>
         </div>
     </div>
