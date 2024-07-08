@@ -75,7 +75,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="password">Full Name:</label>
-                            <input type="text" class="form-control" id="full-name" disabled>
+                            <input type="text" class="form-control" id="full-name" value="<?php echo $_SESSION['name']; ?>"disabled>
                         </div>
                         <div class="form-group">
                             <label for="confirm-password">Username:</label>
