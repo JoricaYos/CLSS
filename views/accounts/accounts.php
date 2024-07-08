@@ -1,3 +1,5 @@
+<?php include($_SERVER['DOCUMENT_ROOT'] . '/controllers/logged_checker.php'); ?>
+
 <!doctype html>
 <html lang="en">
 <head>

@@ -1,6 +1,4 @@
 <?php
-session_start();
-
 if (isset($_SESSION['username'])) {
     $name = $_SESSION['name'];
     $firstLetter = strtoupper(substr($name, 0, 1));
