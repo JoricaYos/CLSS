@@ -15,6 +15,7 @@ if ($result->num_rows > 0) {
         $_SESSION['role'] = $row['role'];
         $_SESSION['name'] = $row['name'];
         $_SESSION['id'] = $row['id'];
+        $_SESSION['img'] = $row['img'];
 
         if ($row['role'] == 'Admin' || $row['role'] == 'Personnel') {
             header("Location: ../views/dashboard/dashboard.php");

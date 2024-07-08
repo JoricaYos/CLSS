@@ -4,7 +4,7 @@
 <html lang="en">
 
 <head>
-    <title>Dashboard</title>
+    <title>Profile</title>
     <meta charset="utf-8">
     <link rel="icon" href="../../assets/smcc-logo.png" type="image/png">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -32,69 +32,95 @@
 
 <body style="background-color: #EBF4F6">
     <div class="wrapper d-flex align-items-stretch">
-        <!-- Sidebar inclusion lagee -->
         <?php include ($_SERVER['DOCUMENT_ROOT'] . '/views/includes/nav.php'); ?>
-        <!-- Sidebar inclusion lagee -->
 
-        <!-- Main kontint / Main divvvv -->
         <div id="content" class="p-4 p-md-5 pt-5">
             <?php include '../includes/user-container.php'; ?>
             <div id="profile-section">
-                <div class="row mt-4">
-                    <div class="col-md-8">
-                        <p>Currently Viewing</p>
-                        <h1 class="text-left">Your Profile</h1>
-                    </div>
-                    <div class="col-md-4 text-right">
-                        <div id="button-group-edit" style="display: block;">
-                            <button id="edit-profile-btn" class="btn btn-primary">Edit</button>
+                <form id="profile-form" enctype="multipart/form-data">
+                    <div class="row mt-4">
+                        <div class="col-md-8">
+                            <p>Currently Viewing</p>
+                            <h1 class="text-left">Your Profile</h1>
                         </div>
-                        <div id="button-group-save-cancel" style="display: none;">
-                            <button id="cancel-profile-btn" class="btn btn-secondary mr-2">Cancel</button>
-                            <button id="save-profile-btn" class="btn btn-success">Save</button>
+                        <div class="col-md-4 text-right">
+                            <div id="button-group-edit" style="display: block;">
+                                <button type="button" id="edit-profile-btn" class="btn btn-primary">Edit</button>
+                            </div>
+                            <div id="button-group-save-cancel" style="display: none;">
+                                <button type="button" id="cancel-profile-btn"
+                                    class="btn btn-secondary mr-2">Cancel</button>
+                                <button type="submit" id="save-profile-btn" class="btn btn-success">Save</button>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="row mt-4 align-items-center justify-content-center">
-                    <div class="col-md-4 text-center">
-                        <div id="profile-image-container" class="shadow">
-                            <img id="profile-image" src="../../assets/smcc-logo.png" alt="Profile Image">
-                            <input type="file" id="profile-image-input" accept="image/*" style="display: none;">
+                    <div class="row mt-4 align-items-center justify-content-center">
+                        <div class="col-md-4 text-center">
+                            <div id="profile-image-container" class="shadow">
+                                <?php
+                                $profileImage = !empty($_SESSION['img']) ? '/' . $_SESSION['img'] : '../../assets/smcc-logo.png';
+                                ?>
+                                <img id="profile-image" src="<?php echo $profileImage; ?>" alt="Profile Image">
+                                <input type="file" id="profile-image-input" name="profile_image" accept="image/*"
+                                    style="display: none;">
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="row mt-4">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="password">Full Name:</label>
-                            <input type="text" class="form-control" id="full-name"
-                                value="<?php echo $_SESSION['name']; ?>" disabled>
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="full-name">Full Name:</label>
+                                <input type="text" class="form-control" id="full-name" name="name"
+                                    value="<?php echo $_SESSION['name']; ?>" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="username">Username:</label>
+                                <input type="text" class="form-control" id="username" name="username"
+                                    value="<?php echo $_SESSION['username']; ?>" disabled>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="confirm-password">Username:</label>
-                            <input type="text" class="form-control" id="username"
-                                value="<?php echo $_SESSION['username']; ?>" disabled>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="password">Password:</label>
+                                <input type="password" class="form-control" id="password" name="password" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="confirm-password">Confirm Password:</label>
+                                <input type="password" class="form-control" id="confirm-password"
+                                    name="confirm_password" disabled>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="password">Password:</label>
-                            <input type="password" class="form-control" id="password" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label for="confirm-password">Confirm Password:</label>
-                            <input type="password" class="form-control" id="confirm-password" disabled>
-                        </div>
-                    </div>
-                </div>
+                </form>
             </div>
             <br>
         </div>
     </div>
 
-    <!-- CDN JS  HEE HEEE-->
+    <!-- Modal for displaying response messages -->
+    <div class="modal fade" id="responseModal" tabindex="-1" role="dialog" aria-labelledby="responseModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="responseModalLabel">Response Message Heee Hee</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="responseMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
     <script src="../../js/popper.js"></script>
@@ -104,6 +130,7 @@
         $(document).ready(function () {
             $('#edit-profile-btn').click(function () {
                 $('#full-name').prop('disabled', false);
+                $('#username').prop('disabled', false);
                 $('#password').prop('disabled', false);
                 $('#confirm-password').prop('disabled', false);
                 $('#profile-image-input').show();
@@ -114,6 +141,7 @@
 
             $('#cancel-profile-btn').click(function () {
                 $('#full-name').prop('disabled', true);
+                $('#username').prop('disabled', true);
                 $('#password').prop('disabled', true);
                 $('#confirm-password').prop('disabled', true);
                 $('#profile-image-input').hide();
@@ -122,14 +150,40 @@
                 $('#button-group-save-cancel').hide();
             });
 
-            $('#save-profile-btn').click(function () {
-                $('#full-name').prop('disabled', true);
-                $('#password').prop('disabled', true);
-                $('#confirm-password').prop('disabled', true);
-                $('#profile-image-input').hide();
+            $('#profile-form').submit(function (e) {
+                e.preventDefault();
 
-                $('#button-group-edit').show();
-                $('#button-group-save-cancel').hide();
+                var formData = new FormData(this);
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'edit_profile.php',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        try {
+                            var res = JSON.parse(response);
+                            if (res.status === 'success') {
+                                $('#responseMessage').text(res.message);
+                                $('#responseModal').modal('show');
+                                location.reload();
+                            } else {
+                                $('#responseMessage').text(res.message);
+                                $('#responseModal').modal('show');
+                            }
+                        } catch (e) {
+                            console.error('Parsing error:', e);
+                            console.error('Server response:', response);
+                            $('#responseMessage').text('An error occurred. Please try again.');
+                            $('#responseModal').modal('show');
+                        }
+                    },
+                    error: function () {
+                        $('#responseMessage').text('An error occurred. Please try again.');
+                        $('#responseModal').modal('show');
+                    }
+                });
             });
 
             $('#profile-image-input').change(function () {
