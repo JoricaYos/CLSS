@@ -31,6 +31,7 @@ while ($row = $result->fetch_assoc()) {
     if (!$row['repeat_weekly']) {
         if ($row['all_day']) {
             $event = array(
+                'id' => $row['id'],
                 'title' => $row['title'],
                 'description' => $row['description'],
                 'start' => $row['start'],
@@ -45,6 +46,7 @@ while ($row = $result->fetch_assoc()) {
 
             while ($currentDate < $endDate) {
                 $event = array(
+                    'id' => $row['id'],
                     'title' => $row['title'],
                     'description' => $row['description'],
                     'start' => $currentDate->format('Y-m-d') . 'T' . $row['start_time'],
@@ -67,6 +69,7 @@ while ($row = $result->fetch_assoc()) {
             while ($currentDate < $endDate) {
                 if ($currentDate->format('D') == $day) {
                     $recurringEvent = array(
+                        'id' => $row['id'],
                         'title' => $row['title'],
                         'description' => $row['description'],
                         'start' => $row['all_day'] ? $currentDate->format('Y-m-d') : $currentDate->format('Y-m-d') . 'T' . $row['start_time'],
