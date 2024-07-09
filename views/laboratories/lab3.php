@@ -170,6 +170,8 @@
           <p><strong>Description:</strong> <span id="modalDescription"></span></p>
         </div>
         <div class="modal-footer">
+        <button type="button" class="btn btn-warning" id="editButton">Edit</button>
+          <button type="button" class="btn btn-danger" id="deleteButton">Delete</button>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         </div>
       </div>
