@@ -2,13 +2,14 @@ Need internet para mu load ang mga elements (Naka cdn ra ang mga calendar, table
 - Schedules 
 - Reservations
 
-Schedule / Reservation `OPTIONS`
+`SCHEDULE / RESERVATION OPTIONS`
  - DAILY / WEEKLY (WEEKLY REPEAT, USEFUL FOR SEMESTRAL SCHEDULE)
  - All day / TIME SET (START TIME - END TIME)
  - Schedule / Reservation title
  - Schedule / Reservation description
  - Schedule per laboratory
-Schedule legend
+
+`SCHEDULE LEGEND`
  - Green (Reservations)
  - Blue (Schedule)
 
