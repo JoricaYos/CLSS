@@ -207,7 +207,7 @@
             </div>
         </div>
     </div>
-
+        
 
     <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
     <script src="../../js/popper.js"></script>
@@ -396,6 +396,52 @@
                     }
                 });
             });
+
+            $('#editButton').click(function () {
+                $('#scheduleDetailsModal').modal('hide');
+                var eventId = $('#modalId').text();
+                var event = calendar.getEventById(eventId);
+
+                $('#scheduleTitle').val(event.title);
+                $('#description').val(event.extendedProps.description);
+                $('#startDate').val(event.startStr.slice(0, 10));
+
+                if (event.allDay) {
+                    var endDate = new Date(event.endStr.slice(0, 10));
+                    endDate.setDate(endDate.getDate() - 1);
+                    var formattedEndDate = endDate.toISOString().slice(0, 10);
+                    $('#endDate').val(formattedEndDate);
+                } else {
+                    $('#endDate').val(event.endStr.slice(0, 10));
+                }
+
+                if (!event.allDay) {
+                    $('#allDay').prop('checked', false);
+                    $('#timeSection').show();
+                    $('#startTime').val(event.startStr.slice(11, 16));
+                    $('#endTime').val(event.endStr.slice(11, 16));
+                } else {
+                    $('#allDay').prop('checked', true);
+                    $('#timeSection').hide();
+                }
+
+                if (event.extendedProps.repeatWeekly) {
+                    $('#repeatWeekly').prop('checked', true);
+                    $('#weeklyDays').show();
+                    event.days.forEach(function (day) {
+                        $('[name="days[]"][value="' + day + '"]').prop('checked', true);
+                    });
+                } else {
+                    $('#repeatWeekly').prop('checked', false);
+                    $('#weeklyDays').hide();
+                }
+
+                $('#addScheduleModalLabel').text('Edit Schedule');
+                $('#saveScheduleButton').text('Update Schedule');
+                $('#addScheduleForm').attr('data-type', 'edit');
+                $('#addScheduleModal').modal('show');
+            });
+
 
             $('#addScheduleModal').on('hidden.bs.modal', function () {
                 $('#addScheduleForm')[0].reset();
