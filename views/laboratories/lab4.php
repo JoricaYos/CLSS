@@ -1,4 +1,4 @@
-<?php include($_SERVER['DOCUMENT_ROOT'] . '/controllers/logged_checker.php'); ?>
+<?php include ($_SERVER['DOCUMENT_ROOT'] . '/controllers/logged_checker.php'); ?>
 <!doctype html>
 <html lang="en">
 
@@ -18,6 +18,11 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
+  <Style>
+    .schedule-id {
+      display: none;
+    }
+  </Style>
 </head>
 
 <body style="background-color: #EBF4F6">
@@ -58,6 +63,7 @@
               <input type="text" class="form-control" id="scheduleTitle" name="scheduleTitle" required
                 style="border: 1px solid #ced4da;">
             </div>
+            <input type="hidden" id="scheduleId" name="scheduleId">
             <div class="form-group">
               <label for="description">Description</label>
               <textarea class="form-control" id="description" name="description" rows="3"
@@ -152,7 +158,7 @@
     </div>
   </div>
 
-  <!-- Schedule Details Modal -->
+  <!-- sched Detalyeheehee Modal -->
   <div class="modal fade" id="scheduleDetailsModal" tabindex="-1" role="dialog"
     aria-labelledby="scheduleDetailsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -167,9 +173,12 @@
           <p><strong>Title:</strong> <span id="modalTitle"></span></p>
           <p><strong>Time:</strong> <span id="modalTime"></span></p>
           <p><strong>Description:</strong> <span id="modalDescription"></span></p>
+          <div class="schedule-id">
+            <p><strong>Id:</strong> <span id="modalId"></span></p>
+          </div>
         </div>
         <div class="modal-footer">
-        <button type="button" class="btn btn-warning" id="editButton">Edit</button>
+          <button type="button" class="btn btn-warning" id="editButton">Edit</button>
           <button type="button" class="btn btn-danger" id="deleteButton">Delete</button>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         </div>
@@ -177,13 +186,36 @@
     </div>
   </div>
 
+  <!-- confirmation modal for deletion heee heee -->
+  <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog"
+    aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Deletion</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to delete this schedule?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger" id="confirmDeleteButton">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
   <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
   <script src="../../js/popper.js"></script>
   <script src="../../js/bootstrap.min.js"></script>
   <script src="../../js/main.js"></script>
   <script src="../../js/table.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    $(document).ready(function () {
       var calendarEl = document.getElementById('calendar');
 
       var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -217,7 +249,7 @@
         views: {
           timeGridWeek: {
             type: 'timeGridWeek',
-            buttonText: 'Weekly'
+            buttonText: 'weekly'
           }
         },
         customButtons: {
@@ -257,10 +289,13 @@
           var event = info.event;
 
           $('#modalTitle').text(event.title);
-          $('#modalDate').text(event.start.toLocaleDateString() + ' - ' + (event.end ? event.end.toLocaleDateString() : ''));
-          $('#modalTime').text(event.allDay ? 'All Day' : event.start.toLocaleTimeString() + ' - ' + (event.end ? event.end.toLocaleTimeString() : ''));
+          $('#modalId').text(event.id);
+          $('#modalDate').text(event.start.toLocaleDateString() + ' - ' + (event.end ? event
+            .end.toLocaleDateString() : ''));
+          $('#modalTime').text(event.allDay ? 'All Day' : event.start.toLocaleTimeString() +
+            ' - ' + (event.end ? event.end.toLocaleTimeString() : ''));
           $('#modalDescription').text(event.extendedProps.description || 'No description');
-
+          $('.schedule-id').hide();
           $('#scheduleDetailsModal').modal('show');
         }
       });
@@ -275,6 +310,39 @@
         $('#timeSection').toggle(!this.checked);
       });
 
+      $('#deleteButton').click(function () {
+        $('#deleteConfirmationModal').modal('show');
+        $('#scheduleDetailsModal').modal('hide');
+      });
+
+      $('#confirmDeleteButton').click(function () {
+        var scheduleId = $('#modalId').text();
+
+        $.ajax({
+          url: 'delete_sched.php',
+          type: 'POST',
+          data: {
+            id: scheduleId
+          },
+          success: function (response) {
+            var result = JSON.parse(response);
+            if (result.success) {
+              $('#scheduleDetailsModal').modal('hide');
+              $('#deleteConfirmationModal').modal('hide');
+              // Reload the page
+              window.location.reload();
+            } else {
+              alert("Error: " + result.error);
+            }
+          },
+          error: function (xhr, status, error) {
+            console.error('AJAX error:', status, error);
+            alert("An error occurred while deleting the schedule.");
+          }
+        });
+      });
+
+
       $('#addScheduleForm').submit(function (event) {
         event.preventDefault();
 
@@ -284,21 +352,20 @@
         var repeatWeeklyChecked = $('#repeatWeekly').prop('checked');
 
         var formData = $(this).serialize();
-
-        var type = ($(this).data('type') === 'schedule') ? 'schedule' : 'reserve';
+        var type = $(this).data('type') === 'schedule' ? 'schedule' : 'reserve';
         formData += '&lab=' + encodeURIComponent('lab4') + '&type=' + encodeURIComponent(type);
 
         if (startDate > endDate) {
-          alert("End date must be equal to or later than start date.");
+          alert('End date must be equal to or later than start date.');
           return;
         }
-
         if (!allDayChecked) {
           var startTime = $('#startTime').val();
           var endTime = $('#endTime').val();
-
           if (startTime < '08:00' || startTime >= endTime || endTime > '21:00') {
-            alert("Time must start at least 8:00 AM and end no later than 9:00 PM, and end time must be later than start time.");
+            alert(
+              'Time must start at least 8:00 AM and end no later than 9:00 PM, and end time must be later than start time.'
+            );
             return;
           }
         }
@@ -318,15 +385,70 @@
                 location.reload();
               }, 1000);
             } else {
-              alert("Error: " + result.error);
+              alert('Error: ' + result.error);
             }
           },
           error: function (xhr, status, error) {
             console.error('AJAX error:', status, error);
-            alert("An error occurred while submitting the schedule.");
+            alert('An error occurred while submitting the schedule.');
           }
         });
       });
+
+      $('#addScheduleModal').on('hidden.bs.modal', function () {
+        $('#addScheduleForm')[0].reset();
+        $('#scheduleId').val('');
+        $('#weeklyDays').hide();
+        $('#timeSection').hide();
+        $('#addScheduleForm').attr('data-type', '');
+      });
+
+      $('#editButton').click(function () {
+        $('#scheduleDetailsModal').modal('hide');
+        var eventId = $('#modalId').text();
+        var event = calendar.getEventById(eventId);
+
+        $('#scheduleId').val(eventId);
+        $('#scheduleTitle').val(event.title);
+        $('#description').val(event.extendedProps.description);
+        $('#startDate').val(event.startStr.slice(0, 10));
+
+        if (event.allDay) {
+          var endDate = new Date(event.endStr.slice(0, 10));
+          endDate.setDate(endDate.getDate() - 1);
+          var formattedEndDate = endDate.toISOString().slice(0, 10);
+          $('#endDate').val(formattedEndDate);
+        } else {
+          $('#endDate').val(event.endStr.slice(0, 10));
+        }
+
+        if (!event.allDay) {
+          $('#allDay').prop('checked', false);
+          $('#timeSection').show();
+          $('#startTime').val(event.startStr.slice(11, 16));
+          $('#endTime').val(event.endStr.slice(11, 16));
+        } else {
+          $('#allDay').prop('checked', true);
+          $('#timeSection').hide();
+        }
+
+        if (event.extendedProps.repeatWeekly) {
+          $('#repeatWeekly').prop('checked', true);
+          $('#weeklyDays').show();
+          event.days.forEach(function (day) {
+            $('[name="days[]"][value="' + day + '"]').prop('checked', true);
+          });
+        } else {
+          $('#repeatWeekly').prop('checked', false);
+          $('#weeklyDays').hide();
+        }
+
+        $('#addScheduleModalLabel').text('Edit Schedule');
+        $('#saveScheduleButton').text('Update Schedule');
+        $('#addScheduleForm').attr('data-type', 'edit');
+        $('#addScheduleModal').modal('show');
+      });
+
     });
   </script>
 

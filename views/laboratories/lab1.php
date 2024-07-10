@@ -63,6 +63,7 @@
                             <input type="text" class="form-control" id="scheduleTitle" name="scheduleTitle" required
                                 style="border: 1px solid #ced4da;">
                         </div>
+                        <input type="hidden" id="scheduleId" name="scheduleId">
                         <div class="form-group">
                             <label for="description">Description</label>
                             <textarea class="form-control" id="description" name="description" rows="3"
@@ -207,7 +208,7 @@
             </div>
         </div>
     </div>
-        
+
 
     <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
     <script src="../../js/popper.js"></script>
@@ -352,22 +353,20 @@
                 var repeatWeeklyChecked = $('#repeatWeekly').prop('checked');
 
                 var formData = $(this).serialize();
-
-                var type = ($(this).data('type') === 'schedule') ? 'schedule' : 'reserve';
+                var type = $(this).data('type') === 'schedule' ? 'schedule' : 'reserve';
                 formData += '&lab=' + encodeURIComponent('lab1') + '&type=' + encodeURIComponent(type);
 
                 if (startDate > endDate) {
-                    alert("End date must be equal to or later than start date.");
+                    alert('End date must be equal to or later than start date.');
                     return;
                 }
-
                 if (!allDayChecked) {
                     var startTime = $('#startTime').val();
                     var endTime = $('#endTime').val();
-
                     if (startTime < '08:00' || startTime >= endTime || endTime > '21:00') {
                         alert(
-                            "Time must start at least 8:00 AM and end no later than 9:00 PM, and end time must be later than start time.");
+                            'Time must start at least 8:00 AM and end no later than 9:00 PM, and end time must be later than start time.'
+                        );
                         return;
                     }
                 }
@@ -387,14 +386,22 @@
                                 location.reload();
                             }, 1000);
                         } else {
-                            alert("Error: " + result.error);
+                            alert('Error: ' + result.error);
                         }
                     },
                     error: function (xhr, status, error) {
                         console.error('AJAX error:', status, error);
-                        alert("An error occurred while submitting the schedule.");
+                        alert('An error occurred while submitting the schedule.');
                     }
                 });
+            });
+
+            $('#addScheduleModal').on('hidden.bs.modal', function () {
+                $('#addScheduleForm')[0].reset();
+                $('#scheduleId').val('');
+                $('#weeklyDays').hide();
+                $('#timeSection').hide();
+                $('#addScheduleForm').attr('data-type', '');
             });
 
             $('#editButton').click(function () {
@@ -402,6 +409,7 @@
                 var eventId = $('#modalId').text();
                 var event = calendar.getEventById(eventId);
 
+                $('#scheduleId').val(eventId);
                 $('#scheduleTitle').val(event.title);
                 $('#description').val(event.extendedProps.description);
                 $('#startDate').val(event.startStr.slice(0, 10));
@@ -442,13 +450,6 @@
                 $('#addScheduleModal').modal('show');
             });
 
-
-            $('#addScheduleModal').on('hidden.bs.modal', function () {
-                $('#addScheduleForm')[0].reset();
-                $('#weeklyDays').hide();
-                $('#timeSection').hide();
-                $('#addScheduleForm').attr('data-type', '');
-            });
         });
     </script>
 

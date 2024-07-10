@@ -11,21 +11,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $allDay = isset($_POST['allDay']) ? 1 : 0;
     $startTime = $allDay ? null : $_POST['startTime'];
     $endTime = $allDay ? null : $_POST['endTime'];
-    $lab = $_POST['lab'];
-    $type = $_POST['type']; 
 
-    $personnel = null;
+    if (isset($_POST['scheduleId']) && !empty($_POST['scheduleId'])) {
+        $scheduleId = $_POST['scheduleId'];
 
-    //submission sa account name / personnel name is only applicable lang to non admin accounts: pang personnel for tracking sa addition of reservation since adding of schedules are only accessible for admin role accounts
-    if ($type == 'reserve') {
-        session_start();
-        $personnel = $_SESSION['name'];
+        $stmt = $conn->prepare("UPDATE schedules SET title=?, description=?, repeat_weekly=?, days=?, start_date=?, end_date=?, all_day=?, start_time=?, end_time=? WHERE id=?");
+        $stmt->bind_param("ssissssssi", $title, $description, $repeatWeekly, $days, $startDate, $endDate, $allDay, $startTime, $endTime, $scheduleId);
     } else {
-        $personnel = '';
-    }
+        $lab = $_POST['lab'];
+        $type = $_POST['type'];
+        $personnel = null;
 
-    $stmt = $conn->prepare("INSERT INTO schedules (title, description, repeat_weekly, days, start_date, end_date, all_day, start_time, end_time, lab, type, personnel) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssisssssssss", $title, $description, $repeatWeekly, $days, $startDate, $endDate, $allDay, $startTime, $endTime, $lab, $type, $personnel);
+        if ($type == 'reserve') {
+            session_start();
+            $personnel = $_SESSION['name'];
+        } else {
+            $personnel = '';
+        }
+
+        $stmt = $conn->prepare("INSERT INTO schedules (title, description, repeat_weekly, days, start_date, end_date, all_day, start_time, end_time, lab, type, personnel) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssisssssssss", $title, $description, $repeatWeekly, $days, $startDate, $endDate, $allDay, $startTime, $endTime, $lab, $type, $personnel);
+    }
 
     if ($stmt->execute()) {
         echo json_encode(['success' => true]);
