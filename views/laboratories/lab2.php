@@ -218,6 +218,7 @@
     <script>
         $(document).ready(function () {
             var calendarEl = document.getElementById('calendar');
+            var userRole = '<?php echo isset($_SESSION['role']) ? $_SESSION['role'] : ''; ?>';
 
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'timeGridWeek',
@@ -243,9 +244,9 @@
                     });
                 },
                 headerToolbar: {
-                    left: 'prev,next today dayGridMonth timeGridWeek list',
+                    left: userRole === 'Student' ? 'today dayGridMonth timeGridWeek list' : 'prev,next today dayGridMonth timeGridWeek list' ,
                     center: 'title',
-                    right: 'printButton addScheduleButton addReservationButton'
+                    right: userRole === 'Student' ? 'prev,next' : 'printButton addScheduleButton addReservationButton'
                 },
                 views: {
                     timeGridWeek: {

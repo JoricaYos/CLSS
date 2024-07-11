@@ -84,12 +84,13 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="password">Password:</label>
-                                <input type="password" class="form-control" id="password" name="password" disabled>
+                                <input type="password" class="form-control" id="password" name="password"
+                                    value="<?php echo $_SESSION['username']; ?>" disabled>
                             </div>
                             <div class="form-group">
                                 <label for="confirm-password">Confirm Password:</label>
                                 <input type="password" class="form-control" id="confirm-password"
-                                    name="confirm_password" disabled>
+                                    name="confirm_password" value="<?php echo $_SESSION['username']; ?>" disabled>
                             </div>
                         </div>
                     </div>

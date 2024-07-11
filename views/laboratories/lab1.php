@@ -28,9 +28,9 @@
 <body style="background-color: #EBF4F6">
     <div class="wrapper d-flex align-items-stretch">
 
-        <!-- Sidebar -->
+        <!-- sidebar / nav diri -->
         <?php include ($_SERVER['DOCUMENT_ROOT'] . '/views/includes/nav.php'); ?>
-        <!-- Sidebar -->
+        <!-- sidebar / nav diri -->
 
         <div id="content" class="p-4 p-md-5 pt-5">
             <?php include '../includes/user-container.php'; ?>
@@ -218,6 +218,7 @@
     <script>
         $(document).ready(function () {
             var calendarEl = document.getElementById('calendar');
+            var userRole = '<?php echo isset($_SESSION['role']) ? $_SESSION['role'] : ''; ?>';
 
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'timeGridWeek',
@@ -243,9 +244,9 @@
                     });
                 },
                 headerToolbar: {
-                    left: 'prev,next today dayGridMonth timeGridWeek list',
+                    left: userRole === 'Student' ? 'today dayGridMonth timeGridWeek list' : 'prev,next today dayGridMonth timeGridWeek list' ,
                     center: 'title',
-                    right: 'printButton addScheduleButton addReservationButton'
+                    right: userRole === 'Student' ? 'prev,next' : 'printButton addScheduleButton addReservationButton'
                 },
                 views: {
                     timeGridWeek: {

@@ -71,10 +71,6 @@
                             <div class="form-group">
                                 <label for="role">Role</label>
                                 <select class="form-control form-control-with-border" name="role" id="role">
-                                    <option value="view1">View 1</option>
-                                    <option value="view2">View 2</option>
-                                    <option value="view3">View 3</option>
-                                    <option value="view4">View 4</option>
                                     <option value="personnel">Personnel</option>
                                 </select>
                             </div>

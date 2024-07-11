@@ -16,17 +16,10 @@ if ($result->num_rows > 0) {
         $_SESSION['name'] = $row['name'];
         $_SESSION['id'] = $row['id'];
         $_SESSION['img'] = $row['img'];
+        $_SESSION['password'] = $row['password'];
 
         if ($row['role'] == 'Admin' || $row['role'] == 'Personnel') {
             header("Location: ../views/dashboard/dashboard.php");
-        } elseif ($row['role'] == 'View1') {
-            header("Location: ../views/view-only/view1.php");
-        } elseif ($row['role'] == 'View2') {
-            header("Location: ../views/view-only/view2.php");
-        } elseif ($row['role'] == 'View3') {
-            header("Location: ../views/view-only/view3.php");
-        } elseif ($row['role'] == 'View4') {
-            header("Location: ../views/view-only/view4.php");
         } else {
             header("Location: ../views/laboratories/lab1.php");
         }
