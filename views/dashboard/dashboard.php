@@ -1,7 +1,8 @@
-<?php include($_SERVER['DOCUMENT_ROOT'] . '/controllers/logged_checker.php'); ?>
+<?php include ($_SERVER['DOCUMENT_ROOT'] . '/controllers/logged_checker.php'); ?>
 
 <!doctype html>
 <html lang="en">
+
 <head>
     <title>Dashboard</title>
     <meta charset="utf-8">
@@ -20,7 +21,7 @@
 </head>
 
 <body style="background-color: #EBF4F6">
-    
+
     <div class="wrapper d-flex align-items-stretch">
         <!-- Sidebar diri -->
         <?php include ($_SERVER['DOCUMENT_ROOT'] . '/views/includes/nav.php'); ?>
@@ -32,19 +33,17 @@
             <div class="row mt-4">
                 <div class="col-md-8">
                     <h1 class="text-left">Hello
-                        <?php echo htmlspecialchars(current(explode(' ', $_SESSION['name']))); ?>,</h1>
+                        <?php echo htmlspecialchars(current(explode(' ', $_SESSION['name']))); ?>,
+                    </h1>
                     <p>This is what we've got for you today.</p>
                 </div>
             </div>
-            <br>
-            <br>
-            <br>
+            <br><br><br>
             <b>Schedules</b>
             <div><canvas id="myChart" width="400" height="200"></canvas></div>
-            <br><br>
-            <b>
-                Reservations
-            </b>
+            <br><br><br>
+            <b>Reservations</b>
+
             <div><canvas id="mySecondChart" width="400" height="200"></canvas></div>
 
         </div>

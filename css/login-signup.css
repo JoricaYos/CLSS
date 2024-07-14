@@ -99,10 +99,21 @@ body {
   color: #000;
 }
 
-.login-card .forgot-password-link {
-  font-size: 14px;
-  color: #919aa3;
-  margin-bottom: 12px;
+.login-card .register-btn {
+  padding: 13px 20px 12px;
+  background-color: rgb(77, 70, 179);
+  border-radius: 4px;
+  font-size: 17px;
+  font-weight: bold;
+  line-height: 20px;
+  color: #fff;
+  margin-bottom: 24px;
+}
+
+.login-card .register-btn:hover {
+  border: 1px solid #000;
+  background-color: transparent;
+  color: #000;
 }
 
 .login-card-footer-text {

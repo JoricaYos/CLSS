@@ -2,7 +2,7 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "scheduling-system";
+$dbname = "clss";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 

@@ -34,6 +34,7 @@
                 <img src="assets/smcc-logo.png" alt="logo" class="logo">
               </div>
               <p class="login-card-description">Computer Laboratory<br>Scheduling System</p>
+              <b>USER LOGIN</b><br><br>
               <form action="controllers/login.php" method="post">
                 <div class="form-group">
                   <label for="email" class="sr-only">Username</label>
@@ -44,6 +45,7 @@
                   <input type="password" name="password" id="password" class="form-control" placeholder="***********">
                 </div>
                 <input name="login" id="login" class="btn btn-block login-btn mb-4" type="submit" value="Login">
+                <a href="views/registration/register.php" class="btn btn-secondary btn-block mb-4">Register</a>
               </form>
               <div class="login-card-footer-nav">
                 <span>Saint Michael College of Caraga</span>
