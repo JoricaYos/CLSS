@@ -138,27 +138,6 @@
         </div>
     </div>
 
-    <!-- basta modal -->
-    <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="successModalLabel">Success</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Schedule was successfully added.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- sched Detalyeheehee Modal -->
     <div class="modal fade" id="scheduleDetailsModal" tabindex="-1" role="dialog"
         aria-labelledby="scheduleDetailsModalLabel" aria-hidden="true">
@@ -244,7 +223,7 @@
                     });
                 },
                 headerToolbar: {
-                    left: userRole === 'Student' ? 'today dayGridMonth timeGridWeek list' : 'prev,next today dayGridMonth timeGridWeek list' ,
+                    left: userRole === 'Student' ? 'today dayGridMonth timeGridWeek' : 'prev,next today dayGridMonth timeGridWeek' ,
                     center: 'title',
                     right: userRole === 'Student' ? 'prev,next' : 'printButton addScheduleButton addReservationButton'
                 },
@@ -331,7 +310,6 @@
                         if (result.success) {
                             $('#scheduleDetailsModal').modal('hide');
                             $('#deleteConfirmationModal').modal('hide');
-                            // Reload the page
                             window.location.reload();
                         } else {
                             alert("Error: " + result.error);
@@ -380,12 +358,8 @@
                         var result = JSON.parse(response);
                         if (result.success) {
                             $('#addScheduleModal').modal('hide');
-                            $('#successModal').modal('show');
                             calendar.refetchEvents();
-
-                            setTimeout(function () {
-                                location.reload();
-                            }, 1000);
+                            location.reload();
                         } else {
                             alert('Error: ' + result.error);
                         }
