@@ -2,7 +2,7 @@
 session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-include($_SERVER['DOCUMENT_ROOT'] . '/models/database.php');
+include ($_SERVER['DOCUMENT_ROOT'] . '/models/database.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $name = isset($_POST['name']) ? $conn->real_escape_string($_POST['name']) : '';

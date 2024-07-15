@@ -223,7 +223,7 @@
                     });
                 },
                 headerToolbar: {
-                    left: userRole === 'Student' ? 'today dayGridMonth timeGridWeek' : 'prev,next today dayGridMonth timeGridWeek' ,
+                    left: userRole === 'Student' ? 'today dayGridMonth timeGridWeek' : 'prev,next today dayGridMonth timeGridWeek',
                     center: 'title',
                     right: userRole === 'Student' ? 'prev,next' : 'printButton addScheduleButton addReservationButton'
                 },

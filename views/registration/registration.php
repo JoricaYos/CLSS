@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../../controllers/checker.php'; 
+include '../../controllers/checker.php';
 
 include '../../models/database.php';
 
