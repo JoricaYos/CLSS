@@ -18,6 +18,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <Style>
         .schedule-id {
             display: none;
@@ -166,29 +168,6 @@
         </div>
     </div>
 
-    <!-- confirmation modal for deletion heee heee -->
-    <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog"
-        aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Deletion</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to delete this schedule?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" id="confirmDeleteButton">Delete</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
     <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
     <script src="../../js/popper.js"></script>
     <script src="../../js/bootstrap.min.js"></script>
@@ -271,10 +250,8 @@
 
                     $('#modalTitle').text(event.title);
                     $('#modalId').text(event.id);
-                    $('#modalDate').text(event.start.toLocaleDateString() + ' - ' + (event.end ? event
-                        .end.toLocaleDateString() : ''));
-                    $('#modalTime').text(event.allDay ? 'All Day' : event.start.toLocaleTimeString() +
-                        ' - ' + (event.end ? event.end.toLocaleTimeString() : ''));
+                    $('#modalDate').text(event.start.toLocaleDateString() + ' - ' + (event.end ? event.end.toLocaleDateString() : ''));
+                    $('#modalTime').text(event.allDay ? 'All Day' : event.start.toLocaleTimeString() + ' - ' + (event.end ? event.end.toLocaleTimeString() : ''));
                     $('#modalDescription').text(event.extendedProps.description || 'No description');
                     $('.schedule-id').hide();
                     $('#scheduleDetailsModal').modal('show');
@@ -292,36 +269,57 @@
             });
 
             $('#deleteButton').click(function () {
-                $('#deleteConfirmationModal').modal('show');
-                $('#scheduleDetailsModal').modal('hide');
-            });
-
-            $('#confirmDeleteButton').click(function () {
                 var scheduleId = $('#modalId').text();
 
-                $.ajax({
-                    url: 'delete_sched.php',
-                    type: 'POST',
-                    data: {
-                        id: scheduleId
-                    },
-                    success: function (response) {
-                        var result = JSON.parse(response);
-                        if (result.success) {
-                            $('#scheduleDetailsModal').modal('hide');
-                            $('#deleteConfirmationModal').modal('hide');
-                            window.location.reload();
-                        } else {
-                            alert("Error: " + result.error);
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('AJAX error:', status, error);
-                        alert("An error occurred while deleting the schedule.");
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: 'delete_sched.php',
+                            type: 'POST',
+                            data: {
+                                id: scheduleId
+                            },
+                            success: function (response) {
+                                var result = JSON.parse(response);
+                                if (result.success) {
+                                    Swal.fire(
+                                        'Deleted!',
+                                        'The schedule has been deleted.',
+                                        'success'
+                                    ).then(() => {
+                                        $('#scheduleDetailsModal').modal('hide');
+                                        calendar.refetchEvents();
+                                        location.reload();
+                                    });
+                                } else {
+                                    Swal.fire(
+                                        'Error!',
+                                        'There was an error deleting the schedule.',
+                                        'error'
+                                    );
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                console.error('AJAX error:', status, error);
+                                Swal.fire(
+                                    'Error!',
+                                    'An error occurred while deleting the schedule.',
+                                    'error'
+                                );
+                            }
+                        });
                     }
                 });
             });
-
 
             $('#addScheduleForm').submit(function (event) {
                 event.preventDefault();
@@ -426,6 +424,7 @@
             });
 
         });
+
     </script>
 
 </body>
