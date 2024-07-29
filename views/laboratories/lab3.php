@@ -260,7 +260,6 @@
                     }
                 },
                 eventDidMount: function (info) {
-                    //color para sa schedule container 
                     if (info.event.extendedProps.type === 'schedule') {
                         info.el.style.backgroundColor = '#071952';
                     } else if (info.event.extendedProps.type === 'reserve') {
@@ -268,14 +267,12 @@
                     }
                 },
                 eventClick: function (info) {
-                    //info modal na
                     var event = info.event;
+
                     $('#modalTitle').text(event.title);
                     $('#modalId').text(event.id);
-                    $('#modalDate').text(event.start.toLocaleDateString() + ' - ' + (event.end ? event
-                        .end.toLocaleDateString() : ''));
-                    $('#modalTime').text(event.allDay ? 'All Day' : event.start.toLocaleTimeString() +
-                        ' - ' + (event.end ? event.end.toLocaleTimeString() : ''));
+                    $('#modalDate').text(event.start.toLocaleDateString() + ' - ' + (event.end ? event.end.toLocaleDateString() : ''));
+                    $('#modalTime').text(event.allDay ? 'All Day' : event.start.toLocaleTimeString() + ' - ' + (event.end ? event.end.toLocaleTimeString() : ''));
                     $('#modalDescription').text(event.extendedProps.description || 'No description');
                     $('.schedule-id').hide();
                     $('#scheduleDetailsModal').modal('show');
@@ -293,36 +290,57 @@
             });
 
             $('#deleteButton').click(function () {
-                $('#deleteConfirmationModal').modal('show');
-                $('#scheduleDetailsModal').modal('hide');
-            });
-
-            $('#confirmDeleteButton').click(function () {
                 var scheduleId = $('#modalId').text();
 
-                $.ajax({
-                    url: 'delete_sched.php',
-                    type: 'POST',
-                    data: {
-                        id: scheduleId
-                    },
-                    success: function (response) {
-                        var result = JSON.parse(response);
-                        if (result.success) {
-                            $('#scheduleDetailsModal').modal('hide');
-                            $('#deleteConfirmationModal').modal('hide');
-                            window.location.reload();
-                        } else {
-                            alert("Error: " + result.error);
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('AJAX error:', status, error);
-                        alert("An error occurred while deleting the schedule.");
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: 'delete_sched.php',
+                            type: 'POST',
+                            data: {
+                                id: scheduleId
+                            },
+                            success: function (response) {
+                                var result = JSON.parse(response);
+                                if (result.success) {
+                                    Swal.fire(
+                                        'Deleted!',
+                                        'The schedule has been deleted.',
+                                        'success'
+                                    ).then(() => {
+                                        $('#scheduleDetailsModal').modal('hide');
+                                        calendar.refetchEvents();
+                                        location.reload();
+                                    });
+                                } else {
+                                    Swal.fire(
+                                        'Error!',
+                                        'There was an error deleting the schedule.',
+                                        'error'
+                                    );
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                console.error('AJAX error:', status, error);
+                                Swal.fire(
+                                    'Error!',
+                                    'An error occurred while deleting the schedule.',
+                                    'error'
+                                );
+                            }
+                        });
                     }
                 });
             });
-
 
             $('#addScheduleForm').submit(function (event) {
                 event.preventDefault();
@@ -351,13 +369,36 @@
                     }
                 }
 
+                submitSchedule(formData, false);
+            });
+
+            function submitSchedule(formData, force) {
+                if (force) {
+                    formData += '&force=true';
+                }
+
                 $.ajax({
                     url: 'submit_sched.php',
                     type: 'POST',
                     data: formData,
                     success: function (response) {
                         var result = JSON.parse(response);
-                        if (result.success) {
+                        if (result.conflict) {
+                            Swal.fire({
+                                title: 'Schedule Conflict',
+                                text: "There is already a schedule/reservation at this time. Do you want to proceed?",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Yes, add it anyway',
+                                cancelButtonText: 'No, cancel'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    submitSchedule(formData, true);
+                                }
+                            });
+                        } else if (result.success) {
                             $('#addScheduleModal').modal('hide');
                             calendar.refetchEvents();
                             location.reload();
@@ -370,7 +411,7 @@
                         alert('An error occurred while submitting the schedule.');
                     }
                 });
-            });
+            }
 
             $('#addScheduleModal').on('hidden.bs.modal', function () {
                 $('#addScheduleForm')[0].reset();
@@ -425,7 +466,6 @@
                 $('#addScheduleForm').attr('data-type', 'edit');
                 $('#addScheduleModal').modal('show');
             });
-
         });
     </script>
 

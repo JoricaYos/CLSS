@@ -37,6 +37,11 @@
                     <li><a href="/views/laboratories/lab4.php">Computer lab 4</a></li>
                 </ul>
             </li>
+            <?php if ($_SESSION['role'] == 'Admin'): ?>
+                <li>
+                    <a href="/views/settings/settings.php"><i class="fas fa-cogs"></i></i> SETTINGS</a>
+                </li>
+            <?php endif; ?>
         </ul>
         <div class="mb-5 text-center justify-content-center">
             <div>

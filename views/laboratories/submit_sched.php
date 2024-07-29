@@ -11,6 +11,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $allDay = isset($_POST['allDay']) ? 1 : 0;
     $startTime = $allDay ? null : $_POST['startTime'];
     $endTime = $allDay ? null : $_POST['endTime'];
+    $lab = $_POST['lab'];
+    $type = $_POST['type'];
+    $force = isset($_POST['force']) && $_POST['force'] === 'true';
+
+    // Check for existing schedules if not forced
+    if (!$force) {
+        $checkStmt = $conn->prepare("SELECT COUNT(*) FROM schedules WHERE lab = ? AND ((start_date <= ? AND end_date >= ?) OR (start_date <= ? AND end_date >= ?)) AND ((all_day = 1) OR (start_time < ? AND end_time > ?))");
+        $checkStmt->bind_param("sssssss", $lab, $endDate, $startDate, $startDate, $endDate, $endTime, $startTime);
+        $checkStmt->execute();
+        $checkResult = $checkStmt->get_result();
+        $conflictCount = $checkResult->fetch_row()[0];
+
+        if ($conflictCount > 0) {
+            echo json_encode(['success' => false, 'conflict' => true]);
+            exit;
+        }
+    }
 
     if (isset($_POST['scheduleId']) && !empty($_POST['scheduleId'])) {
         $scheduleId = $_POST['scheduleId'];
@@ -18,8 +35,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt = $conn->prepare("UPDATE schedules SET title=?, description=?, repeat_weekly=?, days=?, start_date=?, end_date=?, all_day=?, start_time=?, end_time=? WHERE id=?");
         $stmt->bind_param("ssissssssi", $title, $description, $repeatWeekly, $days, $startDate, $endDate, $allDay, $startTime, $endTime, $scheduleId);
     } else {
-        $lab = $_POST['lab'];
-        $type = $_POST['type'];
         $personnel = null;
 
         if ($type == 'reserve') {

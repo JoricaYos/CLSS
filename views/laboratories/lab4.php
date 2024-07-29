@@ -195,236 +195,277 @@
   <script src="../../js/table.js"></script>
   <script>
     $(document).ready(function () {
-      var calendarEl = document.getElementById('calendar');
-      var userRole = '<?php echo isset($_SESSION['role']) ? $_SESSION['role'] : ''; ?>';
+            var calendarEl = document.getElementById('calendar');
+            var userRole = '<?php echo isset($_SESSION['role']) ? $_SESSION['role'] : ''; ?>';
 
-      var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'timeGridWeek',
-        height: '800px',
-        slotDuration: '00:30:00',
-        slotMinTime: '08:00:00',
-        slotMaxTime: '21:00:00',
-        events: function (fetchInfo, successCallback, failureCallback) {
-          $.ajax({
-            url: '/views/laboratories/get_sched.php',
-            type: 'GET',
-            data: {
-              lab: 'lab4'
-            },
-            success: function (data) {
-              var events = JSON.parse(data);
-              successCallback(events);
-            },
-            error: function (xhr, status, error) {
-              console.error('AJAX error:', status, error);
-              failureCallback([]);
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'timeGridWeek',
+                height: '800px',
+                slotDuration: '00:30:00',
+                slotMinTime: '08:00:00',
+                slotMaxTime: '21:00:00',
+                events: function (fetchInfo, successCallback, failureCallback) {
+                    $.ajax({
+                        url: '/views/laboratories/get_sched.php',
+                        type: 'GET',
+                        data: {
+                            lab: 'lab4'
+                        },
+                        success: function (data) {
+                            var events = JSON.parse(data);
+                            successCallback(events);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('AJAX error:', status, error);
+                            failureCallback([]);
+                        }
+                    });
+                },
+                headerToolbar: {
+                    left: userRole === 'Student' ? 'today dayGridMonth timeGridWeek' : 'prev,next today dayGridMonth timeGridWeek',
+                    center: 'title',
+                    right: userRole === 'Student' ? 'prev,next' : 'printButton addScheduleButton addReservationButton'
+                },
+                views: {
+                    timeGridWeek: {
+                        type: 'timeGridWeek',
+                        buttonText: 'weekly'
+                    }
+                },
+                customButtons: {
+                    addScheduleButton: {
+                        text: 'Add Schedule',
+                        click: function () {
+                            $('#addScheduleModalLabel').text('Add Schedule');
+                            $('#saveScheduleButton').text('Save Schedule');
+                            $('#addScheduleForm').attr('data-type', 'schedule');
+                            $('#addScheduleModal').modal('show');
+                        }
+                    },
+                    addReservationButton: {
+                        text: 'Add Reservation',
+                        click: function () {
+                            $('#addScheduleModalLabel').text('Add Reservation');
+                            $('#saveScheduleButton').text('Save Reservation');
+                            $('#addScheduleForm').attr('data-type', 'reserve');
+                            $('#addScheduleModal').modal('show');
+                        }
+                    },
+                    printButton: {
+                        text: 'Print',
+                        click: function () {
+                            window.location.href = '../includes/print-sched.php?lab=lab4';
+                        }
+                    }
+                },
+                eventDidMount: function (info) {
+                    if (info.event.extendedProps.type === 'schedule') {
+                        info.el.style.backgroundColor = '#071952';
+                    } else if (info.event.extendedProps.type === 'reserve') {
+                        info.el.style.backgroundColor = '#136927';
+                    }
+                },
+                eventClick: function (info) {
+                    var event = info.event;
+
+                    $('#modalTitle').text(event.title);
+                    $('#modalId').text(event.id);
+                    $('#modalDate').text(event.start.toLocaleDateString() + ' - ' + (event.end ? event.end.toLocaleDateString() : ''));
+                    $('#modalTime').text(event.allDay ? 'All Day' : event.start.toLocaleTimeString() + ' - ' + (event.end ? event.end.toLocaleTimeString() : ''));
+                    $('#modalDescription').text(event.extendedProps.description || 'No description');
+                    $('.schedule-id').hide();
+                    $('#scheduleDetailsModal').modal('show');
+                }
+            });
+
+            calendar.render();
+
+            $('#repeatWeekly').change(function () {
+                $('#weeklyDays').toggle(this.checked);
+            });
+
+            $('#allDay').change(function () {
+                $('#timeSection').toggle(!this.checked);
+            });
+
+            $('#deleteButton').click(function () {
+                var scheduleId = $('#modalId').text();
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: 'delete_sched.php',
+                            type: 'POST',
+                            data: {
+                                id: scheduleId
+                            },
+                            success: function (response) {
+                                var result = JSON.parse(response);
+                                if (result.success) {
+                                    Swal.fire(
+                                        'Deleted!',
+                                        'The schedule has been deleted.',
+                                        'success'
+                                    ).then(() => {
+                                        $('#scheduleDetailsModal').modal('hide');
+                                        calendar.refetchEvents();
+                                        location.reload();
+                                    });
+                                } else {
+                                    Swal.fire(
+                                        'Error!',
+                                        'There was an error deleting the schedule.',
+                                        'error'
+                                    );
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                console.error('AJAX error:', status, error);
+                                Swal.fire(
+                                    'Error!',
+                                    'An error occurred while deleting the schedule.',
+                                    'error'
+                                );
+                            }
+                        });
+                    }
+                });
+            });
+
+            $('#addScheduleForm').submit(function (event) {
+                event.preventDefault();
+
+                var startDate = new Date($('#startDate').val());
+                var endDate = new Date($('#endDate').val());
+                var allDayChecked = $('#allDay').prop('checked');
+                var repeatWeeklyChecked = $('#repeatWeekly').prop('checked');
+
+                var formData = $(this).serialize();
+                var type = $(this).data('type') === 'schedule' ? 'schedule' : 'reserve';
+                formData += '&lab=' + encodeURIComponent('lab4') + '&type=' + encodeURIComponent(type);
+
+                if (startDate > endDate) {
+                    alert('End date must be equal to or later than start date.');
+                    return;
+                }
+                if (!allDayChecked) {
+                    var startTime = $('#startTime').val();
+                    var endTime = $('#endTime').val();
+                    if (startTime < '08:00' || startTime >= endTime || endTime > '21:00') {
+                        alert(
+                            'Time must start at least 8:00 AM and end no later than 9:00 PM, and end time must be later than start time.'
+                        );
+                        return;
+                    }
+                }
+
+                submitSchedule(formData, false);
+            });
+
+            function submitSchedule(formData, force) {
+                if (force) {
+                    formData += '&force=true';
+                }
+
+                $.ajax({
+                    url: 'submit_sched.php',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        var result = JSON.parse(response);
+                        if (result.conflict) {
+                            Swal.fire({
+                                title: 'Schedule Conflict',
+                                text: "There is already a schedule/reservation at this time. Do you want to proceed?",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Yes, add it anyway',
+                                cancelButtonText: 'No, cancel'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    submitSchedule(formData, true);
+                                }
+                            });
+                        } else if (result.success) {
+                            $('#addScheduleModal').modal('hide');
+                            calendar.refetchEvents();
+                            location.reload();
+                        } else {
+                            alert('Error: ' + result.error);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('AJAX error:', status, error);
+                        alert('An error occurred while submitting the schedule.');
+                    }
+                });
             }
-          });
-        },
-        headerToolbar: {
-          left: userRole === 'Student' ? 'today dayGridMonth timeGridWeek' : 'prev,next today dayGridMonth timeGridWeek',
-          center: 'title',
-          right: userRole === 'Student' ? 'prev,next' : 'printButton addScheduleButton addReservationButton'
-        },
-        views: {
-          timeGridWeek: {
-            type: 'timeGridWeek',
-            buttonText: 'weekly'
-          }
-        },
-        customButtons: {
-          addScheduleButton: {
-            text: 'Add Schedule',
-            click: function () {
-              $('#addScheduleModalLabel').text('Add Schedule');
-              $('#saveScheduleButton').text('Save Schedule');
-              $('#addScheduleForm').attr('data-type', 'schedule');
-              $('#addScheduleModal').modal('show');
-            }
-          },
-          addReservationButton: {
-            text: 'Add Reservation',
-            click: function () {
-              $('#addScheduleModalLabel').text('Add Reservation');
-              $('#saveScheduleButton').text('Save Reservation');
-              $('#addScheduleForm').attr('data-type', 'reserve');
-              $('#addScheduleModal').modal('show');
-            }
-          },
-          printButton: {
-            text: 'Print',
-            click: function () {
-              window.location.href = '../includes/print-sched.php?lab=lab4';
-            }
-          }
-        },
-        eventDidMount: function (info) {
-          if (info.event.extendedProps.type === 'schedule') {
-            info.el.style.backgroundColor = '#071952';
-          } else if (info.event.extendedProps.type === 'reserve') {
-            info.el.style.backgroundColor = '#136927';
-          }
-        },
-        eventClick: function (info) {
-          var event = info.event;
 
-          $('#modalTitle').text(event.title);
-          $('#modalId').text(event.id);
-          $('#modalDate').text(event.start.toLocaleDateString() + ' - ' + (event.end ? event
-            .end.toLocaleDateString() : ''));
-          $('#modalTime').text(event.allDay ? 'All Day' : event.start.toLocaleTimeString() +
-            ' - ' + (event.end ? event.end.toLocaleTimeString() : ''));
-          $('#modalDescription').text(event.extendedProps.description || 'No description');
-          $('.schedule-id').hide();
-          $('#scheduleDetailsModal').modal('show');
-        }
-      });
+            $('#addScheduleModal').on('hidden.bs.modal', function () {
+                $('#addScheduleForm')[0].reset();
+                $('#scheduleId').val('');
+                $('#weeklyDays').hide();
+                $('#timeSection').hide();
+                $('#addScheduleForm').attr('data-type', '');
+            });
 
-      calendar.render();
+            $('#editButton').click(function () {
+                $('#scheduleDetailsModal').modal('hide');
+                var eventId = $('#modalId').text();
+                var event = calendar.getEventById(eventId);
 
-      $('#repeatWeekly').change(function () {
-        $('#weeklyDays').toggle(this.checked);
-      });
+                $('#scheduleId').val(eventId);
+                $('#scheduleTitle').val(event.title);
+                $('#description').val(event.extendedProps.description);
+                $('#startDate').val(event.startStr.slice(0, 10));
 
-      $('#allDay').change(function () {
-        $('#timeSection').toggle(!this.checked);
-      });
+                if (event.allDay) {
+                    var endDate = new Date(event.endStr.slice(0, 10));
+                    endDate.setDate(endDate.getDate() - 1);
+                    var formattedEndDate = endDate.toISOString().slice(0, 10);
+                    $('#endDate').val(formattedEndDate);
+                } else {
+                    $('#endDate').val(event.endStr.slice(0, 10));
+                }
 
-      $('#deleteButton').click(function () {
-        $('#deleteConfirmationModal').modal('show');
-        $('#scheduleDetailsModal').modal('hide');
-      });
+                if (!event.allDay) {
+                    $('#allDay').prop('checked', false);
+                    $('#timeSection').show();
+                    $('#startTime').val(event.startStr.slice(11, 16));
+                    $('#endTime').val(event.endStr.slice(11, 16));
+                } else {
+                    $('#allDay').prop('checked', true);
+                    $('#timeSection').hide();
+                }
 
-      $('#confirmDeleteButton').click(function () {
-        var scheduleId = $('#modalId').text();
+                if (event.extendedProps.repeatWeekly) {
+                    $('#repeatWeekly').prop('checked', true);
+                    $('#weeklyDays').show();
+                    event.days.forEach(function (day) {
+                        $('[name="days[]"][value="' + day + '"]').prop('checked', true);
+                    });
+                } else {
+                    $('#repeatWeekly').prop('checked', false);
+                    $('#weeklyDays').hide();
+                }
 
-        $.ajax({
-          url: 'delete_sched.php',
-          type: 'POST',
-          data: {
-            id: scheduleId
-          },
-          success: function (response) {
-            var result = JSON.parse(response);
-            if (result.success) {
-              $('#scheduleDetailsModal').modal('hide');
-              $('#deleteConfirmationModal').modal('hide');
-              window.location.reload();
-            } else {
-              alert("Error: " + result.error);
-            }
-          },
-          error: function (xhr, status, error) {
-            console.error('AJAX error:', status, error);
-            alert("An error occurred while deleting the schedule.");
-          }
+                $('#addScheduleModalLabel').text('Edit Schedule');
+                $('#saveScheduleButton').text('Update Schedule');
+                $('#addScheduleForm').attr('data-type', 'edit');
+                $('#addScheduleModal').modal('show');
+            });
         });
-      });
-
-
-      $('#addScheduleForm').submit(function (event) {
-        event.preventDefault();
-
-        var startDate = new Date($('#startDate').val());
-        var endDate = new Date($('#endDate').val());
-        var allDayChecked = $('#allDay').prop('checked');
-        var repeatWeeklyChecked = $('#repeatWeekly').prop('checked');
-
-        var formData = $(this).serialize();
-        var type = $(this).data('type') === 'schedule' ? 'schedule' : 'reserve';
-        formData += '&lab=' + encodeURIComponent('lab4') + '&type=' + encodeURIComponent(type);
-
-        if (startDate > endDate) {
-          alert('End date must be equal to or later than start date.');
-          return;
-        }
-        if (!allDayChecked) {
-          var startTime = $('#startTime').val();
-          var endTime = $('#endTime').val();
-          if (startTime < '08:00' || startTime >= endTime || endTime > '21:00') {
-            alert(
-              'Time must start at least 8:00 AM and end no later than 9:00 PM, and end time must be later than start time.'
-            );
-            return;
-          }
-        }
-
-        $.ajax({
-          url: 'submit_sched.php',
-          type: 'POST',
-          data: formData,
-          success: function (response) {
-            var result = JSON.parse(response);
-            if (result.success) {
-              $('#addScheduleModal').modal('hide');
-              calendar.refetchEvents();
-              location.reload();
-            } else {
-              alert('Error: ' + result.error);
-            }
-          },
-          error: function (xhr, status, error) {
-            console.error('AJAX error:', status, error);
-            alert('An error occurred while submitting the schedule.');
-          }
-        });
-      });
-
-      $('#addScheduleModal').on('hidden.bs.modal', function () {
-        $('#addScheduleForm')[0].reset();
-        $('#scheduleId').val('');
-        $('#weeklyDays').hide();
-        $('#timeSection').hide();
-        $('#addScheduleForm').attr('data-type', '');
-      });
-
-      $('#editButton').click(function () {
-        $('#scheduleDetailsModal').modal('hide');
-        var eventId = $('#modalId').text();
-        var event = calendar.getEventById(eventId);
-
-        $('#scheduleId').val(eventId);
-        $('#scheduleTitle').val(event.title);
-        $('#description').val(event.extendedProps.description);
-        $('#startDate').val(event.startStr.slice(0, 10));
-
-        if (event.allDay) {
-          var endDate = new Date(event.endStr.slice(0, 10));
-          endDate.setDate(endDate.getDate() - 1);
-          var formattedEndDate = endDate.toISOString().slice(0, 10);
-          $('#endDate').val(formattedEndDate);
-        } else {
-          $('#endDate').val(event.endStr.slice(0, 10));
-        }
-
-        if (!event.allDay) {
-          $('#allDay').prop('checked', false);
-          $('#timeSection').show();
-          $('#startTime').val(event.startStr.slice(11, 16));
-          $('#endTime').val(event.endStr.slice(11, 16));
-        } else {
-          $('#allDay').prop('checked', true);
-          $('#timeSection').hide();
-        }
-
-        if (event.extendedProps.repeatWeekly) {
-          $('#repeatWeekly').prop('checked', true);
-          $('#weeklyDays').show();
-          event.days.forEach(function (day) {
-            $('[name="days[]"][value="' + day + '"]').prop('checked', true);
-          });
-        } else {
-          $('#repeatWeekly').prop('checked', false);
-          $('#weeklyDays').hide();
-        }
-
-        $('#addScheduleModalLabel').text('Edit Schedule');
-        $('#saveScheduleButton').text('Update Schedule');
-        $('#addScheduleForm').attr('data-type', 'edit');
-        $('#addScheduleModal').modal('show');
-      });
-
-    });
   </script>
 </body>
 

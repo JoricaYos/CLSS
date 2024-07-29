@@ -348,13 +348,36 @@
                     }
                 }
 
+                submitSchedule(formData, false);
+            });
+
+            function submitSchedule(formData, force) {
+                if (force) {
+                    formData += '&force=true';
+                }
+
                 $.ajax({
                     url: 'submit_sched.php',
                     type: 'POST',
                     data: formData,
                     success: function (response) {
                         var result = JSON.parse(response);
-                        if (result.success) {
+                        if (result.conflict) {
+                            Swal.fire({
+                                title: 'Schedule Conflict',
+                                text: "There is already a schedule/reservation at this time. Do you want to proceed?",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Yes, add it anyway',
+                                cancelButtonText: 'No, cancel'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    submitSchedule(formData, true);
+                                }
+                            });
+                        } else if (result.success) {
                             $('#addScheduleModal').modal('hide');
                             calendar.refetchEvents();
                             location.reload();
@@ -367,7 +390,7 @@
                         alert('An error occurred while submitting the schedule.');
                     }
                 });
-            });
+            }
 
             $('#addScheduleModal').on('hidden.bs.modal', function () {
                 $('#addScheduleForm')[0].reset();
@@ -422,9 +445,7 @@
                 $('#addScheduleForm').attr('data-type', 'edit');
                 $('#addScheduleModal').modal('show');
             });
-
         });
-
     </script>
 
 </body>
