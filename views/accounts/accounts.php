@@ -69,11 +69,10 @@
                                 <input type="text" class="form-control" name="username" id="username" required style="border: 1px solid #ced4da;">
                             </div>
                             <div class="form-group">
-                                <label for="role">Role</label>
-                                <select class="form-control form-control-with-border" name="role" id="role">
-                                    <option value="personnel">Personnel</option>
-                                </select>
+                                <label for="sched-color">Schedule Color</label>
+                                <input type="color" class="form-control" name="sched-color" id="sched-color" required>
                             </div>
+                            <input type="hidden" name="role" value="personnel">
                             <input type="hidden" id="password" name="password">
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </form>

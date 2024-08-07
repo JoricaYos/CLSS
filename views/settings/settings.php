@@ -70,28 +70,28 @@ if ($result->num_rows > 0) {
                 <tr>
                   <td>1st Semester</td>
                   <td>
-                    <span class="date-value"><?php echo $semester['sem1-start']; ?></span>
+                    <span class="date-value"><?php echo $semester['sem1_start']; ?></span>
                     <input type="date" class="form-control date-input" style="display:none;"
-                      value="<?php echo $semester['sem1-start']; ?>">
+                      value="<?php echo $semester['sem1_start']; ?>">
                   </td>
                   <td>
-                    <span class="date-value"><?php echo $semester['sem1-end']; ?></span>
+                    <span class="date-value"><?php echo $semester['sem1_end']; ?></span>
                     <input type="date" class="form-control date-input" style="display:none;"
-                      value="<?php echo $semester['sem1-end']; ?>">
+                      value="<?php echo $semester['sem1_end']; ?>">
                   </td>
                   <td><button class="btn btn-warning btn-set btn-sm btn-full-width">Set</button></td>
                 </tr>
                 <tr>
                   <td>2nd Semester</td>
                   <td>
-                    <span class="date-value"><?php echo $semester['sem2-start']; ?></span>
+                    <span class="date-value"><?php echo $semester['sem2_start']; ?></span>
                     <input type="date" class="form-control date-input" style="display:none;"
-                      value="<?php echo $semester['sem2-start']; ?>">
+                      value="<?php echo $semester['sem2_start']; ?>">
                   </td>
                   <td>
-                    <span class="date-value"><?php echo $semester['sem2-end']; ?></span>
+                    <span class="date-value"><?php echo $semester['sem2_end']; ?></span>
                     <input type="date" class="form-control date-input" style="display:none;"
-                      value="<?php echo $semester['sem2-end']; ?>">
+                      value="<?php echo $semester['sem2_end']; ?>">
                   </td>
                   <td><button class="btn btn-warning btn-set btn-sm btn-full-width">Set</button></td>
                 </tr>

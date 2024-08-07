@@ -6,8 +6,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $startDate = $_POST['start_date'];
     $endDate = $_POST['end_date'];
 
-    $startColumn = 'sem' . $semester . '-start';
-    $endColumn = 'sem' . $semester . '-end';
+    $startColumn = 'sem' . $semester . '_start';
+    $endColumn = 'sem' . $semester . '_end';
 
     $sql = "UPDATE semester SET `$startColumn` = ?, `$endColumn` = ? WHERE id = 1";
     $stmt = $conn->prepare($sql);
