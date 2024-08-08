@@ -74,6 +74,7 @@
                                 title: 'Schedule Details',
                                 html: `
                                     <div style="text-align: left;">
+                                    <br>
                                         <p><i class="fas fa-book" style="width: 20px;"></i> <strong>Subject:</strong> ${data.subject}</p>
                                         <p><i class="fas fa-user" style="width: 20px;"></i> <strong>Personnel:</strong> ${data.personnel}</p>
                                         <p><i class="fas fa-clock" style="width: 20px;"></i> <strong>Start Time:</strong> ${data.start_time}</p>
@@ -175,7 +176,6 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     const scheduleData = result.value;
-                    // Check for conflicts before submitting
                     $.ajax({
                         url: 'check_conflicts.php',
                         type: 'POST',
@@ -183,7 +183,6 @@
                         dataType: 'json',
                         success: function (response) {
                             if (response.conflict) {
-                                // If there's a conflict, show a confirmation dialog
                                 Swal.fire({
                                     title: 'Schedule Conflict',
                                     text: "This schedule conflicts with an existing one. Do you want to add it anyway?",
@@ -198,7 +197,6 @@
                                     }
                                 });
                             } else {
-                                // If no conflict, submit the schedule directly
                                 submitSchedule(scheduleData);
                             }
                         },
@@ -229,6 +227,51 @@
                 }
             });
         }
+    </script>
+
+    <script>
+        document.getElementById('addReservationBtn').addEventListener('click', function () {
+            Swal.fire({
+                title: 'Add Reservation',
+                html:
+                    '<div class="form-group">' +
+                    '<label for="swal-reservation-title">Reservation Title:</label>' +
+                    '<input id="swal-reservation-title" class="swal2-input" placeholder="Enter reservation title">' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                    '<label for="swal-start-date">Start Date:</label>' +
+                    '<input id="swal-start-date" class="swal2-input" type="date">' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                    '<label for="swal-end-date">End Date:</label>' +
+                    '<input id="swal-end-date" class="swal2-input" type="date">' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                    '<label for="swal-start-time">Start Time:</label>' +
+                    '<input id="swal-start-time" class="swal2-input" type="time">' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                    '<label for="swal-end-time">End Time:</label>' +
+                    '<input id="swal-end-time" class="swal2-input" type="time">' +
+                    '</div>',
+                focusConfirm: false,
+                preConfirm: () => {
+                    return {
+                        title: document.getElementById('swal-reservation-title').value,
+                        startDate: document.getElementById('swal-start-date').value,
+                        endDate: document.getElementById('swal-end-date').value,
+                        startTime: document.getElementById('swal-start-time').value,
+                        endTime: document.getElementById('swal-end-time').value
+                    }
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const reservationData = result.value;
+                    console.log(reservationData);
+                    Swal.fire('Success', 'Reservation added successfully', 'success');
+                }
+            });
+        });
     </script>
 
     <style>
