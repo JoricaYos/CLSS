@@ -1,7 +1,7 @@
 <?php
 include '../../models/database.php';
 
-$sql = "SELECT id, name FROM personnel WHERE role = 'personnel' ORDER BY name";
+$sql = "SELECT id, name FROM personnel WHERE role != 'student' ORDER BY name";
 $result = $conn->query($sql);
 
 $personnel = array();

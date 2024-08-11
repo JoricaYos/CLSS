@@ -1,4 +1,6 @@
-<?php include($_SERVER['DOCUMENT_ROOT'] . '/controllers/logged_checker.php'); ?>
+<?php 
+include($_SERVER['DOCUMENT_ROOT'] . '/controllers/logged_checker.php');
+?>
 
 <!doctype html>
 <html lang="en">
@@ -14,6 +16,9 @@
 
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/table.css">
+    
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 <body style="background-color: #EBF4F6">
     <div class="wrapper d-flex align-items-stretch">
@@ -69,35 +74,16 @@
                                 <input type="text" class="form-control" name="username" id="username" required style="border: 1px solid #ced4da;">
                             </div>
                             <div class="form-group">
-                                <label for="sched-color">Schedule Color</label>
-                                <input type="color" class="form-control" name="sched-color" id="sched-color" required>
+                                <label for="role">Role</label>
+                                <select class="form-control" name="role" id="role" required style="border: 1px solid #ced4da;">
+                                    <option value="Instructor">Instructor</option>
+                                    <option value="Library Custodian">Library Custodian</option>
+                                    <option value="Dean/Principal">Dean/Principal</option>
+                                </select>
                             </div>
-                            <input type="hidden" name="role" value="personnel">
                             <input type="hidden" id="password" name="password">
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Success Modal -->
-        <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="successModalLabel">Success</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <?php
-                        if (isset($_SESSION['success_message'])) {
-                            echo $_SESSION['success_message'];
-                            unset($_SESSION['success_message']);
-                        }
-                        ?>
                     </div>
                 </div>
             </div>
@@ -108,6 +94,8 @@
     <script src="../../js/popper.js"></script>
     <script src="../../js/bootstrap.min.js"></script>
     <script src="../../js/main.js"></script>
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function () {
             $('#researchersTable').DataTable({
@@ -126,10 +114,25 @@
                 ]
             });
 
-            // Show the success modal if a success message exists
-            <?php if (isset($_SESSION['success_message'])): ?>
-                $('#successModal').modal('show');
-            <?php endif; ?>
+            <?php
+            if (isset($_SESSION['success_message'])) {
+                echo "Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: '" . addslashes($_SESSION['success_message']) . "',
+                    confirmButtonColor: '#3085d6'
+                });";
+                unset($_SESSION['success_message']);
+            } elseif (isset($_SESSION['error_message'])) {
+                echo "Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: '" . addslashes($_SESSION['error_message']) . "',
+                    confirmButtonColor: '#3085d6'
+                });";
+                unset($_SESSION['error_message']);
+            }
+            ?>
         });
     </script>
 </body>

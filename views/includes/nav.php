@@ -6,7 +6,7 @@
         </button>
     </div>
     <div class="p-4 pt-5">
-        <a <?php echo ($_SESSION['role'] == 'Student') ? 'href="#"' : 'href="/views/dashboard/dashboard.php"'; ?>
+        <a <?php echo ($_SESSION['role'] == 'student') ? 'href="#"' : 'href="/views/dashboard/dashboard.php"'; ?>
             class="logo">
             <div class="mb-5 text-center justify-content-center">
                 <div>
@@ -25,7 +25,11 @@
                     <a href="/views/accounts/accounts.php"><i class="fa fa-user"></i> USER ACCOUNTS</a>
                 </li>
             <?php endif; ?>
-
+            <?php if ($_SESSION['role'] != 'student'): ?>
+                <li>
+                <a href="/views/schedule/personnel_sched.php"><i class="fas fa-clipboard-list"></i> YOUR SCHEDULES</a>
+                </li>
+            <?php endif; ?>
             <li>
                 <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                     <i class="fa fa-calendar-check"></i> SCHEDULES

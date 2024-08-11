@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Computer lab 2</title>
+    <title>Computer lab 1</title>
     <meta charset="utf-8">
     <link rel="icon" href="../../assets/smcc-logo.png" type="image/png">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -18,19 +18,16 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
-    <Style>
-        .schedule-id {
-            display: none;
-        }
-    </Style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 </head>
 
 <body style="background-color: #EBF4F6">
     <div class="wrapper d-flex align-items-stretch">
 
-        <!-- Sidebar -->
+        <!-- sidebar / nav diri -->
         <?php include ($_SERVER['DOCUMENT_ROOT'] . '/views/includes/nav.php'); ?>
-        <!-- Sidebar -->
+        <!-- sidebar / nav diri -->
 
         <div id="content" class="p-4 p-md-5 pt-5">
             <?php include '../includes/user-container.php'; ?>
@@ -39,436 +36,345 @@
                     <p>Currently Viewing</p>
                     <h1 class="text-left">Computer Laboratory 2</h1>
                     <br>
-                    <div id="calendar"></div>
+                    <button id="addScheduleBtn" class="btn btn-success mb-3">Add Schedule</button>
+                    <button id="addReservationBtn" class="btn btn-secondary mb-3 ml-2">Add Reservation</button>
                 </div>
             </div>
+            <div id="calendar"></div>
         </div>
     </div>
-
-    <!-- form modal ni -->
-    <div class="modal fade" id="addScheduleModal" tabindex="-1" role="dialog" aria-labelledby="addScheduleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addScheduleModalLabel">Add Schedule</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="addScheduleForm" method="POST" action="submit_sched.php" data-type="schedule">
-                        <div class="form-group">
-                            <label for="scheduleTitle">Schedule Title</label>
-                            <input type="text" class="form-control" id="scheduleTitle" name="scheduleTitle" required
-                                style="border: 1px solid #ced4da;">
-                        </div>
-                        <input type="hidden" id="scheduleId" name="scheduleId">
-                        <div class="form-group">
-                            <label for="description">Description</label>
-                            <textarea class="form-control" id="description" name="description" rows="3"
-                                style="border: 1px solid #ced4da;"></textarea>
-                        </div>
-                        <div class="form-group form-check">
-                            <input type="checkbox" class="form-check-input" id="repeatWeekly" name="repeatWeekly">
-                            <label class="form-check-label" for="repeatWeekly">Repeat Weekly?</label>
-                        </div>
-                        <div id="weeklyDays" style="display: none;">
-                            <div class="form-group">
-                                <label>Repeat on:</label><br>
-                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                    <label class="btn btn-secondary">
-                                        <input type="checkbox" name="days[]" value="Sun" autocomplete="off"> S
-                                    </label>
-                                    <label class="btn btn-secondary">
-                                        <input type="checkbox" name="days[]" value="Mon" autocomplete="off"> M
-                                    </label>
-                                    <label class="btn btn-secondary">
-                                        <input type="checkbox" name="days[]" value="Tue" autocomplete="off"> T
-                                    </label>
-                                    <label class="btn btn-secondary">
-                                        <input type="checkbox" name="days[]" value="Wed" autocomplete="off"> W
-                                    </label>
-                                    <label class="btn btn-secondary">
-                                        <input type="checkbox" name="days[]" value="Thu" autocomplete="off"> T
-                                    </label>
-                                    <label class="btn btn-secondary">
-                                        <input type="checkbox" name="days[]" value="Fri" autocomplete="off"> F
-                                    </label>
-                                    <label class="btn btn-secondary">
-                                        <input type="checkbox" name="days[]" value="Sat" autocomplete="off"> S
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="startDate">Start Date</label>
-                            <input type="date" class="form-control" id="startDate" name="startDate" required
-                                style="border: 1px solid #ced4da;">
-                        </div>
-                        <div class="form-group">
-                            <label for="endDate">End Date</label>
-                            <input type="date" class="form-control" id="endDate" name="endDate" required
-                                style="border: 1px solid #ced4da;">
-                        </div>
-                        <div class="form-group">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="allDay" name="allDay" checked>
-                                <label class="form-check-label" for="allDay">
-                                    All Day
-                                </label>
-                            </div>
-                        </div>
-                        <div id="timeSection" style="display: none;">
-                            <div class="form-group">
-                                <label for="startTime">Start Time</label>
-                                <input type="time" class="form-control" id="startTime" name="startTime"
-                                    style="border: 1px solid #ced4da;">
-                            </div>
-                            <div class="form-group">
-                                <label for="endTime">End Time</label>
-                                <input type="time" class="form-control" id="endTime" name="endTime"
-                                    style="border: 1px solid #ced4da;">
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-primary" id="saveScheduleButton">Save Schedule</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- sched Detalyeheehee Modal -->
-    <div class="modal fade" id="scheduleDetailsModal" tabindex="-1" role="dialog"
-        aria-labelledby="scheduleDetailsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="scheduleDetailsModalLabel">Schedule Details</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p><strong>Title:</strong> <span id="modalTitle"></span></p>
-                    <p><strong>Time:</strong> <span id="modalTime"></span></p>
-                    <p><strong>Description:</strong> <span id="modalDescription"></span></p>
-                    <div class="schedule-id">
-                        <p><strong>Id:</strong> <span id="modalId"></span></p>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-warning" id="editButton">Edit</button>
-                    <button type="button" class="btn btn-danger" id="deleteButton">Delete</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- confirmation modal for deletion heee heee -->
-    <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog"
-        aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Deletion</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to delete this schedule?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" id="confirmDeleteButton">Delete</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
 
     <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
     <script src="../../js/popper.js"></script>
     <script src="../../js/bootstrap.min.js"></script>
     <script src="../../js/main.js"></script>
     <script src="../../js/table.js"></script>
+
     <script>
-        $(document).ready(function () {
-            var calendarEl = document.getElementById('calendar');
-            var userRole = '<?php echo isset($_SESSION['role']) ? $_SESSION['role'] : ''; ?>';
+        function formatTime(time24) {
+            const [hours, minutes] = time24.split(':');
+            let period = 'AM';
+            let hours12 = parseInt(hours, 10);
 
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'timeGridWeek',
-                height: '800px',
-                slotDuration: '00:30:00',
-                slotMinTime: '08:00:00',
-                slotMaxTime: '21:00:00',
-                events: function (fetchInfo, successCallback, failureCallback) {
-                    $.ajax({
-                        url: '/views/laboratories/get_sched.php',
-                        type: 'GET',
-                        data: {
-                            lab: 'lab2'
-                        },
-                        success: function (data) {
-                            var events = JSON.parse(data);
-                            successCallback(events);
-                        },
-                        error: function (xhr, status, error) {
-                            console.error('AJAX error:', status, error);
-                            failureCallback([]);
-                        }
-                    });
-                },
-                headerToolbar: {
-                    left: userRole === 'Student' ? 'today dayGridMonth timeGridWeek' : 'prev,next today dayGridMonth timeGridWeek',
-                    center: 'title',
-                    right: userRole === 'Student' ? 'prev,next' : 'printButton addScheduleButton addReservationButton'
-                },
-                views: {
-                    timeGridWeek: {
-                        type: 'timeGridWeek',
-                        buttonText: 'weekly'
-                    }
-                },
-                customButtons: {
-                    addScheduleButton: {
-                        text: 'Add Schedule',
-                        click: function () {
-                            $('#addScheduleModalLabel').text('Add Schedule');
-                            $('#saveScheduleButton').text('Save Schedule');
-                            $('#addScheduleForm').attr('data-type', 'schedule');
-                            $('#addScheduleModal').modal('show');
-                        }
-                    },
-                    addReservationButton: {
-                        text: 'Add Reservation',
-                        click: function () {
-                            $('#addScheduleModalLabel').text('Add Reservation');
-                            $('#saveScheduleButton').text('Save Reservation');
-                            $('#addScheduleForm').attr('data-type', 'reserve');
-                            $('#addScheduleModal').modal('show');
-                        }
-                    },
-                    printButton: {
-                        text: 'Print',
-                        click: function () {
-                            window.location.href = '../includes/print-sched.php?lab=lab2';
-                        }
-                    }
-                },
-                eventDidMount: function (info) {
-                    if (info.event.extendedProps.type === 'schedule') {
-                        info.el.style.backgroundColor = '#071952';
-                    } else if (info.event.extendedProps.type === 'reserve') {
-                        info.el.style.backgroundColor = '#136927';
-                    }
-                },
-                eventClick: function (info) {
-                    var event = info.event;
-
-                    $('#modalTitle').text(event.title);
-                    $('#modalId').text(event.id);
-                    $('#modalDate').text(event.start.toLocaleDateString() + ' - ' + (event.end ? event.end.toLocaleDateString() : ''));
-                    $('#modalTime').text(event.allDay ? 'All Day' : event.start.toLocaleTimeString() + ' - ' + (event.end ? event.end.toLocaleTimeString() : ''));
-                    $('#modalDescription').text(event.extendedProps.description || 'No description');
-                    $('.schedule-id').hide();
-                    $('#scheduleDetailsModal').modal('show');
+            if (hours12 >= 12) {
+                period = 'PM';
+                if (hours12 > 12) {
+                    hours12 -= 12;
                 }
-            });
-
-            calendar.render();
-
-            $('#repeatWeekly').change(function () {
-                $('#weeklyDays').toggle(this.checked);
-            });
-
-            $('#allDay').change(function () {
-                $('#timeSection').toggle(!this.checked);
-            });
-
-            $('#deleteButton').click(function () {
-                var scheduleId = $('#modalId').text();
-
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!',
-                    cancelButtonText: 'Cancel'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: 'delete_sched.php',
-                            type: 'POST',
-                            data: {
-                                id: scheduleId
-                            },
-                            success: function (response) {
-                                var result = JSON.parse(response);
-                                if (result.success) {
-                                    Swal.fire(
-                                        'Deleted!',
-                                        'The schedule has been deleted.',
-                                        'success'
-                                    ).then(() => {
-                                        $('#scheduleDetailsModal').modal('hide');
-                                        calendar.refetchEvents();
-                                        location.reload();
-                                    });
-                                } else {
-                                    Swal.fire(
-                                        'Error!',
-                                        'There was an error deleting the schedule.',
-                                        'error'
-                                    );
-                                }
-                            },
-                            error: function (xhr, status, error) {
-                                console.error('AJAX error:', status, error);
-                                Swal.fire(
-                                    'Error!',
-                                    'An error occurred while deleting the schedule.',
-                                    'error'
-                                );
-                            }
-                        });
-                    }
-                });
-            });
-
-            $('#addScheduleForm').submit(function (event) {
-                event.preventDefault();
-
-                var startDate = new Date($('#startDate').val());
-                var endDate = new Date($('#endDate').val());
-                var allDayChecked = $('#allDay').prop('checked');
-                var repeatWeeklyChecked = $('#repeatWeekly').prop('checked');
-
-                var formData = $(this).serialize();
-                var type = $(this).data('type') === 'schedule' ? 'schedule' : 'reserve';
-                formData += '&lab=' + encodeURIComponent('lab2') + '&type=' + encodeURIComponent(type);
-
-                if (startDate > endDate) {
-                    alert('End date must be equal to or later than start date.');
-                    return;
-                }
-                if (!allDayChecked) {
-                    var startTime = $('#startTime').val();
-                    var endTime = $('#endTime').val();
-                    if (startTime < '08:00' || startTime >= endTime || endTime > '21:00') {
-                        alert(
-                            'Time must start at least 8:00 AM and end no later than 9:00 PM, and end time must be later than start time.'
-                        );
-                        return;
-                    }
-                }
-
-                submitSchedule(formData, false);
-            });
-
-            function submitSchedule(formData, force) {
-                if (force) {
-                    formData += '&force=true';
-                }
-
-                $.ajax({
-                    url: 'submit_sched.php',
-                    type: 'POST',
-                    data: formData,
-                    success: function (response) {
-                        var result = JSON.parse(response);
-                        if (result.conflict) {
-                            Swal.fire({
-                                title: 'Schedule Conflict',
-                                text: "There is already a schedule/reservation at this time. Do you want to proceed?",
-                                icon: 'warning',
-                                showCancelButton: true,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Yes, add it anyway',
-                                cancelButtonText: 'No, cancel'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    submitSchedule(formData, true);
-                                }
-                            });
-                        } else if (result.success) {
-                            $('#addScheduleModal').modal('hide');
-                            calendar.refetchEvents();
-                            location.reload();
-                        } else {
-                            alert('Error: ' + result.error);
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('AJAX error:', status, error);
-                        alert('An error occurred while submitting the schedule.');
-                    }
-                });
+            }
+            if (hours12 === 0) {
+                hours12 = 12;
             }
 
-            $('#addScheduleModal').on('hidden.bs.modal', function () {
-                $('#addScheduleForm')[0].reset();
-                $('#scheduleId').val('');
-                $('#weeklyDays').hide();
-                $('#timeSection').hide();
-                $('#addScheduleForm').attr('data-type', '');
-            });
-
-            $('#editButton').click(function () {
-                $('#scheduleDetailsModal').modal('hide');
-                var eventId = $('#modalId').text();
-                var event = calendar.getEventById(eventId);
-
-                $('#scheduleId').val(eventId);
-                $('#scheduleTitle').val(event.title);
-                $('#description').val(event.extendedProps.description);
-                $('#startDate').val(event.startStr.slice(0, 10));
-
-                if (event.allDay) {
-                    var endDate = new Date(event.endStr.slice(0, 10));
-                    endDate.setDate(endDate.getDate() - 1);
-                    var formattedEndDate = endDate.toISOString().slice(0, 10);
-                    $('#endDate').val(formattedEndDate);
-                } else {
-                    $('#endDate').val(event.endStr.slice(0, 10));
-                }
-
-                if (!event.allDay) {
-                    $('#allDay').prop('checked', false);
-                    $('#timeSection').show();
-                    $('#startTime').val(event.startStr.slice(11, 16));
-                    $('#endTime').val(event.endStr.slice(11, 16));
-                } else {
-                    $('#allDay').prop('checked', true);
-                    $('#timeSection').hide();
-                }
-
-                if (event.extendedProps.repeatWeekly) {
-                    $('#repeatWeekly').prop('checked', true);
-                    $('#weeklyDays').show();
-                    event.days.forEach(function (day) {
-                        $('[name="days[]"][value="' + day + '"]').prop('checked', true);
-                    });
-                } else {
-                    $('#repeatWeekly').prop('checked', false);
-                    $('#weeklyDays').hide();
-                }
-
-                $('#addScheduleModalLabel').text('Edit Schedule');
-                $('#saveScheduleButton').text('Update Schedule');
-                $('#addScheduleForm').attr('data-type', 'edit');
-                $('#addScheduleModal').modal('show');
-            });
-        });
+            return `${hours12}:${minutes} ${period}`;
+        }
     </script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                aspectRatio: 2,
+                dayMaxEvents: true,
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                events: 'get_events.php?lab=lab2',
+                eventClick: function (info) {
+                    if (info.event.extendedProps.type === 'schedule') {
+                        $.ajax({
+                            url: 'get_event_details.php',
+                            type: 'GET',
+                            data: { id: info.event.id.split('_')[1] },
+                            dataType: 'json',
+                            success: function (data) {
+                                Swal.fire({
+                                    title: 'Schedule Details',
+                                    html: `
+                <div style="text-align: left;">
+                    <p><i class="fas fa-book" style="width: 20px;"></i> <strong>Subject:</strong> ${data.subject}</p>
+                    <p><i class="fas fa-user" style="width: 20px;"></i> <strong>Personnel:</strong> ${data.personnel}</p>
+                    <p><i class="fas fa-clock" style="width: 20px;"></i> <strong>Start Time:</strong> ${formatTime(data.start_time)}</p>
+                    <p><i class="fas fa-hourglass-end" style="width: 20px;"></i> <strong>End Time:</strong> ${formatTime(data.end_time)}</p>
+                </div>
+            `,
+                                    icon: 'info'
+                                });
+                            },
+                            error: function () {
+                                Swal.fire('Error', 'Failed to fetch event details', 'error');
+                            }
+                        });
+                    } else if (info.event.extendedProps.type === 'reservation') {
+                        Swal.fire({
+                            title: 'Reservation Details',
+                            html: `
+                <div style="text-align: left;">
+                    <p><i class="fas fa-bookmark" style="width: 20px;"></i> <strong>Title:</strong> ${info.event.title}</p>
+                    <p><i class="fas fa-calendar" style="width: 20px;"></i> <strong>Date:</strong> ${info.event.start.toLocaleDateString()}</p>
+                    <p><i class="fas fa-clock" style="width: 20px;"></i> <strong>Start Time:</strong> ${formatTime(info.event.start.toTimeString().split(' ')[0])}</p>
+                    <p><i class="fas fa-hourglass-end" style="width: 20px;"></i> <strong>End Time:</strong> ${formatTime(info.event.end.toTimeString().split(' ')[0])}</p>
+                </div>
+            `,
+                            icon: 'info'
+                        });
+                    }
+                }
+            });
+            calendar.render();
+        });
+
+        function populatePersonnelDropdown() {
+            $.ajax({
+                url: 'get_personnel.php',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    var select = $('#swal-personnel');
+                    select.empty();
+                    select.append('<option value="">Select Personnel</option>');
+                    $.each(data, function (index, item) {
+                        select.append('<option value="' + item.id + '">' + item.name + '</option>');
+                    });
+                },
+                error: function () {
+                    console.error('Failed to fetch personnel data');
+                }
+            });
+        }
+
+        document.getElementById('addScheduleBtn').addEventListener('click', function () {
+            Swal.fire({
+                title: 'Add Schedule',
+                html:
+                    '<div class="form-group">' +
+                    '<input type="hidden" id="swal-lab" value="lab2">' +
+                    '<label for="swal-subject">Subject:</label>' +
+                    '<input id="swal-subject" class="swal2-input" placeholder="Enter subject">' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                    '<label for="swal-personnel">Personnel:</label>' +
+                    '<select id="swal-personnel" class="swal2-input">' +
+                    '<option value="">Select Personnel</option>' +
+                    '</select>' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                    '<label for="swal-semester">Semester:</label>' +
+                    '<select id="swal-semester" class="swal2-input">' +
+                    '<option value="">Select Semester</option>' +
+                    '<option value="1">1st Semester</option>' +
+                    '<option value="2">2nd Semester</option>' +
+                    '</select>' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                    '<label>Day:</label>' +
+                    '<div id="day-buttons">' +
+                    '<button type="button" class="btn btn-outline-primary day-btn" data-day="Monday">Monday</button>' +
+                    '<button type="button" class="btn btn-outline-primary day-btn" data-day="Tuesday">Tuesday</button>' +
+                    '<button type="button" class="btn btn-outline-primary day-btn" data-day="Wednesday">Wednesday</button>' +
+                    '<button type="button" class="btn btn-outline-primary day-btn" data-day="Thursday">Thursday</button>' +
+                    '<button type="button" class="btn btn-outline-primary day-btn" data-day="Friday">Friday</button>' +
+                    '</div>' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                    '<label for="swal-start-time">Start Time:</label>' +
+                    '<input id="swal-start-time" class="swal2-input" type="time">' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                    '<label for="swal-end-time">End Time:</label>' +
+                    '<input id="swal-end-time" class="swal2-input" type="time">' +
+                    '</div>',
+                focusConfirm: false,
+                didOpen: () => {
+                    document.querySelectorAll('.day-btn').forEach(btn => {
+                        btn.addEventListener('click', function () {
+                            document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+                            this.classList.add('active');
+                        });
+                    });
+                    populatePersonnelDropdown();
+                },
+                preConfirm: () => {
+                    const selectedDay = document.querySelector('.day-btn.active');
+                    return {
+                        subject: document.getElementById('swal-subject').value,
+                        personnel: document.getElementById('swal-personnel').value,
+                        semester: document.getElementById('swal-semester').value,
+                        day: selectedDay ? selectedDay.dataset.day : null,
+                        startTime: document.getElementById('swal-start-time').value,
+                        endTime: document.getElementById('swal-end-time').value,
+                        lab: document.getElementById('swal-lab').value
+                    }
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const scheduleData = result.value;
+                    // Check for conflicts before submitting
+                    $.ajax({
+                        url: 'check_conflicts.php?lab=lab2',
+                        type: 'POST',
+                        data: scheduleData,
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.conflict) {
+                                // If there's a conflict, show a confirmation dialog
+                                Swal.fire({
+                                    title: 'Schedule Conflict',
+                                    text: "This schedule conflicts with an existing one. Do you want to add it anyway?",
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'Yes, add it!'
+                                }).then((confirmResult) => {
+                                    if (confirmResult.isConfirmed) {
+                                        submitSchedule(scheduleData);
+                                    }
+                                });
+                            } else {
+                                // If no conflict, submit the schedule directly
+                                submitSchedule(scheduleData);
+                            }
+                        },
+                        error: function () {
+                            Swal.fire('Error', 'An error occurred while checking for conflicts', 'error');
+                        }
+                    });
+                }
+            });
+        });
+
+        function submitSchedule(data) {
+            $.ajax({
+                url: 'submit_schedule.php',
+                type: 'POST',
+                data: data,
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status === 'success') {
+                        Swal.fire('Success', response.message, 'success');
+                        calendar.refetchEvents();
+                    } else {
+                        Swal.fire('Error', response.message, 'error');
+                    }
+                },
+                error: function () {
+                    Swal.fire('Error', 'An error occurred while submitting the schedule', 'error');
+                }
+            });
+        }
+    </script>
+
+    <script>
+        document.getElementById('addReservationBtn').addEventListener('click', function () {
+            Swal.fire({
+                title: 'Add Reservation',
+                html:
+                    '<div class="form-group">' +
+                    '<input type="hidden" id="swal-lab" value="lab2">' +
+                    '<label for="swal-event-title">Event Title:</label>' +
+                    '<input id="swal-event-title" class="swal2-input" placeholder="Enter event title">' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                    '<label for="swal-start-date">Start Date:</label>' +
+                    '<input id="swal-start-date" class="swal2-input" type="date">' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                    '<label for="swal-end-date">End Date:</label>' +
+                    '<input id="swal-end-date" class="swal2-input" type="date">' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                    '<label for="swal-start-time">Start Time:</label>' +
+                    '<input id="swal-start-time" class="swal2-input" type="time">' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                    '<label for="swal-end-time">End Time:</label>' +
+                    '<input id="swal-end-time" class="swal2-input" type="time">' +
+                    '</div>',
+                focusConfirm: false,
+                preConfirm: () => {
+                    return {
+                        title: document.getElementById('swal-event-title').value,
+                        lab: document.getElementById('swal-lab').value,
+                        start_date: document.getElementById('swal-start-date').value,
+                        end_date: document.getElementById('swal-end-date').value,
+                        start_time: document.getElementById('swal-start-time').value,
+                        end_time: document.getElementById('swal-end-time').value
+                    }
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    submitReservation(result.value);
+                }
+            });
+        });
+
+        function submitReservation(data) {
+            $.ajax({
+                url: 'submit_reservation.php',
+                type: 'POST',
+                data: data,
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status === 'success') {
+                        Swal.fire('Success', response.message, 'success');
+                        calendar.refetchEvents();
+                    } else {
+                        Swal.fire('Error', response.message, 'error');
+                    }
+                },
+                error: function () {
+                    Swal.fire('Error', 'An error occurred while submitting the reservation', 'error');
+                }
+            });
+        }
+    </script>
+
+    <style>
+        /* Style for all events */
+        .fc-event {
+            background-color: #2F48A1 !important;
+            border-color: #2F48A1 !important;
+        }
+
+        /* Style for reservations */
+        .fc-event[data-event-type="reservation"] {
+            background-color: #28a745 !important;
+            border-color: #28a745 !important;
+        }
+
+        .fc-event.reservation-event {
+            background-color: #28a745 !important;
+            border-color: #28a745 !important;
+        }
+
+
+        /* Style for event text */
+        .fc-event-title,
+        .fc-event-time {
+            color: white !important;
+        }
+
+        .swal2-input,
+        .swal2-select {
+            width: 100% !important;
+            margin: 5px auto !important;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+    </style>
 </body>
 
 </html>

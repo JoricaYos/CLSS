@@ -5,17 +5,19 @@ $semester = $_POST['semester'];
 $day = $_POST['day'];
 $startTime = $_POST['startTime'];
 $endTime = $_POST['endTime'];
+$lab = $_GET['lab'];  // Get the lab from the URL parameter
 
-// Query to check for conflicts, without considering personnel
+// Update the SQL query to include the lab condition
 $sql = "SELECT * FROM sched 
         WHERE semester = ? 
         AND day = ? 
+        AND lab = ? 
         AND ((start_time <= ? AND end_time > ?) 
              OR (start_time < ? AND end_time >= ?) 
              OR (start_time >= ? AND end_time <= ?))";
 
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("isssssss", $semester, $day, $endTime, $startTime, $endTime, $startTime, $startTime, $endTime);
+$stmt->bind_param("issssssss", $semester, $day, $lab, $endTime, $startTime, $endTime, $startTime, $startTime, $endTime);
 $stmt->execute();
 $result = $stmt->get_result();
 

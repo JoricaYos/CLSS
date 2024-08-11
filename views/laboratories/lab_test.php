@@ -36,8 +36,8 @@
                     <p>Currently Viewing</p>
                     <h1 class="text-left">Computer Laboratory Test</h1>
                     <br>
-                    <button id="addScheduleBtn" class="btn btn-success mb-3">Add Schedule</button> <button
-                        id="addReservationBtn" class="btn btn-secondary mb-3 ml-2">Add Reservation</button>
+                    <button id="addScheduleBtn" class="btn btn-success mb-3">Add Schedule</button>
+                    <button id="addReservationBtn" class="btn btn-secondary mb-3 ml-2">Add Reservation</button>
                 </div>
             </div>
             <div id="calendar"></div>
@@ -51,48 +51,64 @@
     <script src="../../js/table.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                aspectRatio: 2,
-                dayMaxEvents: true,
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                },
-                events: 'get_events.php',
-                eventClick: function (info) {
-                    $.ajax({
-                        url: 'get_event_details.php',
-                        type: 'GET',
-                        data: { id: info.event.id },
-                        dataType: 'json',
-                        success: function (data) {
-                            Swal.fire({
-                                title: 'Schedule Details',
-                                html: `
-                                    <div style="text-align: left;">
-                                    <br>
-                                        <p><i class="fas fa-book" style="width: 20px;"></i> <strong>Subject:</strong> ${data.subject}</p>
-                                        <p><i class="fas fa-user" style="width: 20px;"></i> <strong>Personnel:</strong> ${data.personnel}</p>
-                                        <p><i class="fas fa-clock" style="width: 20px;"></i> <strong>Start Time:</strong> ${data.start_time}</p>
-                                        <p><i class="fas fa-hourglass-end" style="width: 20px;"></i> <strong>End Time:</strong> ${data.end_time}</p>
-                                    </div>
-                                `,
-                                icon: 'info'
-                            });
-                        },
-                        error: function () {
-                            Swal.fire('Error', 'Failed to fetch event details', 'error');
-                        }
-                    });
-                }
-            });
-            calendar.render();
-        });
+          document.addEventListener('DOMContentLoaded', function () {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        aspectRatio: 2,
+        dayMaxEvents: true,
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        events: 'get_events.php?lab=lab1',
+        eventClick: function (info) {
+            if (info.event.extendedProps.type === 'schedule') {
+                $.ajax({
+                    url: 'get_event_details.php',
+                    type: 'GET',
+                    data: { id: info.event.id.split('_')[1] },
+                    dataType: 'json',
+                    success: function (data) {
+                        Swal.fire({
+                            title: 'Schedule Details',
+                            html: `
+                <div style="text-align: left;">
+                    <p><i class="fas fa-book" style="width: 20px;"></i> <strong>Subject:</strong> ${data.subject}</p>
+                    <p><i class="fas fa-user" style="width: 20px;"></i> <strong>Personnel:</strong> ${data.personnel}</p>
+                    <p><i class="fas fa-clock" style="width: 20px;"></i> <strong>Start Time:</strong> ${formatTime(data.start_time)}</p>
+                    <p><i class="fas fa-hourglass-end" style="width: 20px;"></i> <strong>End Time:</strong> ${formatTime(data.end_time)}</p>
+                </div>
+            `,
+                            icon: 'info'
+                        });
+                    },
+                    error: function () {
+                        Swal.fire('Error', 'Failed to fetch event details', 'error');
+                    }
+                });
+            } else if (info.event.extendedProps.type === 'reservation') {
+                Swal.fire({
+                    title: 'Reservation Details',
+                    html: `
+                <div style="text-align: left;">
+                    <p><i class="fas fa-bookmark" style="width: 20px;"></i> <strong>Title:</strong> ${info.event.title}</p>
+                    <p><i class="fas fa-calendar" style="width: 20px;"></i> <strong>Date:</strong> ${info.event.start.toLocaleDateString()}</p>
+                    <p><i class="fas fa-clock" style="width: 20px;"></i> <strong>Start Time:</strong> ${formatTime(info.event.start.toTimeString().split(' ')[0])}</p>
+                    <p><i class="fas fa-hourglass-end" style="width: 20px;"></i> <strong>End Time:</strong> ${formatTime(info.event.end.toTimeString().split(' ')[0])}</p>
+                </div>
+            `,
+                    icon: 'info'
+                });
+            }
+        }
+    });
+    calendar.render();
+});
+    </script>
 
+    <script>
         function populatePersonnelDropdown() {
             $.ajax({
                 url: 'get_personnel.php',
@@ -117,6 +133,7 @@
                 title: 'Add Schedule',
                 html:
                     '<div class="form-group">' +
+                    '<input type="hidden" id="swal-lab" value="lab1">' +
                     '<label for="swal-subject">Subject:</label>' +
                     '<input id="swal-subject" class="swal2-input" placeholder="Enter subject">' +
                     '</div>' +
@@ -170,19 +187,22 @@
                         semester: document.getElementById('swal-semester').value,
                         day: selectedDay ? selectedDay.dataset.day : null,
                         startTime: document.getElementById('swal-start-time').value,
-                        endTime: document.getElementById('swal-end-time').value
+                        endTime: document.getElementById('swal-end-time').value,
+                        lab: document.getElementById('swal-lab').value
                     }
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
                     const scheduleData = result.value;
+                    // Check for conflicts before submitting
                     $.ajax({
-                        url: 'check_conflicts.php',
+                        url: 'check_conflicts.php?lab=lab1',
                         type: 'POST',
                         data: scheduleData,
                         dataType: 'json',
                         success: function (response) {
                             if (response.conflict) {
+                                // If there's a conflict, show a confirmation dialog
                                 Swal.fire({
                                     title: 'Schedule Conflict',
                                     text: "This schedule conflicts with an existing one. Do you want to add it anyway?",
@@ -197,6 +217,7 @@
                                     }
                                 });
                             } else {
+                                // If no conflict, submit the schedule directly
                                 submitSchedule(scheduleData);
                             }
                         },
@@ -235,8 +256,9 @@
                 title: 'Add Reservation',
                 html:
                     '<div class="form-group">' +
-                    '<label for="swal-reservation-title">Reservation Title:</label>' +
-                    '<input id="swal-reservation-title" class="swal2-input" placeholder="Enter reservation title">' +
+                    '<input type="hidden" id="swal-lab" value="lab1">' +
+                    '<label for="swal-event-title">Event Title:</label>' +
+                    '<input id="swal-event-title" class="swal2-input" placeholder="Enter event title">' +
                     '</div>' +
                     '<div class="form-group">' +
                     '<label for="swal-start-date">Start Date:</label>' +
@@ -257,21 +279,40 @@
                 focusConfirm: false,
                 preConfirm: () => {
                     return {
-                        title: document.getElementById('swal-reservation-title').value,
-                        startDate: document.getElementById('swal-start-date').value,
-                        endDate: document.getElementById('swal-end-date').value,
-                        startTime: document.getElementById('swal-start-time').value,
-                        endTime: document.getElementById('swal-end-time').value
+                        title: document.getElementById('swal-event-title').value,
+                        lab: document.getElementById('swal-lab').value,
+                        start_date: document.getElementById('swal-start-date').value,
+                        end_date: document.getElementById('swal-end-date').value,
+                        start_time: document.getElementById('swal-start-time').value,
+                        end_time: document.getElementById('swal-end-time').value
                     }
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    const reservationData = result.value;
-                    console.log(reservationData);
-                    Swal.fire('Success', 'Reservation added successfully', 'success');
+                    submitReservation(result.value);
                 }
             });
         });
+
+        function submitReservation(data) {
+            $.ajax({
+                url: 'submit_reservation.php',
+                type: 'POST',
+                data: data,
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status === 'success') {
+                        Swal.fire('Success', response.message, 'success');
+                        calendar.refetchEvents();
+                    } else {
+                        Swal.fire('Error', response.message, 'error');
+                    }
+                },
+                error: function () {
+                    Swal.fire('Error', 'An error occurred while submitting the reservation', 'error');
+                }
+            });
+        }
     </script>
 
     <style>
