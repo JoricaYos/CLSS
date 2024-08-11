@@ -15,16 +15,16 @@
     <link rel="stylesheet" href="../../css/table.css">
     <style>
         #profile-image-container {
-            position: relative;
-            width: 100%;
+            width: 200px;
             height: auto;
             overflow: hidden;
+            margin: 0 auto;
         }
 
         #profile-image {
             display: block;
-            width: 100%;
-            height: auto;
+            width: 200px;
+            height: 200px;
             object-fit: cover;
         }
     </style>
@@ -55,7 +55,7 @@
                         </div>
                     </div>
 
-                    <div class="row mt-4 align-items-center justify-content-center">
+                    <div class="row mt-4 justify-content-center">
                         <div class="col-md-4 text-center">
                             <div id="profile-image-container" class="shadow">
                                 <?php
