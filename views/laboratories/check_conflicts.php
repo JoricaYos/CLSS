@@ -5,9 +5,8 @@ $semester = $_POST['semester'];
 $day = $_POST['day'];
 $startTime = $_POST['startTime'];
 $endTime = $_POST['endTime'];
-$lab = $_GET['lab'];  // Get the lab from the URL parameter
+$lab = $_GET['lab'];  
 
-// Update the SQL query to include the lab condition
 $sql = "SELECT * FROM sched 
         WHERE semester = ? 
         AND day = ? 
@@ -22,10 +21,8 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
-    // Conflict found
     echo json_encode(['conflict' => true, 'message' => 'Schedule conflict detected']);
 } else {
-    // No conflict
     echo json_encode(['conflict' => false]);
 }
 

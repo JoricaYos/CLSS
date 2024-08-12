@@ -6,7 +6,6 @@ $lab = $conn->real_escape_string($lab);
 
 $events = array();
 
-// Fetch schedules
 $sql = "SELECT * FROM sched WHERE lab = '$lab'";
 $result = $conn->query($sql);
 
@@ -27,14 +26,13 @@ if ($result->num_rows > 0) {
                 'title' => $row['subject'],
                 'start' => $date->format('Y-m-d') . 'T' . $row['start_time'],
                 'end' => $date->format('Y-m-d') . 'T' . $row['end_time'],
-                'color' => '#2F48A1', // Blue color for schedules
+                'color' => '#2F48A1',
                 'type' => 'schedule'
             );
         }
     }
 }
 
-// Fetch reservations
 $sql = "SELECT * FROM reserve WHERE lab = '$lab'";
 $result = $conn->query($sql);
 
@@ -45,7 +43,7 @@ if ($result->num_rows > 0) {
             'title' => $row['title'],
             'start' => $row['start_date'] . 'T' . $row['start_time'],
             'end' => $row['end_date'] . 'T' . $row['end_time'],
-            'color' => '#28a745', // Green color for reservations
+            'color' => '#28a745',
             'type' => 'reservation',
             'classNames' => ['reservation-event']
         );

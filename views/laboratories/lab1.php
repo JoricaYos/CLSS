@@ -75,6 +75,9 @@
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'timeGridWeek',
+                slotMinTime: '08:00:00',
+                slotMaxTime: '21:00:00',
+                contentHeight: 'auto',
                 aspectRatio: 2,
                 dayMaxEvents: true,
                 headerToolbar: {
@@ -212,7 +215,6 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     const scheduleData = result.value;
-                    // Check for conflicts before submitting
                     $.ajax({
                         url: 'check_conflicts.php?lab=lab1',
                         type: 'POST',
@@ -246,6 +248,16 @@
         });
 
         function submitSchedule(data) {
+            const startTime = data.startTime;
+            const endTime = data.endTime;
+            const minTime = '08:00';
+            const maxTime = '21:00';
+
+            if (startTime < minTime || endTime > maxTime || startTime >= endTime) {
+                Swal.fire('Invalid Time', 'Please enter a time between 8:00 AM and 9:00 PM. Start time must be earlier than end time.', 'error');
+                return;
+            }
+
             $.ajax({
                 url: 'submit_schedule.php',
                 type: 'POST',
@@ -311,6 +323,16 @@
         });
 
         function submitReservation(data) {
+            const startTime = data.start_time;
+            const endTime = data.end_time;
+            const minTime = '08:00';
+            const maxTime = '21:00';
+
+            if (startTime < minTime || endTime > maxTime || startTime >= endTime) {
+                Swal.fire('Invalid Time', 'Please enter a time between 8:00 AM and 9:00 PM. Start time must be earlier than end time.', 'error');
+                return;
+            }
+
             $.ajax({
                 url: 'submit_reservation.php',
                 type: 'POST',

@@ -194,7 +194,6 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     const scheduleData = result.value;
-                    // Check for conflicts before submitting
                     $.ajax({
                         url: 'check_conflicts.php?lab=lab1',
                         type: 'POST',
@@ -202,7 +201,6 @@
                         dataType: 'json',
                         success: function (response) {
                             if (response.conflict) {
-                                // If there's a conflict, show a confirmation dialog
                                 Swal.fire({
                                     title: 'Schedule Conflict',
                                     text: "This schedule conflicts with an existing one. Do you want to add it anyway?",
@@ -217,7 +215,6 @@
                                     }
                                 });
                             } else {
-                                // If no conflict, submit the schedule directly
                                 submitSchedule(scheduleData);
                             }
                         },
