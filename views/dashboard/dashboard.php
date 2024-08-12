@@ -38,14 +38,44 @@
                     <p>This is what we've got for you today.</p>
                 </div>
             </div>
-            <br><br><br>
-            <b>Schedules</b>
-            <div><canvas id="myChart" width="400" height="200"></canvas></div>
-            <br><br><br>
-            <b>Reservations</b>
+            <div class="py-3"></div>
 
-            <div><canvas id="mySecondChart" width="400" height="200"></canvas></div>
+            <div>
+                <div class="row mt-4">
+                    <div class="col-md-8">
+                        <p class="text-left">Your Schedules</p>
+                    </div>
+                </div>
+                <table id="scheduleTable" class="table table-bordered text-center">
+                    <thead style="background-color: white;">
+                        <tr>
+                            <th><i class="fas fa-map-marker"></i> Subject</th>
+                            <th><i class="fas fa-school"></i> Semester</th>
+                            <th><i class="fas fa-keyboard"></i> Laboratory</th>
+                            <th><i class="fas fa-calendar-week"></i> Day</th>
+                            <th><i class="fas fa-clock"></i> Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <div class="py-5"></div>
+            </div>
 
+            <?php if ($_SESSION['role'] == 'Admin'): ?>
+                <div class="row">
+                    <div class="col-md-2">
+                        <select id="chartSelector" class="form-control">
+                            <option value="both">Schedules & Reservations</option>
+                            <option value="schedules">Schedules</option>
+                            <option value="reservations">Reservations</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="py-2"></div>
+                <div><canvas id="myChart"></canvas></div>
+                <div class="py-5"></div>
+            <?php endif; ?>
         </div>
 
     </div>
@@ -58,6 +88,32 @@
     <script src="../../js/main.js"></script>
     <script src="../../js/table.js"></script>
 
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: 'get_personnel_sched.php',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    var tableBody = $('#scheduleTable tbody');
+                    $.each(data, function (i, item) {
+                        var row = $('<tr>').append(
+                            $('<td>').text(item.subject),
+                            $('<td>').text(item.semester),
+                            $('<td>').text(item.lab),
+                            $('<td>').text(item.day),
+                            $('<td>').text(item.time)
+                        );
+                        tableBody.append(row);
+                    });
+                },
+                error: function () {
+                    console.log('Error fetching schedule data');
+                }
+            });
+        });
+    </script>
+
     <!-- PHP to be transfered pa -->
     <?php
     include ($_SERVER['DOCUMENT_ROOT'] . '/models/database.php');
@@ -65,7 +121,7 @@
     function getSchedulesCount($lab)
     {
         global $conn;
-        $sql = "SELECT COUNT(*) AS count FROM schedules WHERE lab = '$lab' AND type = 'schedule'";
+        $sql = "SELECT COUNT(*) AS count FROM sched WHERE lab = '$lab'";
         $result = $conn->query($sql);
         if (!$result) {
             echo "Error: " . $conn->error;
@@ -78,7 +134,7 @@
     function getReservationsCount($lab)
     {
         global $conn;
-        $sql = "SELECT COUNT(*) AS count FROM schedules WHERE lab = '$lab' AND type = 'reserve'";
+        $sql = "SELECT COUNT(*) AS count FROM reserve WHERE lab = '$lab'";
         $result = $conn->query($sql);
         if (!$result) {
             echo "Error: " . $conn->error;
@@ -101,19 +157,24 @@
 
     <!-- barchart jabaskrep -->
     <script>
-        var ctx1 = document.getElementById('myChart').getContext('2d');
-        var myChart = new Chart(ctx1, {
-            type: 'bar',
-            data: {
-                labels: ['Computer lab 1', 'Computer lab 2', 'Computer lab 3', 'Computer lab 4'],
-                datasets: [{
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart;
+
+        function createChart(showSchedules, showReservations) {
+            if (myChart) {
+                myChart.destroy();
+            }
+
+            var datasets = [];
+            if (showSchedules) {
+                datasets.push({
                     label: 'Schedules',
                     data: [<?php echo $count_lab1_schedule; ?>, <?php echo $count_lab2_schedule; ?>, <?php echo $count_lab3_schedule; ?>, <?php echo $count_lab4_schedule; ?>],
                     backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)'
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(255, 206, 86, 0.5)',
+                        'rgba(75, 192, 192, 0.5)'
                     ],
                     borderColor: [
                         'rgba(255, 99, 132, 1)',
@@ -122,30 +183,17 @@
                         'rgba(75, 192, 192, 1)'
                     ],
                     borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
+                });
             }
-        });
-
-        var ctx2 = document.getElementById('mySecondChart').getContext('2d');
-        var mySecondChart = new Chart(ctx2, {
-            type: 'bar',
-            data: {
-                labels: ['Computer lab 1', 'Computer lab 2', 'Computer lab 3', 'Computer lab 4'],
-                datasets: [{
+            if (showReservations) {
+                datasets.push({
                     label: 'Reservations',
                     data: [<?php echo $count_lab1_reservation; ?>, <?php echo $count_lab2_reservation; ?>, <?php echo $count_lab3_reservation; ?>, <?php echo $count_lab4_reservation; ?>],
                     backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)'
+                        'rgba(255, 99, 132, 0.8)',
+                        'rgba(54, 162, 235, 0.8)',
+                        'rgba(255, 206, 86, 0.8)',
+                        'rgba(75, 192, 192, 0.8)'
                     ],
                     borderColor: [
                         'rgba(255, 99, 132, 1)',
@@ -154,14 +202,44 @@
                         'rgba(75, 192, 192, 1)'
                     ],
                     borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
+                });
+            }
+
+            myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Computer lab 1', 'Computer lab 2', 'Computer lab 3', 'Computer lab 4'],
+                    datasets: datasets
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
                     }
                 }
+            });
+        }
+
+        createChart(true, true);
+
+        document.getElementById('chartSelector').addEventListener('change', function () {
+            var selectedValue = this.value;
+            switch (selectedValue) {
+                case 'both':
+                    createChart(true, true);
+                    break;
+                case 'schedules':
+                    createChart(true, false);
+                    break;
+                case 'reservations':
+                    createChart(false, true);
+                    break;
             }
         });
     </script>

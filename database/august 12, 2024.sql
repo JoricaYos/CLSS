@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 11, 2024 at 07:58 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- Generation Time: Aug 12, 2024 at 03:52 AM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -56,7 +56,11 @@ INSERT INTO `personnel` (`id`, `name`, `role`, `username`, `password`, `img`) VA
 (25, 'oorts', 'personnel', 'ooorts', '$2y$10$F6fYe1NY2FcCnSFfDGaZG.0ZXusZ4ozjZm0b2RgaGxZ8YI2G2NWnC', ''),
 (26, 'mars', 'personnel', 'maers', '$2y$10$pY33VAImPBKjnJliRxwkTO0gCGf6vtz.9zvGmAJe8Z.ta1lvQctj.', ''),
 (27, 'ako mani', 'Library Custodian', 'ako mani gani', '$2y$10$7CbRdYBIVQ7buGc8ni/vieqs2JbzPlVPUqThUq6Kzg7iSAzgyGmx6', ''),
-(29, 'jam', 'student', 'student', '$2y$10$79y.m.8kF8DTK.LnRJrtjOGqFPO629xFr8dfP88BWP6hjcKWLbAAW', '');
+(29, 'jam', 'student', 'student', '$2y$10$79y.m.8kF8DTK.LnRJrtjOGqFPO629xFr8dfP88BWP6hjcKWLbAAW', ''),
+(30, 'meep', 'Instructor', 'maap', '$2y$10$G2BzloEryKace.bQ2GgMtetLys/7oGQib84o8b1t3E4X0YXROi72q', ''),
+(31, 'dean', 'Dean/Principal', 'dean', '$2y$10$pW//bNoNobob6lqDAlOuheNlBvQ3q/8gL5bZtJbH8ANfwWxfXfyTC', ''),
+(32, 'instructor', 'Instructor', 'instructor', '$2y$10$k72tcb1sVn.RdbllOqwI2eGyASJ2v8okec5VBUeDbk9DV94isrJWu', ''),
+(33, 'custodian', 'Library Custodian', 'custodian', '$2y$10$iAGzDdsC2iZv89LCt/HY3uaTtz1Tz94ixckpFI73x96L/fh9FUbq2', '');
 
 -- --------------------------------------------------------
 
@@ -122,7 +126,9 @@ INSERT INTO `sched` (`id`, `subject`, `personnel_id`, `semester`, `lab`, `day`, 
 (22, '6', 17, 1, 'lab4', 'Monday', '06:00:00', '10:00:00', '2024-04-08', '2024-10-18', '2024-08-10 18:10:03'),
 (23, 'asd', 15, 1, 'lab4', 'Monday', '06:00:00', '10:00:00', '2024-04-08', '2024-10-18', '2024-08-10 18:10:30'),
 (24, 'asd', 21, 1, 'lab1', 'Monday', '06:00:00', '07:00:00', '2024-04-08', '2024-10-18', '2024-08-11 10:37:55'),
-(25, 'aaa', 13, 1, 'lab1', 'Friday', '03:24:00', '05:24:00', '2024-04-08', '2024-10-18', '2024-08-11 17:24:53');
+(25, 'aaa', 13, 1, 'lab1', 'Friday', '03:24:00', '05:24:00', '2024-04-08', '2024-10-18', '2024-08-11 17:24:53'),
+(26, 'Mehehey', 14, 1, 'lab1', 'Wednesday', '08:00:00', '11:00:00', '2024-04-08', '2024-10-18', '2024-08-12 00:37:57'),
+(27, 'maap', 13, 1, 'lab1', 'Thursday', '08:07:00', '10:00:00', '2024-04-08', '2024-10-18', '2024-08-12 00:50:13');
 
 -- --------------------------------------------------------
 
@@ -153,20 +159,20 @@ CREATE TABLE `schedules` (
 --
 
 INSERT INTO `schedules` (`id`, `title`, `description`, `repeat_weekly`, `days`, `start_date`, `end_date`, `all_day`, `start_time`, `end_time`, `created_at`, `personnel`, `type`, `lab`, `sem`) VALUES
-(72, 'sad', 'sad', 1, 'Tue', '2024-07-02', '2024-07-30', 1, NULL, NULL, '2024-07-01 22:58:03', '', 'schedule', 'lab4', '\0\0\0\0\0D€\0\0I\0\0\0\0\0\0€\0\0\0\0\0\0sadsadWedÐãÑ€€ž€€¾€fƒ4œschedulelab1\00\0\0 \0>€\0\0J\0\0\0\0\0\0€\0\0\0\0\0\0sadsad€WedÐ'),
-(73, 'sad', 'sad', 1, 'Wed', '2024-07-03', '2024-08-07', 0, '09:58:00', '11:58:00', '2024-07-01 22:58:36', '', 'schedule', 'lab1', '\00\0\0 \0>€\0\0J\0\0\0\0\0\0€\0\0\0\0\0\0sadsad€WedÐæÐæfƒ4¹sc'),
-(74, 'sad', 'sad', 0, 'Wed', '2024-07-06', '2024-07-06', 1, NULL, NULL, '2024-07-01 22:59:05', '', 'schedule', 'lab3', '\0\00\0(\0;€\0\0K\0\0\0\0\0\0€\0\0\0\0\0\0aaaaaaa€ÐåÐåfƒ4ær'),
-(75, 'aaa', 'aaaa', 0, '', '2024-07-05', '2024-07-05', 1, NULL, NULL, '2024-07-01 22:59:50', '', 'reserve', 'lab1', '\0\00\0\00\0:€\0\0L\0\0\0\0\0\0€\0\0\0\0\0\0asdasd€ÐìÐìfƒ5Jrese'),
-(76, 'asd', 'asd', 0, '', '2024-07-12', '2024-07-12', 1, NULL, NULL, '2024-07-01 23:01:30', '', 'reserve', 'lab2', '\0\0	0\0\08\0F€\0\0N\0\0\0\0\0\0€\0\0\0\0\0\0lab1 newlab 1 new€Ð'),
-(78, 'lab1 new', 'lab 1 new', 0, '', '2024-07-03', '2024-07-03', 1, NULL, NULL, '2024-07-02 17:05:33', '', 'schedule', 'lab1', '\0\0		0\0\0@\0G€\0\0O\0\0\0\0\0\0€\0\0\0\0\0\0lab 2 newlab 2 new€Ð'),
-(79, 'lab 2 new', 'lab 2 new', 0, '', '2024-07-03', '2024-07-03', 1, NULL, NULL, '2024-07-02 17:05:47', '', 'schedule', 'lab2', '\0	\n0\0H\0K€\0\0P\0\0\0\0\0\0€\0\0\0\0\0\0lab 3 new lab 3 new'),
-(80, 'lab 3 new ', 'lab 3 new', 1, 'Wed', '2024-07-03', '2024-07-24', 1, NULL, NULL, '2024-07-02 17:06:09', '', 'schedule', 'lab3', '\0\0\0\0\0P\0‚€\0\0Q\0\0\0\0\0\0€\0\0\0\0\0\0lab 4lab 4 €ÐãÐã€€q'),
-(81, 'lab 4', 'lab 4 ', 0, '', '2024-07-03', '2024-07-03', 0, '07:06:00', '09:00:00', '2024-07-02 17:06:43', '', 'schedule', 'lab4', '\0\00\0\0X–€\0\0e\0\0\0\0\0\0€\0\0\0\0\0\0asdasd€ÐëÐëf¾sche'),
-(83, 'aa new', 'aa new ', 0, '', '2024-07-06', '2024-07-06', 1, NULL, NULL, '2024-07-02 18:32:44', 'Imong Nawng', 'reserve', 'lab1', '\0\00 \0h\0\0€\0\0Y\0\0\0\0-ñ\0\0V+ßmemsmams€ÐéÐéf‹\Z'),
-(86, 'asd', 'asd', 0, '', '2024-07-01', '2024-07-01', 1, NULL, NULL, '2024-07-02 18:38:18', '', 'schedule', 'lab1', '\0\00\0x\0K€\0\0W\0\0\0\0\0\0€\0\0\0\0\0\0SampleDescription la'),
-(87, 'Sample', 'Description lang', 0, '', '2024-07-08', '2024-07-08', 1, NULL, NULL, '2024-07-07 22:12:07', '', 'schedule', 'lab3', '\00\0\0€A€\0\0X\0\0\0\0\0\0€\0\0\0\0\0\0reserveasd€ÐèÐèf‹'),
-(88, 'reserve', 'asd', 0, '', '2024-07-08', '2024-07-08', 1, NULL, NULL, '2024-07-07 22:12:26', 'Imong Nawng', 'reserve', 'lab3', '\0\00 \0ˆþò€\0\0Z\0\0\0\0-ó \0\0”jmomsmims€ÐêÐêf‹*sc'),
-(103, 'aaa', 'aaaa', 0, '', '2024-07-10', '2024-07-12', 1, NULL, NULL, '2024-07-09 21:13:02', '', 'schedule', 'lab1', 'edulelab1\0\00 \0àý²€\0\0i\0\0\0\0.Ì9\0\0«#¤11€ÐêÐêf');
+(72, 'sad', 'sad', 1, 'Tue', '2024-07-02', '2024-07-30', 1, NULL, NULL, '2024-07-01 22:58:03', '', 'schedule', 'lab4', '\0\0\0\0\0D?\0\0I\0\0\0\0\0\0?\0\0\0\0\0\0sadsad?Wed????????????f?4?schedulelab1\00\0\0 \0>?\0\0J\0\0\0\0\0\0?\0\0\0\0\0\0sadsad?Wed??'),
+(73, 'sad', 'sad', 1, 'Wed', '2024-07-03', '2024-08-07', 0, '09:58:00', '11:58:00', '2024-07-01 22:58:36', '', 'schedule', 'lab1', '\00\0\0 \0>?\0\0J\0\0\0\0\0\0?\0\0\0\0\0\0sadsad?Wed???????f?4?sc'),
+(74, 'sad', 'sad', 0, 'Wed', '2024-07-06', '2024-07-06', 1, NULL, NULL, '2024-07-01 22:59:05', '', 'schedule', 'lab3', '\0\00\0(\0;?\0\0K\0\0\0\0\0\0?\0\0\0\0\0\0aaaaaaa????????f?4?r'),
+(75, 'aaa', 'aaaa', 0, '', '2024-07-05', '2024-07-05', 1, NULL, NULL, '2024-07-01 22:59:50', '', 'reserve', 'lab1', '\0\00\0\00\0:?\0\0L\0\0\0\0\0\0?\0\0\0\0\0\0asdasd????????f?5Jrese'),
+(76, 'asd', 'asd', 0, '', '2024-07-12', '2024-07-12', 1, NULL, NULL, '2024-07-01 23:01:30', '', 'reserve', 'lab2', '\0\0	0\0\08\0F?\0\0N\0\0\0\0\0\0?\0\0\0\0\0\0lab1 newlab 1 new???'),
+(78, 'lab1 new', 'lab 1 new', 0, '', '2024-07-03', '2024-07-03', 1, NULL, NULL, '2024-07-02 17:05:33', '', 'schedule', 'lab1', '\0\0		0\0\0@\0G?\0\0O\0\0\0\0\0\0?\0\0\0\0\0\0lab 2 newlab 2 new???'),
+(79, 'lab 2 new', 'lab 2 new', 0, '', '2024-07-03', '2024-07-03', 1, NULL, NULL, '2024-07-02 17:05:47', '', 'schedule', 'lab2', '\0	\n0\0H\0K?\0\0P\0\0\0\0\0\0?\0\0\0\0\0\0lab 3 new lab 3 new?'),
+(80, 'lab 3 new ', 'lab 3 new', 1, 'Wed', '2024-07-03', '2024-07-24', 1, NULL, NULL, '2024-07-02 17:06:09', '', 'schedule', 'lab3', '\0\0\0\0\0P\0??\0\0Q\0\0\0\0\0\0?\0\0\0\0\0\0lab 4lab 4 ??????ã€€q'),
+(81, 'lab 4', 'lab 4 ', 0, '', '2024-07-03', '2024-07-03', 0, '07:06:00', '09:00:00', '2024-07-02 17:06:43', '', 'schedule', 'lab4', '\0\00\0\0X??\0\0e\0\0\0\0\0\0?\0\0\0\0\0\0asdasd????????f???sche'),
+(83, 'aa new', 'aa new ', 0, '', '2024-07-06', '2024-07-06', 1, NULL, NULL, '2024-07-02 18:32:44', 'Imong Nawng', 'reserve', 'lab1', '\0\00 \0h\0\0?\0\0Y\0\0\0\0-?\0\0V+?memsmams????????f?\Z'),
+(86, 'asd', 'asd', 0, '', '2024-07-01', '2024-07-01', 1, NULL, NULL, '2024-07-02 18:38:18', '', 'schedule', 'lab1', '\0\00\0x\0K?\0\0W\0\0\0\0\0\0?\0\0\0\0\0\0SampleDescription la'),
+(87, 'Sample', 'Description lang', 0, '', '2024-07-08', '2024-07-08', 1, NULL, NULL, '2024-07-07 22:12:07', '', 'schedule', 'lab3', '\00\0\0?A?\0\0X\0\0\0\0\0\0?\0\0\0\0\0\0reserveasd????????f?'),
+(88, 'reserve', 'asd', 0, '', '2024-07-08', '2024-07-08', 1, NULL, NULL, '2024-07-07 22:12:26', 'Imong Nawng', 'reserve', 'lab3', '\0\00 \0????\0\0Z\0\0\0\0-? \0\0?jmomsmims????????f?*sc'),
+(103, 'aaa', 'aaaa', 0, '', '2024-07-10', '2024-07-12', 1, NULL, NULL, '2024-07-09 21:13:02', '', 'schedule', 'lab1', 'edulelab1\0\00 \0????\0\0i\0\0\0\0.?9\0\0?#?11????????f');
 
 -- --------------------------------------------------------
 
@@ -231,7 +237,7 @@ ALTER TABLE `semester`
 -- AUTO_INCREMENT for table `personnel`
 --
 ALTER TABLE `personnel`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `reserve`
@@ -243,7 +249,7 @@ ALTER TABLE `reserve`
 -- AUTO_INCREMENT for table `sched`
 --
 ALTER TABLE `sched`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `schedules`

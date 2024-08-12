@@ -78,11 +78,11 @@
                     <h6 class="text-center">+63 085 343-3251 / +63 085 283-3113</h6>
                 </div>
                 <div style="display: inline-block; vertical-align: top; margin-left: 20px;">
-                    <img src="../../assets/iso.jpg" alt="Second Image" style="width: 100px; height: 70px;">
+                    <img src="../../assets/iso.jpg" alt="Second Image" style="width: 110px; height: 70px;">
                 </div>
             </div>
             <br>
-            <h4 id="lab-schedule-title" style="text-align: center;">COMPUTER LABORATORY 1 SCHEDULE</h4>
+            <h4 id="lab-schedule-title" style="text-align: center;">Computer Laboratory 1 Schedule</h4>
             <br>
             <div class="row">
                 <div class="col-md-12">
@@ -103,29 +103,6 @@
         </div>
     </div>
 
-    <!-- Schedule Details Modal -->
-    <div class="modal fade" id="scheduleDetailsModal" tabindex="-1" role="dialog"
-        aria-labelledby="scheduleDetailsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="scheduleDetailsModalLabel">Schedule Details</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p><strong>Title:</strong> <span id="modalTitle"></span></p>
-                    <p><strong>Time:</strong> <span id="modalTime"></span></p>
-                    <p><strong>Description:</strong> <span id="modalDescription"></span></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
     <script src="../../js/popper.js"></script>
     <script src="../../js/bootstrap.min.js"></script>
@@ -133,90 +110,48 @@
     <script src="../../js/table.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            var urlParams = new URLSearchParams(window.location.search);
-            var lab = urlParams.get('lab') || 'lab1';
-            var labScheduleTitle = document.getElementById('lab-schedule-title');
-            labScheduleTitle.textContent = 'COMPUTER LABORATORY ' + lab.charAt(lab.length - 1) + ' SCHEDULE';
-
             var calendarEl = document.getElementById('calendar');
-
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'timeGridWeek',
+                dayMaxEvents: true,
                 height: 'auto',
                 width: '500px',
                 contentHeight: 'auto',
                 slotDuration: '00:30:00',
                 slotMinTime: '08:00:00',
                 slotMaxTime: '21:00:00',
-                events: function (fetchInfo, successCallback, failureCallback) {
-                    $.ajax({
-                        url: '/views/laboratories/get_sched.php',
-                        type: 'GET',
-                        data: {
-                            lab: lab
-                        },
-                        success: function (data) {
-                            var events = JSON.parse(data);
-                            // Filter out 'reserve' type events
-                            var filteredEvents = events.filter(event => event.type !== 'reserve');
-                            successCallback(filteredEvents);
-                        },
-                        error: function (xhr, status, error) {
-                            console.error('AJAX error:', status, error);
-                            failureCallback([]);
-                        }
-                    });
-                },
+                events: 'get_sched.php?lab=lab1',
                 headerToolbar: {
                     left: '',
                     center: '',
                     right: ''
                 },
-                views: {
-                    timeGridWeek: {
-                        type: 'timeGridWeek',
-                        buttonText: 'Weekly',
-                        dayHeaderFormat: { weekday: 'long' }
-                    }
-                },
-                eventDidMount: function (info) {
-                    if (info.event.extendedProps.type === 'schedule') {
-                        info.el.style.backgroundColor = '#071952';
-                    }
-                },
-                eventClick: function (info) {
-                    var event = info.event;
-                    $('#modalTitle').text(event.title);
-                    $('#modalDate').text(event.start.toLocaleDateString() + ' - ' + (event.end ? event.end.toLocaleDateString() : ''));
-                    $('#modalTime').text(event.allDay ? 'All Day' : event.start.toLocaleTimeString() + ' - ' + (event.end ? event.end.toLocaleTimeString() : ''));
-                    $('#modalDescription').text(event.extendedProps.description || 'No description');
-                    $('#scheduleDetailsModal').modal('show');
-                }
             });
-
             calendar.render();
-
-            $('#printButton').click(function () {
-                html2canvas(document.querySelector('#content')).then(canvas => {
-                    const { jsPDF } = window.jspdf;
-                    var imgData = canvas.toDataURL('image/png');
-                    var doc = new jsPDF('landscape');
-                    var imgWidth = doc.internal.pageSize.getWidth();
-                    var imgHeight = canvas.height * imgWidth / canvas.width;
-                    doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-                    doc.save('calendar.pdf');
-                });
-            });
-
-            window.onbeforeprint = function () {
-                document.getElementById('printButton').style.display = 'none';
-            };
-
-            window.onafterprint = function () {
-                document.getElementById('printButton').style.display = 'block';
-            };
         });
 
+    </script>
+
+    <script>
+        $('#printButton').click(function () {
+            html2canvas(document.querySelector('#content')).then(canvas => {
+                const { jsPDF } = window.jspdf;
+                var imgData = canvas.toDataURL('image/png');
+                var doc = new jsPDF('landscape');
+                var imgWidth = doc.internal.pageSize.getWidth();
+                var imgHeight = canvas.height * imgWidth / canvas.width;
+                doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                doc.save('calendar.pdf');
+            });
+        });
+
+        window.onbeforeprint = function () {
+            document.getElementById('printButton').style.display = 'none';
+        };
+
+        window.onafterprint = function () {
+            document.getElementById('printButton').style.display = 'block';
+        };
     </script>
 </body>
 

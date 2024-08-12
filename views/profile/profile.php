@@ -42,6 +42,7 @@
                         <div class="col-md-8">
                             <p>Currently Viewing</p>
                             <h1 class="text-left">Your Profile</h1>
+                            <div class="py-5"></div>
                         </div>
                         <div class="col-md-4 text-right">
                             <div id="button-group-edit" style="display: block;">

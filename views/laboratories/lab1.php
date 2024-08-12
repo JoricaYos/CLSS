@@ -74,13 +74,13 @@
         document.addEventListener('DOMContentLoaded', function () {
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
+                initialView: 'timeGridWeek',
                 aspectRatio: 2,
                 dayMaxEvents: true,
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                    right: 'dayGridMonth,timeGridWeek,list'
                 },
                 events: 'get_events.php?lab=lab1',
                 eventClick: function (info) {
@@ -220,7 +220,6 @@
                         dataType: 'json',
                         success: function (response) {
                             if (response.conflict) {
-                                // If there's a conflict, show a confirmation dialog
                                 Swal.fire({
                                     title: 'Schedule Conflict',
                                     text: "This schedule conflicts with an existing one. Do you want to add it anyway?",
@@ -235,7 +234,6 @@
                                     }
                                 });
                             } else {
-                                // If no conflict, submit the schedule directly
                                 submitSchedule(scheduleData);
                             }
                         },
@@ -334,13 +332,11 @@
     </script>
 
     <style>
-        /* Style for all events */
         .fc-event {
             background-color: #2F48A1 !important;
             border-color: #2F48A1 !important;
         }
 
-        /* Style for reservations */
         .fc-event[data-event-type="reservation"] {
             background-color: #28a745 !important;
             border-color: #28a745 !important;
@@ -351,8 +347,6 @@
             border-color: #28a745 !important;
         }
 
-
-        /* Style for event text */
         .fc-event-title,
         .fc-event-time {
             color: white !important;

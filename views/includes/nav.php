@@ -6,28 +6,25 @@
         </button>
     </div>
     <div class="p-4 pt-5">
-        <a <?php echo ($_SESSION['role'] == 'student') ? 'href="#"' : 'href="/views/dashboard/dashboard.php"'; ?>
-            class="logo">
-            <div class="mb-5 text-center justify-content-center">
+       <div class="mb-5 text-center justify-content-center">
                 <div>
                     <img src="/assets/smcc-logo.png" alt="SMCC-LOGO" width="50px" height="50px">
                     <h1 class="h6">SAINT MICHAEL COLLEGE OF CARAGA</h1>
                 </div>
             </div>
-        </a>
 
         <ul class="list-unstyled components mb-5">
+            <?php if ($_SESSION['role'] != 'student'): ?>
+                <li>
+                    <a href="/views/dashboard/dashboard.php"><i class="fas fa-chart-bar"></i> DASHBOARD</a>
+                </li>
+            <?php endif; ?>
             <li>
                 <a href="/views/profile/profile.php"><i class="fa fa-user"></i> PROFILE</a>
             </li>
             <?php if ($_SESSION['role'] == 'Admin'): ?>
                 <li>
                     <a href="/views/accounts/accounts.php"><i class="fa fa-user"></i> USER ACCOUNTS</a>
-                </li>
-            <?php endif; ?>
-            <?php if ($_SESSION['role'] != 'student'): ?>
-                <li>
-                <a href="/views/schedule/personnel_sched.php"><i class="fas fa-clipboard-list"></i> YOUR SCHEDULES</a>
                 </li>
             <?php endif; ?>
             <li>
