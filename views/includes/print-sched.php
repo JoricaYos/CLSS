@@ -1,4 +1,9 @@
 <?php include ($_SERVER['DOCUMENT_ROOT'] . '/controllers/logged_checker.php'); ?>
+
+<?php
+$title = isset($_GET['title']) ? htmlspecialchars($_GET['title']) : 'Laboratory Schedule';
+$lab = isset($_GET['lab']) ? htmlspecialchars($_GET['lab']) : 'lab1';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -82,7 +87,7 @@
                 </div>
             </div>
             <br>
-            <h4 id="lab-schedule-title" style="text-align: center;">Computer Laboratory 1 Schedule</h4>
+            <h4 id="lab-schedule-title" style="text-align: center;"><?php echo $title; ?></h4>
             <br>
             <div class="row">
                 <div class="col-md-12">
@@ -120,7 +125,7 @@
                 slotDuration: '00:30:00',
                 slotMinTime: '08:00:00',
                 slotMaxTime: '21:00:00',
-                events: 'get_sched.php?lab=lab1',
+                events: 'get_sched.php?lab=<?php echo $lab; ?>',
                 headerToolbar: {
                     left: '',
                     center: '',

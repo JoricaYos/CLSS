@@ -38,7 +38,7 @@
                     <li><a href="/views/laboratories/lab4.php">Computer lab 4</a></li>
                 </ul>
             </li>
-            <?php if ($_SESSION['role'] == 'Admin'): ?>
+            <?php if ($_SESSION['role'] == 'Admin' || $_SESSION['role'] == 'Custodian'): ?>
                 <li>
                     <a href="/views/settings/settings.php"><i class="fas fa-cogs"></i></i> SETTINGS</a>
                 </li>

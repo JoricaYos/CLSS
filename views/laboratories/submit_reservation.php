@@ -16,17 +16,14 @@ $end_date = mysqli_real_escape_string($conn, $_POST['end_date']);
 $start_time = mysqli_real_escape_string($conn, $_POST['start_time']);
 $end_time = mysqli_real_escape_string($conn, $_POST['end_time']);
 
-// Prepare SQL statement
 $sql = "INSERT INTO reserve (title, lab, personnel_id, start_date, end_date, start_time, end_time) 
         VALUES ('$title', '$lab', $personnel_id, '$start_date', '$end_date', '$start_time', '$end_time')";
 
-// Execute query
 if (mysqli_query($conn, $sql)) {
     echo json_encode(['status' => 'success', 'message' => 'Reservation added successfully']);
 } else {
     echo json_encode(['status' => 'error', 'message' => 'Error adding reservation: ' . mysqli_error($conn)]);
 }
 
-// Close connection
 mysqli_close($conn);
 ?>

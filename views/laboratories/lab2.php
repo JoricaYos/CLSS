@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Computer lab 1</title>
+    <title>Computer lab 2</title>
     <meta charset="utf-8">
     <link rel="icon" href="../../assets/smcc-logo.png" type="image/png">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -36,8 +36,13 @@
                     <p>Currently Viewing</p>
                     <h1 class="text-left">Computer Laboratory 2</h1>
                     <br>
-                    <button id="addScheduleBtn" class="btn btn-success mb-3">Add Schedule</button>
-                    <button id="addReservationBtn" class="btn btn-secondary mb-3 ml-2">Add Reservation</button>
+                    <?php if ($_SESSION['role'] != 'student'): ?>
+                        <button id="addScheduleBtn" class="btn mb-3" style="background-color: #2F48A1; color: white">Add Schedule</button>
+                        <button id="addReservationBtn" class="btn btn-success mb-3 ml-2">Add Reservation</button>
+                    <?php endif; ?>
+                    <?php if ($_SESSION['role'] != 'Instructor' && $_SESSION['role'] != 'student' && $_SESSION['role'] != 'Dean/Principal'): ?>
+                        <button id="printScheduleBtn" class="btn btn-primary mb-3 ml-2">Print Schedule</button>
+                    <?php endif; ?>
                 </div>
             </div>
             <div id="calendar"></div>
@@ -351,6 +356,14 @@
                 }
             });
         }
+    </script>
+
+    <script>
+        document.getElementById('printScheduleBtn').addEventListener('click', function () {
+            const title = encodeURIComponent("Computer Laboratory 2 Schedule");
+            const lab = "lab2";
+            window.location.href = `../includes/print-sched.php?title=${title}&lab=${lab}`;
+        });
     </script>
 
     <style>

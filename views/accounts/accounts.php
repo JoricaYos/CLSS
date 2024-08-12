@@ -77,7 +77,7 @@ include($_SERVER['DOCUMENT_ROOT'] . '/controllers/logged_checker.php');
                                 <label for="role">Role</label>
                                 <select class="form-control" name="role" id="role" required style="border: 1px solid #ced4da;">
                                     <option value="Instructor">Instructor</option>
-                                    <option value="Library Custodian">Library Custodian</option>
+                                    <option value="Library Custodian">Custodian</option>
                                     <option value="Dean/Principal">Dean/Principal</option>
                                 </select>
                             </div>
