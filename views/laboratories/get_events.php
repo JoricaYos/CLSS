@@ -6,7 +6,10 @@ $lab = $conn->real_escape_string($lab);
 
 $events = array();
 
-$sql = "SELECT * FROM sched WHERE lab = '$lab'";
+$sql = "SELECT s.*, p.name as personnel_name 
+        FROM sched s 
+        LEFT JOIN personnel p ON s.personnel_id = p.id 
+        WHERE s.lab = '$lab'";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
@@ -28,7 +31,10 @@ if ($result->num_rows > 0) {
                 'end' => $date->format('Y-m-d') . 'T' . $row['end_time'],
                 'color' => '#2F48A1',
                 'type' => 'schedule',
-                'semester' => $row['semester']
+                'semester' => $row['semester'],
+                'day' => $row['day'],
+                'personnel_id' => $row['personnel_id'],
+                'personnel_name' => $row['personnel_name']
             );
         }
     }

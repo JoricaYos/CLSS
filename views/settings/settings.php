@@ -266,17 +266,26 @@ if ($result->num_rows > 0) {
               data: { id: info.event.id.split('_')[1] },
               dataType: 'json',
               success: function (data) {
+                console.log(data);
                 Swal.fire({
                   title: 'Schedule Details',
                   html: `
-                <div style="text-align: left;">
-                    <p><i class="fas fa-book" style="width: 20px;"></i> <strong>Subject:</strong> ${data.subject}</p>
-                    <p><i class="fas fa-user" style="width: 20px;"></i> <strong>Personnel:</strong> ${data.personnel}</p>
-                    <p><i class="fas fa-clock" style="width: 20px;"></i> <strong>Start Time:</strong> ${formatTime(data.start_time)}</p>
-                    <p><i class="fas fa-hourglass-end" style="width: 20px;"></i> <strong>End Time:</strong> ${formatTime(data.end_time)}</p>
-                </div>
+              <div style="text-align: left;">
+                <p><i class="fas fa-book" style="width: 20px;"></i> <strong>Subject:</strong> ${data.subject}</p>
+                <p><i class="fas fa-user" style="width: 20px;"></i> <strong>Personnel:</strong> ${data.personnel_name}</p>
+                <p><i class="fas fa-clock" style="width: 20px;"></i> <strong>Start Time:</strong> ${formatTime(data.start_time)}</p>
+                <p><i class="fas fa-hourglass-end" style="width: 20px;"></i> <strong>End Time:</strong> ${formatTime(data.end_time)}</p>
+              </div>
             `,
-                  icon: 'info'
+                  icon: 'info',
+                  showCancelButton: true,
+                  cancelButtonText: 'Close',
+                  confirmButtonText: 'Edit',
+                  showCloseButton: true,
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    editSchedule(data);
+                  }
                 });
               },
               error: function () {
@@ -287,13 +296,13 @@ if ($result->num_rows > 0) {
             Swal.fire({
               title: 'Reservation Details',
               html: `
-            <div style="text-align: left;">
-                <p><i class="fas fa-bookmark" style="width: 20px;"></i> <strong>Title:</strong> ${info.event.title}</p>
-                <p><i class="fas fa-calendar" style="width: 20px;"></i> <strong>Date:</strong> ${info.event.start.toLocaleDateString()}</p>
-                <p><i class="fas fa-clock" style="width: 20px;"></i> <strong>Start Time:</strong> ${formatTime(info.event.start.toTimeString().split(' ')[0])}</p>
-                <p><i class="fas fa-hourglass-end" style="width: 20px;"></i> <strong>End Time:</strong> ${formatTime(info.event.end.toTimeString().split(' ')[0])}</p>
-            </div>
-          `,
+          <div style="text-align: left;">
+            <p><i class="fas fa-bookmark" style="width: 20px;"></i> <strong>Title:</strong> ${info.event.title}</p>
+            <p><i class="fas fa-calendar" style="width: 20px;"></i> <strong>Date:</strong> ${info.event.start.toLocaleDateString()}</p>
+            <p><i class="fas fa-clock" style="width: 20px;"></i> <strong>Start Time:</strong> ${formatTime(info.event.start.toTimeString().split(' ')[0])}</p>
+            <p><i class="fas fa-hourglass-end" style="width: 20px;"></i> <strong>End Time:</strong> ${formatTime(info.event.end.toTimeString().split(' ')[0])}</p>
+          </div>
+        `,
               icon: 'info'
             });
           }
@@ -424,6 +433,119 @@ if ($result->num_rows > 0) {
           }
         });
       });
+
+      function editSchedule(scheduleData) {
+        Swal.fire({
+          title: 'Edit Schedule',
+          html:
+            '<div class="form-group">' +
+            '<input type="hidden" id="swal-id" value="' + scheduleData.id + '">' +
+            '<input type="hidden" id="swal-lab" value="' + currentLab + '">' +
+            '<label for="swal-subject">Subject:</label>' +
+            '<input id="swal-subject" class="swal2-input" value="' + scheduleData.subject + '">' +
+            '</div>' +
+            '<div class="form-group">' +
+            '<label for="swal-personnel">Personnel:</label>' +
+            '<select id="swal-personnel" class="swal2-input">' +
+            '<option value="">Select Personnel</option>' +
+            '</select>' +
+            '</div>' +
+            '<div class="form-group">' +
+            '<label for="swal-semester">Semester:</label>' +
+            '<select id="swal-semester" class="swal2-input">' +
+            '<option value="1" ' + (scheduleData.semester == 1 ? 'selected' : '') + '>1st Semester</option>' +
+            '<option value="2" ' + (scheduleData.semester == 2 ? 'selected' : '') + '>2nd Semester</option>' +
+            '</select>' +
+            '</div>' +
+            '<div class="form-group">' +
+            '<label>Day:</label>' +
+            '<div id="day-buttons">' +
+            '<button type="button" class="btn btn-outline-primary day-btn ' + (scheduleData.day === 'Monday' ? 'active' : '') + '" data-day="Monday">Monday</button>' +
+            '<button type="button" class="btn btn-outline-primary day-btn ' + (scheduleData.day === 'Tuesday' ? 'active' : '') + '" data-day="Tuesday">Tuesday</button>' +
+            '<button type="button" class="btn btn-outline-primary day-btn ' + (scheduleData.day === 'Wednesday' ? 'active' : '') + '" data-day="Wednesday">Wednesday</button>' +
+            '<button type="button" class="btn btn-outline-primary day-btn ' + (scheduleData.day === 'Thursday' ? 'active' : '') + '" data-day="Thursday">Thursday</button>' +
+            '<button type="button" class="btn btn-outline-primary day-btn ' + (scheduleData.day === 'Friday' ? 'active' : '') + '" data-day="Friday">Friday</button>' +
+            '</div>' +
+            '</div>' +
+            '<div class="form-group">' +
+            '<label for="swal-start-time">Start Time:</label>' +
+            '<input id="swal-start-time" class="swal2-input" type="time" value="' + scheduleData.start_time + '">' +
+            '</div>' +
+            '<div class="form-group">' +
+            '<label for="swal-end-time">End Time:</label>' +
+            '<input id="swal-end-time" class="swal2-input" type="time" value="' + scheduleData.end_time + '">' +
+            '</div>',
+          focusConfirm: false,
+          didOpen: () => {
+            document.querySelectorAll('.day-btn').forEach(btn => {
+              btn.addEventListener('click', function () {
+                document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+              });
+            });
+            populatePersonnelDropdown(scheduleData.personnel_id);
+          },
+          preConfirm: () => {
+            const selectedDay = document.querySelector('.day-btn.active');
+            return {
+              id: document.getElementById('swal-id').value,
+              subject: document.getElementById('swal-subject').value,
+              personnel: document.getElementById('swal-personnel').value,
+              semester: document.getElementById('swal-semester').value,
+              day: selectedDay ? selectedDay.dataset.day : null,
+              startTime: document.getElementById('swal-start-time').value,
+              endTime: document.getElementById('swal-end-time').value,
+              lab: document.getElementById('swal-lab').value
+            }
+          }
+        }).then((result) => {
+          if (result.isConfirmed) {
+            updateSchedule(result.value);
+          }
+        });
+      }
+
+      function updateSchedule(data) {
+        $.ajax({
+          url: '../laboratories/update_schedule.php',
+          type: 'POST',
+          data: data,
+          dataType: 'json',
+          success: function (response) {
+            if (response.status === 'success') {
+              Swal.fire('Success', response.message, 'success');
+              calendar.refetchEvents();
+            } else {
+              console.error('Update failed:', response.message);
+              Swal.fire('Error', response.message, 'error');
+            }
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            console.error('AJAX error:', textStatus, errorThrown);
+            console.error('Response text:', jqXHR.responseText);
+            Swal.fire('Error', 'An error occurred while updating the schedule. Please check the console and error logs for details.', 'error');
+          }
+        });
+      }
+
+      function populatePersonnelDropdown(selectedPersonnelId) {
+        $.ajax({
+          url: '../laboratories/get_personnel.php',
+          type: 'GET',
+          dataType: 'json',
+          success: function (data) {
+            var select = $('#swal-personnel');
+            select.empty();
+            select.append('<option value="">Select Personnel</option>');
+            $.each(data, function (index, item) {
+              select.append('<option value="' + item.id + '" ' + (item.id == selectedPersonnelId ? 'selected' : '') + '>' + item.name + '</option>');
+            });
+          },
+          error: function () {
+            console.error('Failed to fetch personnel data');
+          }
+        });
+      }
 
       function submitSchedule(data) {
         const startTime = data.startTime;

@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 13, 2024 at 10:33 AM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: Aug 13, 2024 at 04:03 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -103,13 +103,14 @@ CREATE TABLE `sched` (
 --
 
 INSERT INTO `sched` (`id`, `subject`, `personnel_id`, `semester`, `lab`, `day`, `start_time`, `end_time`, `semester_start`, `semester_end`, `created_at`) VALUES
-(28, 'Monday ', 33, 1, 'lab1', 'Monday', '08:00:00', '09:30:00', '2024-04-08', '2024-10-18', '2024-08-12 06:04:38'),
+(28, 'Monday nasad', 33, 2, 'lab1', 'Monday', '08:00:00', '09:30:00', '2024-07-07', '2024-12-12', '2024-08-12 06:04:38'),
 (29, 'asd', 33, 1, 'lab1', 'Monday', '10:00:00', '13:00:00', '2024-04-08', '2024-10-18', '2024-08-13 00:24:01'),
 (30, 'meek', 27, 1, 'lab2', 'Monday', '08:00:00', '11:30:00', '2024-04-08', '2024-10-18', '2024-08-13 00:36:34'),
 (31, 'marps', 27, 1, 'lab3', 'Monday', '08:00:00', '11:00:00', '2024-04-08', '2024-10-18', '2024-08-13 00:39:31'),
 (32, 'marps 4', 32, 1, 'lab4', 'Tuesday', '13:00:00', '17:00:00', '2024-04-08', '2024-10-18', '2024-08-13 00:39:56'),
 (33, 'Intro to Computing', 13, 1, 'lab1', 'Monday', '15:30:00', '17:00:00', '2024-04-08', '2024-10-18', '2024-08-13 01:35:51'),
-(35, 'Web Development', 13, 1, 'lab3', 'Tuesday', '13:00:00', '15:00:00', '2024-04-08', '2024-10-18', '2024-08-13 01:38:26');
+(35, 'Web Development', 13, 1, 'lab3', 'Tuesday', '13:00:00', '15:00:00', '2024-04-08', '2024-10-18', '2024-08-13 01:38:26'),
+(37, ' updated', 27, 1, 'lab1', 'Tuesday', '08:00:00', '11:00:00', '2024-07-07', '2024-12-12', '2024-08-13 13:22:01');
 
 -- --------------------------------------------------------
 
@@ -230,7 +231,7 @@ ALTER TABLE `reserve`
 -- AUTO_INCREMENT for table `sched`
 --
 ALTER TABLE `sched`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `schedules`
