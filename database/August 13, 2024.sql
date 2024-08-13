@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 12, 2024 at 03:52 AM
+-- Generation Time: Aug 13, 2024 at 04:27 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -42,25 +42,11 @@ CREATE TABLE `personnel` (
 
 INSERT INTO `personnel` (`id`, `name`, `role`, `username`, `password`, `img`) VALUES
 (13, 'Nawng Nimo', 'Admin', 'admin', '$2y$10$IRTCH4eQfFqDUZQffHy47uqTrTYVUOn8azO6FiYDNwdr0ENt3D76.', 'uploads/13/smcc-logo.png'),
-(14, 'SI mark tahimik lungs', 'personnel', 'personnel', '$2y$10$vE2p84WEWDOFnapmQsE3He6pdrO9WS5V46sPHlwqqftX0gCQEWmLW', ''),
-(15, 'ako mani', 'personnel', 'personnel1', '$2y$10$a6ei0DxXImKmRDxY9AiKxed1twZp/Hdx1rrQN9Xla/CQcuBGX1nui', ''),
-(16, 'sya mani', 'personnel', 'personnel2', '$2y$10$5dIM9dPxYyb5CevFZhFhG.a/qRBqFsCEX6K06WVzzuOyKiwg6yupi', ''),
-(17, 'Jane', 'personnel', 'personnel3', '$2y$10$pqfBiJvFuwV.zcB.syyMg.RJo5CmSgbPNPcpjjViZCZm.FO6R6uZy', ''),
-(18, 'sample', 'personnel', 'personnel1000', '$2y$10$wIiJcsvpvL5F9Vr2P/qOhOt/jf29AwzSlS/HRS.95ECxxZJvibFcG', ''),
-(19, 'asd', 'personnel', 'asd', '$2y$10$GP4AoSiotvQ1PYExHnodS.Gsz7sUPRy0mxze2afFNwugdWvNX.L0e', ''),
-(20, 'saaaad', 'personnel', 'saaaad', '$2y$10$kkuO5T0lombyjRcpeOEske/wCVuXm/Yx2dXcvXvPJ23.dXfTydbM2', ''),
-(21, 'aaa', 'personnel', 'aaa', '$2y$10$JCR3rTABDPqiitIZCzJz5.IEm2nIBKUE0dva5VsN/bI5Eof1Zxumq', ''),
-(22, 'olala', 'personnel', 'olaa', '$2y$10$XNj8kJy.khr4YIaIuyleCeTsVDnbgxf4fr.Y6Jau1xkBJZNFCxvlK', ''),
-(23, 'alili', 'personnel', 'aliliaaa', '$2y$10$9VbOKDlnlQtO7XgNRX49hes3GAn4GQDZ2QT.RI.VEHVqF5VkhlEQ.', ''),
-(24, 'aaa', 'personnel', 'aaa', '$2y$10$LQq5izculfuirp3xSR86NOWIalztSoN5jcefLhAk7Cspk1tUD.XwG', ''),
-(25, 'oorts', 'personnel', 'ooorts', '$2y$10$F6fYe1NY2FcCnSFfDGaZG.0ZXusZ4ozjZm0b2RgaGxZ8YI2G2NWnC', ''),
-(26, 'mars', 'personnel', 'maers', '$2y$10$pY33VAImPBKjnJliRxwkTO0gCGf6vtz.9zvGmAJe8Z.ta1lvQctj.', ''),
 (27, 'ako mani', 'Library Custodian', 'ako mani gani', '$2y$10$7CbRdYBIVQ7buGc8ni/vieqs2JbzPlVPUqThUq6Kzg7iSAzgyGmx6', ''),
 (29, 'jam', 'student', 'student', '$2y$10$79y.m.8kF8DTK.LnRJrtjOGqFPO629xFr8dfP88BWP6hjcKWLbAAW', ''),
-(30, 'meep', 'Instructor', 'maap', '$2y$10$G2BzloEryKace.bQ2GgMtetLys/7oGQib84o8b1t3E4X0YXROi72q', ''),
 (31, 'dean', 'Dean/Principal', 'dean', '$2y$10$pW//bNoNobob6lqDAlOuheNlBvQ3q/8gL5bZtJbH8ANfwWxfXfyTC', ''),
 (32, 'instructor', 'Instructor', 'instructor', '$2y$10$k72tcb1sVn.RdbllOqwI2eGyASJ2v8okec5VBUeDbk9DV94isrJWu', ''),
-(33, 'custodian', 'Library Custodian', 'custodian', '$2y$10$iAGzDdsC2iZv89LCt/HY3uaTtz1Tz94ixckpFI73x96L/fh9FUbq2', '');
+(33, 'custodian', 'Custodian', 'custodian', '$2y$10$iAGzDdsC2iZv89LCt/HY3uaTtz1Tz94ixckpFI73x96L/fh9FUbq2', '');
 
 -- --------------------------------------------------------
 
@@ -86,7 +72,10 @@ CREATE TABLE `reserve` (
 INSERT INTO `reserve` (`id`, `title`, `lab`, `personnel_id`, `start_date`, `end_date`, `start_time`, `end_time`) VALUES
 (4, 'asd', 'lab1', 13, '2024-08-15', '2024-08-15', '09:56:00', '12:00:00'),
 (5, 'meek', 'lab1', 13, '2024-08-17', '2024-08-17', '17:00:00', '20:00:00'),
-(6, 'meymey', 'lab2', 13, '2024-08-08', '2024-08-08', '22:00:00', '23:00:00');
+(6, 'meymey', 'lab2', 13, '2024-08-08', '2024-08-08', '22:00:00', '23:00:00'),
+(7, 'asd', 'lab2', 13, '2024-08-16', '2024-08-16', '08:01:00', '10:00:00'),
+(8, '8', 'lab1', 13, '2024-08-15', '2024-08-15', '13:00:00', '15:00:00'),
+(9, 'aa', 'lab1', 13, '2024-08-15', '2024-08-15', '08:00:00', '09:00:00');
 
 -- --------------------------------------------------------
 
@@ -113,22 +102,13 @@ CREATE TABLE `sched` (
 --
 
 INSERT INTO `sched` (`id`, `subject`, `personnel_id`, `semester`, `lab`, `day`, `start_time`, `end_time`, `semester_start`, `semester_end`, `created_at`) VALUES
-(11, 'aa', 15, 1, '', 'Monday', '16:00:00', '18:00:00', '2024-04-08', '2024-10-18', '2024-08-03 17:20:13'),
-(13, 'asd', 16, 1, '', 'Monday', '14:00:00', '17:00:00', '2024-04-08', '2024-10-18', '2024-08-03 17:31:09'),
-(14, 'asd', 15, 1, '', 'Monday', '20:00:00', '22:00:00', '2024-04-08', '2024-10-18', '2024-08-03 17:36:42'),
-(15, 'asd', 18, 1, '', 'Monday', '13:00:00', '15:00:00', '2024-04-08', '2024-10-18', '2024-08-03 17:39:15'),
-(16, 'asd', 18, 1, '', 'Monday', '06:00:00', '10:00:00', '2024-04-08', '2024-10-18', '2024-08-03 17:39:44'),
-(17, 'samting', 17, 1, 'lab1', 'Tuesday', '12:24:00', '15:24:00', '2024-04-08', '2024-10-18', '2024-08-10 15:24:27'),
-(18, 'aaaa', 17, 1, 'lab1', 'Monday', '06:00:00', '10:00:00', '2024-04-08', '2024-10-18', '2024-08-10 18:03:55'),
-(19, 'asd', 17, 1, 'lab1', 'Monday', '11:59:00', '01:00:00', '2024-04-08', '2024-10-18', '2024-08-10 18:04:51'),
-(20, 'asd', 17, 1, 'lab2', 'Monday', '06:00:00', '10:00:00', '2024-04-08', '2024-10-18', '2024-08-10 18:07:26'),
-(21, 'kkk', 17, 1, 'lab3', 'Monday', '06:00:00', '13:00:00', '2024-04-08', '2024-10-18', '2024-08-10 18:09:22'),
-(22, '6', 17, 1, 'lab4', 'Monday', '06:00:00', '10:00:00', '2024-04-08', '2024-10-18', '2024-08-10 18:10:03'),
-(23, 'asd', 15, 1, 'lab4', 'Monday', '06:00:00', '10:00:00', '2024-04-08', '2024-10-18', '2024-08-10 18:10:30'),
-(24, 'asd', 21, 1, 'lab1', 'Monday', '06:00:00', '07:00:00', '2024-04-08', '2024-10-18', '2024-08-11 10:37:55'),
-(25, 'aaa', 13, 1, 'lab1', 'Friday', '03:24:00', '05:24:00', '2024-04-08', '2024-10-18', '2024-08-11 17:24:53'),
-(26, 'Mehehey', 14, 1, 'lab1', 'Wednesday', '08:00:00', '11:00:00', '2024-04-08', '2024-10-18', '2024-08-12 00:37:57'),
-(27, 'maap', 13, 1, 'lab1', 'Thursday', '08:07:00', '10:00:00', '2024-04-08', '2024-10-18', '2024-08-12 00:50:13');
+(28, 'Monday ', 33, 1, 'lab1', 'Monday', '08:00:00', '09:30:00', '2024-04-08', '2024-10-18', '2024-08-12 06:04:38'),
+(29, 'asd', 33, 1, 'lab1', 'Monday', '10:00:00', '13:00:00', '2024-04-08', '2024-10-18', '2024-08-13 00:24:01'),
+(30, 'meek', 27, 1, 'lab2', 'Monday', '08:00:00', '11:30:00', '2024-04-08', '2024-10-18', '2024-08-13 00:36:34'),
+(31, 'marps', 27, 1, 'lab3', 'Monday', '08:00:00', '11:00:00', '2024-04-08', '2024-10-18', '2024-08-13 00:39:31'),
+(32, 'marps 4', 32, 1, 'lab4', 'Tuesday', '13:00:00', '17:00:00', '2024-04-08', '2024-10-18', '2024-08-13 00:39:56'),
+(33, 'Intro to Computing', 13, 1, 'lab1', 'Monday', '15:30:00', '17:00:00', '2024-04-08', '2024-10-18', '2024-08-13 01:35:51'),
+(35, 'Web Development', 13, 1, 'lab3', 'Tuesday', '13:00:00', '15:00:00', '2024-04-08', '2024-10-18', '2024-08-13 01:38:26');
 
 -- --------------------------------------------------------
 
@@ -237,19 +217,19 @@ ALTER TABLE `semester`
 -- AUTO_INCREMENT for table `personnel`
 --
 ALTER TABLE `personnel`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `reserve`
 --
 ALTER TABLE `reserve`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `sched`
 --
 ALTER TABLE `sched`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `schedules`
