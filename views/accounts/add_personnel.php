@@ -2,6 +2,8 @@
 include '../../models/database.php';
 session_start();
 
+$response = [];
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['name']) && isset($_POST['username']) && isset($_POST['role'])) {
         $name = $_POST['name'];
@@ -13,18 +15,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->bind_param("ssss", $name, $username, $role, $password);
 
         if ($stmt->execute()) {
-            $_SESSION['success_message'] = "New personnel added successfully";
+            $response['success'] = true;
+            $response['message'] = "New personnel added successfully";
         } else {
-            $_SESSION['error_message'] = "Error: " . $stmt->error;
+            $response['success'] = false;
+            $response['message'] = "Error: " . $stmt->error;
         }
 
         $stmt->close();
     } else {
-        $_SESSION['error_message'] = "Required fields are missing";
+        $response['success'] = false;
+        $response['message'] = "Required fields are missing";
     }
 
     $conn->close();
-    header("Location: accounts.php");
-    exit();
+} else {
+    $response['success'] = false;
+    $response['message'] = "Invalid request method";
 }
+
+header('Content-Type: application/json');
+echo json_encode($response);
 ?>

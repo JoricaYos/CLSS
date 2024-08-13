@@ -47,16 +47,16 @@
                     </div>
                 </div>
                 <table id="scheduleTable" class="table table-bordered text-center">
-                    <thead style="background-color: white;">
+                    <thead style="background-color: #071952; color: white">
                         <tr>
-                            <th><i class="fas fa-map-marker"></i> Subject</th>
+                            <th><i class="fas fa-keyboard"></i> Subject</th>
                             <th><i class="fas fa-school"></i> Semester</th>
-                            <th><i class="fas fa-keyboard"></i> Laboratory</th>
+                            <th><i class="fas fa-map-marker"></i> Laboratory</th>
                             <th><i class="fas fa-calendar-week"></i> Day</th>
                             <th><i class="fas fa-clock"></i> Time</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody style="background-color: white;">
                     </tbody>
                 </table>
                 <div class="py-5"></div>
