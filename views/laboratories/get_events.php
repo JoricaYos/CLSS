@@ -27,7 +27,8 @@ if ($result->num_rows > 0) {
                 'start' => $date->format('Y-m-d') . 'T' . $row['start_time'],
                 'end' => $date->format('Y-m-d') . 'T' . $row['end_time'],
                 'color' => '#2F48A1',
-                'type' => 'schedule'
+                'type' => 'schedule',
+                'semester' => $row['semester']
             );
         }
     }

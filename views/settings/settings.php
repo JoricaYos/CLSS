@@ -111,9 +111,10 @@ if ($result->num_rows > 0) {
                 <option value="lab3">Laboratory 3</option>
                 <option value="lab4">Laboratory 4</option>
               </select>
-              <button id="addScheduleBtn" class="btn mb-3" style="background-color: #2F48A1; color: white">Add
+              <button id="addScheduleBtn" class="btn mb-3" style="background-color: #0B206A; color: white">Add
                 Schedule</button>
-              <button id="addReservationBtn" class="btn btn-success mb-3 ml-2">Add Reservation</button>
+              <button id="addReservationBtn" class="btn mb-3 ml-2" style="background-color: #106825; color: white;">Add
+                Reservation</button>
               <button id="printScheduleBtn" class="btn btn-primary mb-3 ml-2">Print Schedule</button>
             </div>
           </div>
@@ -537,18 +538,18 @@ if ($result->num_rows > 0) {
 
   <style>
     .fc-event {
-      background-color: #2F48A1 !important;
-      border-color: #2F48A1 !important;
+      background-color: #0B206A !important;
+      border-color: #0B206A !important;
     }
 
     .fc-event[data-event-type="reservation"] {
-      background-color: #28a745 !important;
-      border-color: #28a745 !important;
+      background-color: #106825 !important;
+      border-color: #106825 !important;
     }
 
     .fc-event.reservation-event {
-      background-color: #28a745 !important;
-      border-color: #28a745 !important;
+      background-color: #106825 !important;
+      border-color: #106825 !important;
     }
 
     .fc-event-title,
@@ -572,38 +573,13 @@ if ($result->num_rows > 0) {
       margin-bottom: 5px;
       font-weight: bold;
     }
-  </style>
 
-  <style>
-    .fc-event {
-      background-color: #2F48A1 !important;
-      border-color: #2F48A1 !important;
-    }
-
-    .fc-event[data-event-type="reservation"] {
-      background-color: #28a745 !important;
-      border-color: #28a745 !important;
-    }
-
-    .fc-event.reservation-event {
-      background-color: #28a745 !important;
-      border-color: #28a745 !important;
-    }
-
-    .fc-event-title,
-    .fc-event-time {
-      color: white !important;
-    }
-
-    .form-group {
-      text-align: left;
-      margin-bottom: 15px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
+    #calendar .fc-event-title,
+    #calendar .fc-event-time {
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   </style>
 

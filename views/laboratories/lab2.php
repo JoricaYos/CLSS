@@ -37,7 +37,8 @@
                     <h1 class="text-left">Computer Laboratory 2</h1>
                     <br>
                     <?php if ($_SESSION['role'] != 'student'): ?>
-                        <button id="addScheduleBtn" class="btn mb-3" style="background-color: #2F48A1; color: white">Add Schedule</button>
+                        <button id="addScheduleBtn" class="btn mb-3" style="background-color: #2F48A1; color: white">Add
+                            Schedule</button>
                         <button id="addReservationBtn" class="btn btn-success mb-3 ml-2">Add Reservation</button>
                     <?php endif; ?>
                     <?php if ($_SESSION['role'] != 'Instructor' && $_SESSION['role'] != 'student' && $_SESSION['role'] != 'Dean/Principal'): ?>
@@ -367,6 +368,14 @@
     </script>
 
     <style>
+        #calendar .fc-event-title,
+        #calendar .fc-event-time {
+            font-size: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
         .fc-event {
             background-color: #2F48A1 !important;
             border-color: #2F48A1 !important;

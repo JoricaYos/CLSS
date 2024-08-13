@@ -124,7 +124,6 @@ include ($_SERVER['DOCUMENT_ROOT'] . '/controllers/logged_checker.php');
                     {
                         "data": "status",
                         "render": function (data, type, row) {
-                            // Set the switch based on status
                             const isChecked = data === 'active' ? 'checked' : '';
                             return `
                         <label class="switch">
@@ -137,7 +136,6 @@ include ($_SERVER['DOCUMENT_ROOT'] . '/controllers/logged_checker.php');
                 ]
             });
 
-            // Handle status toggle
             $('#researchersTable').on('change', '.status-switch', function () {
                 const id = $(this).data('id');
                 const status = $(this).is(':checked') ? 'active' : 'inactive';
@@ -155,7 +153,6 @@ include ($_SERVER['DOCUMENT_ROOT'] . '/controllers/logged_checker.php');
                                 text: result.message,
                                 confirmButtonColor: '#3085d6'
                             }).then(() => {
-                                // Revert the switch if there's an error
                                 $(this).prop('checked', !$(this).is(':checked'));
                             });
                         }
@@ -166,13 +163,11 @@ include ($_SERVER['DOCUMENT_ROOT'] . '/controllers/logged_checker.php');
                             text: 'An error occurred while updating the status.',
                             confirmButtonColor: '#3085d6'
                         }).then(() => {
-                            // Revert the switch if there's an error
                             $(this).prop('checked', !$(this).is(':checked'));
                         });
                     });
             });
 
-            // Custom button click handler
             $('#btn-custom').on('click', function () {
                 Swal.fire({
                     title: 'Add Personnel',

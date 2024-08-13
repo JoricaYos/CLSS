@@ -62,6 +62,27 @@ $lab = isset($_GET['lab']) ? htmlspecialchars($_GET['lab']) : 'lab1';
         .approval-section .right {
             text-align: center;
         }
+
+        #calendar .fc-event-title,
+        #calendar .fc-event-time {
+            font-size: 12px;
+            /* Reduce font size */
+            white-space: nowrap;
+            /* Prevent text wrapping */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            /* Show ellipsis if text overflows */
+        }
+
+        .fc .fc-timegrid-event-harness {
+            padding: 2px;
+            /* Reduce padding */
+        }
+
+        .fc .fc-daygrid-event {
+            margin: 1px;
+            /* Reduce margin */
+        }
     </style>
 </head>
 
@@ -72,7 +93,7 @@ $lab = isset($_GET['lab']) ? htmlspecialchars($_GET['lab']) : 'lab1';
 
     <div class="wrapper d-flex align-items-stretch justify-content-center">
         <div id="content" class="p-4 p-md-5 pt-5">
-            <div style="text-align: center; margin-bottom: 20px;">
+            <div style="text-align: center; margin-bottom: 20px; margin-left: 50px">
                 <div style="display: inline-block; text-align: center;">
                     <img src="../../assets/smcc-logo.png" alt="SMCC Logo" style="width: 70px; height: 70px;">
                 </div>
@@ -96,11 +117,11 @@ $lab = isset($_GET['lab']) ? htmlspecialchars($_GET['lab']) : 'lab1';
                     <div class="approval-section">
                         <div class="left">
                             <p>Prepared by: <span style="font-weight: bold; text-decoration: underline;">Name
-                                    here</span><br><span style="font-weight: bold;">Position 69</span></p>
+                                    here</span><br><span style="font-weight: bold;">Position dari</span></p>
                         </div>
                         <div class="right">
                             <p>Approved by: <span style="font-weight: bold; text-decoration: underline;">NAME
-                                    here</span><br><span style="font-weight: bold;">Position 69</span></p>
+                                    here</span><br><span style="font-weight: bold;">Position dari</span></p>
                         </div>
                     </div>
                 </div>
