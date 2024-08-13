@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 13, 2024 at 04:27 AM
+-- Generation Time: Aug 13, 2024 at 05:27 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -31,6 +31,7 @@ CREATE TABLE `personnel` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `role` varchar(255) NOT NULL,
+  `status` varchar(255) NOT NULL,
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `img` varchar(255) NOT NULL
@@ -40,13 +41,13 @@ CREATE TABLE `personnel` (
 -- Dumping data for table `personnel`
 --
 
-INSERT INTO `personnel` (`id`, `name`, `role`, `username`, `password`, `img`) VALUES
-(13, 'Nawng Nimo', 'Admin', 'admin', '$2y$10$IRTCH4eQfFqDUZQffHy47uqTrTYVUOn8azO6FiYDNwdr0ENt3D76.', 'uploads/13/smcc-logo.png'),
-(27, 'ako mani', 'Library Custodian', 'ako mani gani', '$2y$10$7CbRdYBIVQ7buGc8ni/vieqs2JbzPlVPUqThUq6Kzg7iSAzgyGmx6', ''),
-(29, 'jam', 'student', 'student', '$2y$10$79y.m.8kF8DTK.LnRJrtjOGqFPO629xFr8dfP88BWP6hjcKWLbAAW', ''),
-(31, 'dean', 'Dean/Principal', 'dean', '$2y$10$pW//bNoNobob6lqDAlOuheNlBvQ3q/8gL5bZtJbH8ANfwWxfXfyTC', ''),
-(32, 'instructor', 'Instructor', 'instructor', '$2y$10$k72tcb1sVn.RdbllOqwI2eGyASJ2v8okec5VBUeDbk9DV94isrJWu', ''),
-(33, 'custodian', 'Custodian', 'custodian', '$2y$10$iAGzDdsC2iZv89LCt/HY3uaTtz1Tz94ixckpFI73x96L/fh9FUbq2', '');
+INSERT INTO `personnel` (`id`, `name`, `role`, `status`, `username`, `password`, `img`) VALUES
+(13, 'Nawng Nimo', 'Admin', 'active', 'admin', '$2y$10$IRTCH4eQfFqDUZQffHy47uqTrTYVUOn8azO6FiYDNwdr0ENt3D76.', 'uploads/13/smcc-logo.png'),
+(27, 'ako mani', 'Library Custodian', 'active', 'ako mani gani', '$2y$10$7CbRdYBIVQ7buGc8ni/vieqs2JbzPlVPUqThUq6Kzg7iSAzgyGmx6', ''),
+(29, 'jam', 'student', 'inactive', 'student', '$2y$10$79y.m.8kF8DTK.LnRJrtjOGqFPO629xFr8dfP88BWP6hjcKWLbAAW', ''),
+(31, 'dean', 'Dean/Principal', 'active', 'dean', '$2y$10$pW//bNoNobob6lqDAlOuheNlBvQ3q/8gL5bZtJbH8ANfwWxfXfyTC', ''),
+(32, 'instructor', 'Instructor', 'active', 'instructor', '$2y$10$k72tcb1sVn.RdbllOqwI2eGyASJ2v8okec5VBUeDbk9DV94isrJWu', ''),
+(33, 'custodian', 'Custodian', 'active', 'custodian', '$2y$10$iAGzDdsC2iZv89LCt/HY3uaTtz1Tz94ixckpFI73x96L/fh9FUbq2', '');
 
 -- --------------------------------------------------------
 

@@ -20,6 +20,55 @@ include ($_SERVER['DOCUMENT_ROOT'] . '/controllers/logged_checker.php');
 
     <!-- SweetAlert2 CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    <style>
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            border-radius: 50%;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+        }
+
+        input:checked+.slider {
+            background-color: #2196F3;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(26px);
+        }
+    </style>
+
+
 </head>
 
 <body style="background-color: #EBF4F6">
@@ -46,7 +95,7 @@ include ($_SERVER['DOCUMENT_ROOT'] . '/controllers/logged_checker.php');
                                 <th><i class="fas fa-user"></i> NAME</th>
                                 <th><i class="fas fa-user-tag"></i> ROLE</th>
                                 <th><i class="fas fa-user-circle"></i> USERNAME</th>
-                                <th><i class="fas fa-calendar-alt"></i> RESERVATIONS</th>
+                                <th><i class="fas fa-cog"></i> ACTIONS</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -73,37 +122,80 @@ include ($_SERVER['DOCUMENT_ROOT'] . '/controllers/logged_checker.php');
                     { "data": "role" },
                     { "data": "username" },
                     {
-                        "data": "reservations",
-                        "render": function (data) {
-                            return data ? data : '0';
+                        "data": "status",
+                        "render": function (data, type, row) {
+                            // Set the switch based on status
+                            const isChecked = data === 'active' ? 'checked' : '';
+                            return `
+                        <label class="switch">
+                            <input type="checkbox" class="status-switch" data-id="${row.id}" ${isChecked}>
+                            <span class="slider round"></span>
+                        </label>
+                    `;
                         }
                     }
                 ]
             });
 
+            // Handle status toggle
+            $('#researchersTable').on('change', '.status-switch', function () {
+                const id = $(this).data('id');
+                const status = $(this).is(':checked') ? 'active' : 'inactive';
+
+                fetch('update_status.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id, status })
+                }).then(response => response.json())
+                    .then(result => {
+                        if (!result.success) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: result.message,
+                                confirmButtonColor: '#3085d6'
+                            }).then(() => {
+                                // Revert the switch if there's an error
+                                $(this).prop('checked', !$(this).is(':checked'));
+                            });
+                        }
+                    }).catch(error => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'An error occurred while updating the status.',
+                            confirmButtonColor: '#3085d6'
+                        }).then(() => {
+                            // Revert the switch if there's an error
+                            $(this).prop('checked', !$(this).is(':checked'));
+                        });
+                    });
+            });
+
+            // Custom button click handler
             $('#btn-custom').on('click', function () {
                 Swal.fire({
                     title: 'Add Personnel',
                     html: `
-                    <form id="addPersonnelForm" method="post">
-                        <div class="form-group" style="text-align: left;">
-                            <label for="name">Name</label>
-                            <input type="text" class="form-control" name="name" id="name" required style="border: 1px solid #ced4da;">
-                        </div>
-                        <div class="form-group" style="text-align: left;">
-                            <label for="username">Username</label>
-                            <input type="text" class="form-control" name="username" id="username" required style="border: 1px solid #ced4da;">
-                        </div>
-                        <div class="form-group" style="text-align: left;">
-                            <label for="role">Role</label>
-                            <select class="form-control" name="role" id="role" required style="border: 1px solid #ced4da;">
-                                <option value="Instructor">Instructor</option>
-                                <option value="Library Custodian">Custodian</option>
-                                <option value="Dean/Principal">Dean/Principal</option>
-                            </select>
-                        </div>
-                    </form>
-                `,
+            <form id="addPersonnelForm" method="post">
+                <div class="form-group" style="text-align: left;">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" name="name" id="name" required style="border: 1px solid #ced4da;">
+                </div>
+                <div class="form-group" style="text-align: left;">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" name="username" id="username" required style="border: 1px solid #ced4da;">
+                </div>
+                <div class="form-group" style="text-align: left;">
+                    <label for="role">Role</label>
+                    <select class="form-control" name="role" id="role" required style="border: 1px solid #ced4da;">
+                        <option value="Instructor">Instructor</option>
+                        <option value="Library Custodian">Custodian</option>
+                        <option value="Dean/Principal">Dean/Principal</option>
+                    </select>
+                </div>
+            </form>
+        `,
                     showCancelButton: true,
                     confirmButtonText: 'Submit',
                     cancelButtonText: 'Cancel',
@@ -148,19 +240,19 @@ include ($_SERVER['DOCUMENT_ROOT'] . '/controllers/logged_checker.php');
             <?php
             if (isset($_SESSION['success_message'])) {
                 echo "Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: '" . addslashes($_SESSION['success_message']) . "',
-                confirmButtonColor: '#3085d6'
-            });";
+        icon: 'success',
+        title: 'Success!',
+        text: '" . addslashes($_SESSION['success_message']) . "',
+        confirmButtonColor: '#3085d6'
+    });";
                 unset($_SESSION['success_message']);
             } elseif (isset($_SESSION['error_message'])) {
                 echo "Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: '" . addslashes($_SESSION['error_message']) . "',
-                confirmButtonColor: '#3085d6'
-            });";
+        icon: 'error',
+        title: 'Error',
+        text: '" . addslashes($_SESSION['error_message']) . "',
+        confirmButtonColor: '#3085d6'
+    });";
                 unset($_SESSION['error_message']);
             }
             ?>

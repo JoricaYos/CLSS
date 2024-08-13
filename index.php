@@ -67,18 +67,25 @@
       if (isset($_GET['error'])) {
         if ($_GET['error'] == 'invalid_password') {
           echo "Swal.fire({
-            icon: 'error',
-            title: 'Login Error',
-            text: 'Invalid password.',
-            confirmButtonText: 'Ok'
-          });";
+          icon: 'error',
+          title: 'Login Error',
+          text: 'Invalid password.',
+          confirmButtonText: 'Ok'
+        });";
         } elseif ($_GET['error'] == 'no_user') {
           echo "Swal.fire({
-            icon: 'error',
-            title: 'Login Error',
-            text: 'No user found.',
-            confirmButtonText: 'Ok'
-          });";
+          icon: 'error',
+          title: 'Login Error',
+          text: 'No user found.',
+          confirmButtonText: 'Ok'
+        });";
+        } elseif ($_GET['error'] == 'inactive_status') {
+          echo "Swal.fire({
+          icon: 'error',
+          title: 'Login Error',
+          text: 'Your account is now disabled. Please contact our School Computer Laboratory Custodian / Admin.',
+          confirmButtonText: 'Okay'
+        });";
         }
       }
       ?>

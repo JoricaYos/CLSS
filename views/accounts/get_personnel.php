@@ -1,12 +1,9 @@
 <?php
 include '../../models/database.php';
 
-$sql = "SELECT p.name, p.role, p.username, COUNT(s.id) AS reservations
-        FROM personnel p
-        LEFT JOIN schedules s ON p.name = s.personnel
-        GROUP BY p.name, p.role, p.username
-        ORDER BY p.id DESC"; 
-
+$sql = "SELECT id, name, role, username, status
+        FROM personnel
+        ORDER BY id DESC";
 
 $result = $conn->query($sql);
 
