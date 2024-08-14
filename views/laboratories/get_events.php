@@ -49,7 +49,7 @@ if ($result->num_rows > 0) {
             'id' => 'reserve_' . $row['id'],
             'title' => $row['title'],
             'start' => $row['start_date'] . 'T' . $row['start_time'],
-            'end' => $row['end_date'] . 'T' . $row['end_time'],
+            'end' => $row['start_date'] . 'T' . $row['end_time'],
             'color' => '#28a745',
             'type' => 'reservation',
             'classNames' => ['reservation-event']

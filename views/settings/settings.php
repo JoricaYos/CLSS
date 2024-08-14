@@ -193,7 +193,7 @@ if ($result->num_rows > 0) {
           var endDate = $row.find('.date-input:eq(1)').val();
 
           $.ajax({
-            url: '../laboratories/update_semester.php',
+            url: 'update_semester.php',
             method: 'POST',
             data: {
               semester: semesterIndex,
@@ -587,12 +587,8 @@ if ($result->num_rows > 0) {
             '<input id="swal-event-title" class="swal2-input" placeholder="Enter event title">' +
             '</div>' +
             '<div class="form-group">' +
-            '<label for="swal-start-date">Start Date:</label>' +
+            '<label for="swal-start-date">Date:</label>' +
             '<input id="swal-start-date" class="swal2-input" type="date">' +
-            '</div>' +
-            '<div class="form-group">' +
-            '<label for="swal-end-date">End Date:</label>' +
-            '<input id="swal-end-date" class="swal2-input" type="date">' +
             '</div>' +
             '<div class="form-group">' +
             '<label for="swal-start-time">Start Time:</label>' +
@@ -608,7 +604,6 @@ if ($result->num_rows > 0) {
               title: document.getElementById('swal-event-title').value,
               lab: document.getElementById('swal-lab').value,
               start_date: document.getElementById('swal-start-date').value,
-              end_date: document.getElementById('swal-end-date').value,
               start_time: document.getElementById('swal-start-time').value,
               end_time: document.getElementById('swal-end-time').value
             }
