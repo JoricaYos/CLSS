@@ -1,4 +1,4 @@
-<?php include ($_SERVER['DOCUMENT_ROOT'] . '/controllers/logged_checker.php'); ?>
+<?php include($_SERVER['DOCUMENT_ROOT'] . '/controllers/logged_checker.php'); ?>
 
 <?php
 include '../../models/database.php';
@@ -41,7 +41,7 @@ if ($result->num_rows > 0) {
 
 <body style="background-color: #EBF4F6">
   <div class="wrapper d-flex align-items-stretch">
-    <?php include ($_SERVER['DOCUMENT_ROOT'] . '/views/includes/nav.php'); ?>
+    <?php include($_SERVER['DOCUMENT_ROOT'] . '/views/includes/nav.php'); ?>
     <div id="content" class="p-4 p-md-5 pt-5">
       <?php include '../includes/user-container.php'; ?>
       <div class="row mt-4">
@@ -255,7 +255,7 @@ if ($result->num_rows > 0) {
         headerToolbar: {
           left: 'prev,next today',
           center: 'title',
-          right: 'dayGridMonth,timeGridWeek,list'
+          right: 'dayGridMonth,timeGridWeek'
         },
         events: `../laboratories/get_events.php?lab=${currentLab}`,
         eventClick: function (info) {
@@ -270,21 +270,25 @@ if ($result->num_rows > 0) {
                 Swal.fire({
                   title: 'Schedule Details',
                   html: `
-              <div style="text-align: left;">
-                <p><i class="fas fa-book" style="width: 20px;"></i> <strong>Subject:</strong> ${data.subject}</p>
-                <p><i class="fas fa-user" style="width: 20px;"></i> <strong>Personnel:</strong> ${data.personnel_name}</p>
-                <p><i class="fas fa-clock" style="width: 20px;"></i> <strong>Start Time:</strong> ${formatTime(data.start_time)}</p>
-                <p><i class="fas fa-hourglass-end" style="width: 20px;"></i> <strong>End Time:</strong> ${formatTime(data.end_time)}</p>
-              </div>
-            `,
+            <div style="text-align: left;">
+              <p><i class="fas fa-book" style="width: 20px;"></i> <strong>Subject:</strong> ${data.subject}</p>
+              <p><i class="fas fa-user" style="width: 20px;"></i> <strong>Personnel:</strong> ${data.personnel_name}</p>
+              <p><i class="fas fa-clock" style="width: 20px;"></i> <strong>Start Time:</strong> ${formatTime(data.start_time)}</p>
+              <p><i class="fas fa-hourglass-end" style="width: 20px;"></i> <strong>End Time:</strong> ${formatTime(data.end_time)}</p>
+            </div>
+          `,
                   icon: 'info',
                   showCancelButton: true,
+                  showDenyButton: true,
                   cancelButtonText: 'Close',
                   confirmButtonText: 'Edit',
+                  denyButtonText: 'Delete',
                   showCloseButton: true,
                 }).then((result) => {
                   if (result.isConfirmed) {
                     editSchedule(data);
+                  } else if (result.isDenied) {
+                    deleteSchedule(data.id);
                   }
                 });
               },
@@ -316,6 +320,38 @@ if ($result->num_rows > 0) {
         calendar.removeAllEventSources();
         calendar.addEventSource(`../laboratories/get_events.php?lab=${currentLab}`);
       });
+
+      function deleteSchedule(scheduleId) {
+        Swal.fire({
+          title: 'Are you sure?',
+          text: "You won't be able to revert this!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            $.ajax({
+              url: 'delete_schedule.php',
+              type: 'POST',
+              data: { id: scheduleId },
+              dataType: 'json',
+              success: function (response) {
+                if (response.status === 'success') {
+                  Swal.fire('Deleted!', response.message, 'success');
+                  calendar.refetchEvents();
+                } else {
+                  Swal.fire('Error', response.message, 'error');
+                }
+              },
+              error: function () {
+                Swal.fire('Error', 'An error occurred while deleting the schedule', 'error');
+              }
+            });
+          }
+        });
+      }
 
       function populatePersonnelDropdown() {
         $.ajax({
@@ -659,19 +695,9 @@ if ($result->num_rows > 0) {
       border-color: #0B206A !important;
     }
 
-    .fc-event[data-event-type="reservation"] {
-      background-color: #106825 !important;
-      border-color: #106825 !important;
-    }
-
     .fc-event.reservation-event {
       background-color: #106825 !important;
       border-color: #106825 !important;
-    }
-
-    .fc-event-title,
-    .fc-event-time {
-      color: white !important;
     }
 
     .swal2-input,

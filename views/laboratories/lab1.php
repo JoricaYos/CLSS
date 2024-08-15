@@ -92,7 +92,7 @@
         headerToolbar: {
           left: 'prev,next today',
           center: 'title',
-          right: 'dayGridMonth,timeGridWeek,list'
+          right: 'dayGridMonth,timeGridWeek'
         },
         events: `get_events.php?lab=${currentLab}`,
         eventClick: function (info) {

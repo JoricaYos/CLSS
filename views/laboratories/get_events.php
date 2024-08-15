@@ -29,7 +29,6 @@ if ($result->num_rows > 0) {
                 'title' => $row['subject'],
                 'start' => $date->format('Y-m-d') . 'T' . $row['start_time'],
                 'end' => $date->format('Y-m-d') . 'T' . $row['end_time'],
-                'color' => '#2F48A1',
                 'type' => 'schedule',
                 'semester' => $row['semester'],
                 'day' => $row['day'],
@@ -50,7 +49,6 @@ if ($result->num_rows > 0) {
             'title' => $row['title'],
             'start' => $row['start_date'] . 'T' . $row['start_time'],
             'end' => $row['start_date'] . 'T' . $row['end_time'],
-            'color' => '#28a745',
             'type' => 'reservation',
             'classNames' => ['reservation-event']
         );
