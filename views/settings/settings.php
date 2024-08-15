@@ -261,7 +261,7 @@ if ($result->num_rows > 0) {
         eventClick: function (info) {
           if (info.event.extendedProps.type === 'schedule') {
             $.ajax({
-              url: '../laboratories/get_event_details.php',
+              url: 'get_admin_event_details.php',
               type: 'GET',
               data: { id: info.event.id.split('_')[1] },
               dataType: 'json',

@@ -367,52 +367,52 @@
         });
     </script>
 
-    <style>
-        #calendar .fc-event-title,
-        #calendar .fc-event-time {
-            font-size: 12px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+<style>
+    .fc-event {
+      background-color: #0B206A !important;
+      border-color: #0B206A !important;
+    }
 
-        .fc-event {
-            background-color: #2F48A1 !important;
-            border-color: #2F48A1 !important;
-        }
+    .fc-event[data-event-type="reservation"] {
+      background-color: #106825 !important;
+      border-color: #106825 !important;
+    }
 
-        .fc-event[data-event-type="reservation"] {
-            background-color: #28a745 !important;
-            border-color: #28a745 !important;
-        }
+    .fc-event.reservation-event {
+      background-color: #106825 !important;
+      border-color: #106825 !important;
+    }
 
-        .fc-event.reservation-event {
-            background-color: #28a745 !important;
-            border-color: #28a745 !important;
-        }
+    .fc-event-title,
+    .fc-event-time {
+      color: white !important;
+    }
 
-        .fc-event-title,
-        .fc-event-time {
-            color: white !important;
-        }
+    .swal2-input,
+    .swal2-select {
+      width: 100% !important;
+      margin: 5px auto !important;
+    }
 
-        .swal2-input,
-        .swal2-select {
-            width: 100% !important;
-            margin: 5px auto !important;
-        }
+    .form-group {
+      text-align: left;
+      margin-bottom: 15px;
+    }
 
-        .form-group {
-            text-align: left;
-            margin-bottom: 15px;
-        }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-    </style>
+    #calendar .fc-event-title,
+    #calendar .fc-event-time {
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  </style>
 </body>
 
 </html>

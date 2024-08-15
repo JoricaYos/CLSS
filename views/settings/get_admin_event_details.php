@@ -1,6 +1,4 @@
-
 <?php
-session_start(); 
 include '../../models/database.php';
 
 $id = isset($_GET['id']) ? $_GET['id'] : '';
@@ -23,8 +21,7 @@ if ($result->num_rows > 0) {
         'day' => $row['day'],
         'start_time' => $row['start_time'],
         'end_time' => $row['end_time'],
-        'lab' => $row['lab'],
-        'current_user' => $_SESSION['name'] ?? ''
+        'lab' => $row['lab']
     );
     echo json_encode($event);
 } else {
