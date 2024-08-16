@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 16, 2024 at 02:38 AM
+-- Generation Time: Aug 16, 2024 at 11:05 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -43,8 +43,7 @@ CREATE TABLE `personnel` (
 
 INSERT INTO `personnel` (`id`, `name`, `role`, `status`, `username`, `password`, `img`) VALUES
 (13, 'ImongNawngHello', 'Admin', 'active', 'admin', '$2y$10$WB1MoQwlsTH6vk4yp8FUpO8wQ7eiSsjU/2FngBEQZ7PXe.newFE.O', 'uploads/13/smcc-logo.png'),
-(27, 'ako mani', 'Library Custodian', 'active', 'ako mani gani', '$2y$10$7CbRdYBIVQ7buGc8ni/vieqs2JbzPlVPUqThUq6Kzg7iSAzgyGmx6', ''),
-(29, 'jam', 'student', 'inactive', 'student', '$2y$10$79y.m.8kF8DTK.LnRJrtjOGqFPO629xFr8dfP88BWP6hjcKWLbAAW', ''),
+(29, 'jam', 'student', 'active', 'student', '$2y$10$79y.m.8kF8DTK.LnRJrtjOGqFPO629xFr8dfP88BWP6hjcKWLbAAW', ''),
 (31, 'dean', 'Dean/Principal', 'active', 'dean', '$2y$10$pW//bNoNobob6lqDAlOuheNlBvQ3q/8gL5bZtJbH8ANfwWxfXfyTC', ''),
 (32, 'instructor', 'Instructor', 'active', 'instructor', '$2y$10$k72tcb1sVn.RdbllOqwI2eGyASJ2v8okec5VBUeDbk9DV94isrJWu', ''),
 (33, 'custodian', 'Custodian', 'active', 'custodian', '$2y$10$iAGzDdsC2iZv89LCt/HY3uaTtz1Tz94ixckpFI73x96L/fh9FUbq2', '');
@@ -76,7 +75,9 @@ INSERT INTO `reserve` (`id`, `title`, `lab`, `personnel_id`, `start_date`, `end_
 (6, 'meymey', 'lab2', 13, '2024-08-08', '2024-08-08', '22:00:00', '23:00:00'),
 (7, 'asd', 'lab2', 13, '2024-08-16', '2024-08-16', '08:01:00', '10:00:00'),
 (8, '8', 'lab1', 13, '2024-08-15', '2024-08-15', '13:00:00', '15:00:00'),
-(10, 'Try 2 day event', 'lab1', 13, '2024-08-15', '2024-08-17', '16:00:00', '19:00:00');
+(10, 'Try 2 day event', 'lab1', 13, '2024-08-15', '2024-08-17', '16:00:00', '19:00:00'),
+(14, '', 'lab1', 13, '2024-08-16', '0000-00-00', '08:00:00', '10:00:00'),
+(15, 'asd', 'lab4', 13, '2024-08-16', '0000-00-00', '13:00:00', '17:00:00');
 
 -- --------------------------------------------------------
 
@@ -103,16 +104,15 @@ CREATE TABLE `sched` (
 --
 
 INSERT INTO `sched` (`id`, `subject`, `personnel_id`, `semester`, `lab`, `day`, `start_time`, `end_time`, `semester_start`, `semester_end`, `created_at`) VALUES
-(28, 'Monday nasad', 33, 2, 'lab1', 'Monday', '08:00:00', '09:30:00', '2024-09-01', '2024-12-12', '2024-08-12 06:04:38'),
 (30, 'meek', 27, 1, 'lab2', 'Monday', '08:00:00', '11:30:00', '2024-04-08', '2024-10-18', '2024-08-13 00:36:34'),
 (31, 'marps', 27, 1, 'lab3', 'Monday', '08:00:00', '11:00:00', '2024-04-08', '2024-10-18', '2024-08-13 00:39:31'),
 (32, 'marps 4', 32, 1, 'lab4', 'Tuesday', '13:00:00', '17:00:00', '2024-04-08', '2024-10-18', '2024-08-13 00:39:56'),
 (33, 'Intro to Computing', 13, 1, 'lab1', 'Monday', '15:30:00', '17:00:00', '2024-04-08', '2024-10-18', '2024-08-13 01:35:51'),
 (35, 'Web Development', 13, 1, 'lab3', 'Tuesday', '13:00:00', '15:00:00', '2024-04-08', '2024-10-18', '2024-08-13 01:38:26'),
-(37, 'Web Development', 27, 1, 'lab1', 'Tuesday', '08:00:00', '11:00:00', '2024-04-08', '2024-10-18', '2024-08-13 13:22:01'),
-(39, 'Capstone II', 27, 1, 'lab1', 'Tuesday', '13:00:00', '15:00:00', '2024-04-08', '2024-10-18', '2024-08-15 02:14:32'),
-(40, 'New added lamang ', 31, 0, 'lab1', 'Monday', '08:00:00', '10:00:00', '2024-09-01', '2024-12-12', '2024-08-15 05:42:49'),
-(41, 'New added lamang ', 27, 1, 'lab1', 'Monday', '08:00:00', '10:00:00', '2024-04-08', '2024-10-18', '2024-08-15 05:43:08');
+(44, 'Friday nasad', 13, 0, 'lab1', 'Friday', '08:00:00', '11:00:00', '2024-09-01', '2024-12-12', '2024-08-16 00:53:22'),
+(47, 'bbbb', 13, 1, 'lab2', 'Tuesday', '13:00:00', '15:00:00', '2024-04-08', '2024-10-18', '2024-08-16 03:50:03'),
+(48, 'mummimi', 13, 1, 'lab3', 'Wednesday', '13:00:00', '17:00:00', '2024-04-08', '2024-10-18', '2024-08-16 03:50:59'),
+(49, 'mamar apdited', 13, 1, 'lab4', 'Monday', '13:00:00', '17:00:00', '2024-04-08', '2024-10-18', '2024-08-16 03:52:17');
 
 -- --------------------------------------------------------
 
@@ -227,13 +227,13 @@ ALTER TABLE `personnel`
 -- AUTO_INCREMENT for table `reserve`
 --
 ALTER TABLE `reserve`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `sched`
 --
 ALTER TABLE `sched`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT for table `schedules`
