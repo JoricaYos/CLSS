@@ -1,5 +1,10 @@
 <?php
 include ($_SERVER['DOCUMENT_ROOT'] . '/controllers/logged_checker.php');
+
+if (!isset($_SESSION['role']) || ($_SESSION['role'] !== 'Admin' && $_SESSION['role'] !== 'Custodian')) {
+    header("Location: ../profile/profile.php");
+    exit();
+  }
 ?>
 
 <!doctype html>
@@ -95,7 +100,7 @@ include ($_SERVER['DOCUMENT_ROOT'] . '/controllers/logged_checker.php');
                                 <th><i class="fas fa-user"></i> NAME</th>
                                 <th><i class="fas fa-user-tag"></i> ROLE</th>
                                 <th><i class="fas fa-user-circle"></i> USERNAME</th>
-                                <th><i class="fas fa-cog"></i> ACTIONS</th>
+                                <th><i class="fas fa-cog"></i> ACTIVE</th>
                             </tr>
                         </thead>
                         <tbody>

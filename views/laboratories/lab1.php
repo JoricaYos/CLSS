@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/table.css">
+    <link rel="stylesheet" href="../../css/calendar.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -494,53 +495,6 @@
       });
     });
   </script>
-
-<style>
-    .fc-event {
-      background-color: #0B206A !important;
-      border-color: #0B206A !important;
-    }
-
-    .fc-event[data-event-type="reservation"] {
-      background-color: #106825 !important;
-      border-color: #106825 !important;
-    }
-
-    .fc-event.reservation-event {
-      background-color: #106825 !important;
-      border-color: #106825 !important;
-    }
-
-    .fc-event-title,
-    .fc-event-time {
-      color: white !important;
-    }
-
-    .swal2-input,
-    .swal2-select {
-      width: 100% !important;
-      margin: 5px auto !important;
-    }
-
-    .form-group {
-      text-align: left;
-      margin-bottom: 15px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-
-    #calendar .fc-event-title,
-    #calendar .fc-event-time {
-      font-size: 12px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  </style>
 </body>
 
 </html>

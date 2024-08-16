@@ -22,7 +22,7 @@
             <li>
                 <a href="/views/profile/profile.php"><i class="fas fa-user-circle"></i> PROFILE</a>
             </li>
-            <?php if ($_SESSION['role'] == 'Admin'): ?>
+            <?php if ($_SESSION['role'] == 'Admin' || $_SESSION['role'] == 'Custodian'): ?>
                 <li>
                     <a href="/views/accounts/accounts.php"><i class="fas fa-users"></i> USER ACCOUNTS</a>
                 </li>

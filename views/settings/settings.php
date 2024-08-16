@@ -10,6 +10,11 @@ $semester = array();
 if ($result->num_rows > 0) {
   $semester = $result->fetch_assoc();
 }
+
+if (!isset($_SESSION['role']) || ($_SESSION['role'] !== 'Admin' && $_SESSION['role'] !== 'Custodian')) {
+  header("Location: ../profile/profile.php");
+  exit();
+}
 ?>
 
 <!doctype html>
@@ -29,6 +34,7 @@ if ($result->num_rows > 0) {
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+  <link rel="stylesheet" href="../../css/calendar.css">
   <link rel="stylesheet" href="../../css/style.css">
   <link rel="stylesheet" href="../../css/table.css">
   <style>
@@ -123,28 +129,6 @@ if ($result->num_rows > 0) {
       </div>
     </div>
 
-    <!-- Success Modal -->
-    <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel"
-      aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="successModalLabel">Success</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <?php
-            if (isset($_SESSION['success_message'])) {
-              echo $_SESSION['success_message'];
-              unset($_SESSION['success_message']);
-            }
-            ?>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
@@ -379,17 +363,17 @@ if ($result->num_rows > 0) {
             '<div class="form-group">' +
             '<input type="hidden" id="swal-lab" value="' + currentLab + '">' +
             '<label for="swal-subject">Subject:</label>' +
-            '<input id="swal-subject" class="swal2-input" placeholder="Enter subject">' +
+            '<input id="swal-subject" class="swal2-input" placeholder="Enter subject" required>' +
             '</div>' +
             '<div class="form-group">' +
             '<label for="swal-personnel">Personnel:</label>' +
-            '<select id="swal-personnel" class="swal2-input">' +
+            '<select id="swal-personnel" class="swal2-input" required>' +
             '<option value="">Select Personnel</option>' +
             '</select>' +
             '</div>' +
             '<div class="form-group">' +
             '<label for="swal-semester">Semester:</label>' +
-            '<select id="swal-semester" class="swal2-input">' +
+            '<select id="swal-semester" class="swal2-input" placeholder="Select Semester" required>' +
             '<option value="">Select Semester</option>' +
             '<option value="1">1st Semester</option>' +
             '<option value="2">2nd Semester</option>' +
@@ -584,6 +568,11 @@ if ($result->num_rows > 0) {
       }
 
       function submitSchedule(data) {
+        if (!data.subject || !data.personnel || !data.semester || !data.day || !data.startTime || !data.endTime) {
+          Swal.fire('Error', 'Please fill in all required fields', 'error');
+          return;
+        }
+
         const startTime = data.startTime;
         const endTime = data.endTime;
         const minTime = '08:00';
@@ -652,6 +641,10 @@ if ($result->num_rows > 0) {
       });
 
       function submitReservation(data) {
+        if (!data.title || !data.start_date || !data.start_time || !data.end_time) {
+          Swal.fire('Error', 'Please fill in all required fields', 'error');
+          return;
+        }
         const startTime = data.start_time;
         const endTime = data.end_time;
         const minTime = '08:00';
@@ -688,44 +681,6 @@ if ($result->num_rows > 0) {
       });
     });
   </script>
-
-  <style>
-    .fc-event {
-      background-color: #0B206A !important;
-      border-color: #0B206A !important;
-    }
-
-    .fc-event.reservation-event {
-      background-color: #106825 !important;
-      border-color: #106825 !important;
-    }
-
-    .swal2-input,
-    .swal2-select {
-      width: 100% !important;
-      margin: 5px auto !important;
-    }
-
-    .form-group {
-      text-align: left;
-      margin-bottom: 15px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-
-    #calendar .fc-event-title,
-    #calendar .fc-event-time {
-      font-size: 12px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  </style>
-
 </body>
 
 </html>
