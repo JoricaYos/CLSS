@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 16, 2024 at 11:05 AM
+-- Generation Time: Aug 17, 2024 at 07:56 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -109,54 +109,9 @@ INSERT INTO `sched` (`id`, `subject`, `personnel_id`, `semester`, `lab`, `day`, 
 (32, 'marps 4', 32, 1, 'lab4', 'Tuesday', '13:00:00', '17:00:00', '2024-04-08', '2024-10-18', '2024-08-13 00:39:56'),
 (33, 'Intro to Computing', 13, 1, 'lab1', 'Monday', '15:30:00', '17:00:00', '2024-04-08', '2024-10-18', '2024-08-13 01:35:51'),
 (35, 'Web Development', 13, 1, 'lab3', 'Tuesday', '13:00:00', '15:00:00', '2024-04-08', '2024-10-18', '2024-08-13 01:38:26'),
-(44, 'Friday nasad', 13, 0, 'lab1', 'Friday', '08:00:00', '11:00:00', '2024-09-01', '2024-12-12', '2024-08-16 00:53:22'),
 (47, 'bbbb', 13, 1, 'lab2', 'Tuesday', '13:00:00', '15:00:00', '2024-04-08', '2024-10-18', '2024-08-16 03:50:03'),
 (48, 'mummimi', 13, 1, 'lab3', 'Wednesday', '13:00:00', '17:00:00', '2024-04-08', '2024-10-18', '2024-08-16 03:50:59'),
 (49, 'mamar apdited', 13, 1, 'lab4', 'Monday', '13:00:00', '17:00:00', '2024-04-08', '2024-10-18', '2024-08-16 03:52:17');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `schedules`
---
-
-CREATE TABLE `schedules` (
-  `id` int(11) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `description` text DEFAULT NULL,
-  `repeat_weekly` tinyint(1) DEFAULT NULL,
-  `days` varchar(255) DEFAULT NULL,
-  `start_date` date NOT NULL,
-  `end_date` date NOT NULL,
-  `all_day` tinyint(1) DEFAULT NULL,
-  `start_time` time DEFAULT NULL,
-  `end_time` time DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `personnel` varchar(255) NOT NULL,
-  `type` varchar(255) NOT NULL,
-  `lab` varchar(255) NOT NULL,
-  `sem` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `schedules`
---
-
-INSERT INTO `schedules` (`id`, `title`, `description`, `repeat_weekly`, `days`, `start_date`, `end_date`, `all_day`, `start_time`, `end_time`, `created_at`, `personnel`, `type`, `lab`, `sem`) VALUES
-(72, 'sad', 'sad', 1, 'Tue', '2024-07-02', '2024-07-30', 1, NULL, NULL, '2024-07-01 22:58:03', '', 'schedule', 'lab4', '\0\0\0\0\0D?\0\0I\0\0\0\0\0\0?\0\0\0\0\0\0sadsad?Wed????????????f?4?schedulelab1\00\0\0 \0>?\0\0J\0\0\0\0\0\0?\0\0\0\0\0\0sadsad?Wed??'),
-(73, 'sad', 'sad', 1, 'Wed', '2024-07-03', '2024-08-07', 0, '09:58:00', '11:58:00', '2024-07-01 22:58:36', '', 'schedule', 'lab1', '\00\0\0 \0>?\0\0J\0\0\0\0\0\0?\0\0\0\0\0\0sadsad?Wed???????f?4?sc'),
-(74, 'sad', 'sad', 0, 'Wed', '2024-07-06', '2024-07-06', 1, NULL, NULL, '2024-07-01 22:59:05', '', 'schedule', 'lab3', '\0\00\0(\0;?\0\0K\0\0\0\0\0\0?\0\0\0\0\0\0aaaaaaa????????f?4?r'),
-(75, 'aaa', 'aaaa', 0, '', '2024-07-05', '2024-07-05', 1, NULL, NULL, '2024-07-01 22:59:50', '', 'reserve', 'lab1', '\0\00\0\00\0:?\0\0L\0\0\0\0\0\0?\0\0\0\0\0\0asdasd????????f?5Jrese'),
-(76, 'asd', 'asd', 0, '', '2024-07-12', '2024-07-12', 1, NULL, NULL, '2024-07-01 23:01:30', '', 'reserve', 'lab2', '\0\0	0\0\08\0F?\0\0N\0\0\0\0\0\0?\0\0\0\0\0\0lab1 newlab 1 new???'),
-(78, 'lab1 new', 'lab 1 new', 0, '', '2024-07-03', '2024-07-03', 1, NULL, NULL, '2024-07-02 17:05:33', '', 'schedule', 'lab1', '\0\0		0\0\0@\0G?\0\0O\0\0\0\0\0\0?\0\0\0\0\0\0lab 2 newlab 2 new???'),
-(79, 'lab 2 new', 'lab 2 new', 0, '', '2024-07-03', '2024-07-03', 1, NULL, NULL, '2024-07-02 17:05:47', '', 'schedule', 'lab2', '\0	\n0\0H\0K?\0\0P\0\0\0\0\0\0?\0\0\0\0\0\0lab 3 new lab 3 new?'),
-(80, 'lab 3 new ', 'lab 3 new', 1, 'Wed', '2024-07-03', '2024-07-24', 1, NULL, NULL, '2024-07-02 17:06:09', '', 'schedule', 'lab3', '\0\0\0\0\0P\0??\0\0Q\0\0\0\0\0\0?\0\0\0\0\0\0lab 4lab 4 ??????　q'),
-(81, 'lab 4', 'lab 4 ', 0, '', '2024-07-03', '2024-07-03', 0, '07:06:00', '09:00:00', '2024-07-02 17:06:43', '', 'schedule', 'lab4', '\0\00\0\0X??\0\0e\0\0\0\0\0\0?\0\0\0\0\0\0asdasd????????f???sche'),
-(83, 'aa new', 'aa new ', 0, '', '2024-07-06', '2024-07-06', 1, NULL, NULL, '2024-07-02 18:32:44', 'Imong Nawng', 'reserve', 'lab1', '\0\00 \0h\0\0?\0\0Y\0\0\0\0-?\0\0V+?memsmams????????f?\Z'),
-(86, 'asd', 'asd', 0, '', '2024-07-01', '2024-07-01', 1, NULL, NULL, '2024-07-02 18:38:18', '', 'schedule', 'lab1', '\0\00\0x\0K?\0\0W\0\0\0\0\0\0?\0\0\0\0\0\0SampleDescription la'),
-(87, 'Sample', 'Description lang', 0, '', '2024-07-08', '2024-07-08', 1, NULL, NULL, '2024-07-07 22:12:07', '', 'schedule', 'lab3', '\00\0\0?A?\0\0X\0\0\0\0\0\0?\0\0\0\0\0\0reserveasd????????f?'),
-(88, 'reserve', 'asd', 0, '', '2024-07-08', '2024-07-08', 1, NULL, NULL, '2024-07-07 22:12:26', 'Imong Nawng', 'reserve', 'lab3', '\0\00 \0????\0\0Z\0\0\0\0-? \0\0?jmomsmims????????f?*sc'),
-(103, 'aaa', 'aaaa', 0, '', '2024-07-10', '2024-07-12', 1, NULL, NULL, '2024-07-09 21:13:02', '', 'schedule', 'lab1', 'edulelab1\0\00 \0????\0\0i\0\0\0\0.?9\0\0?#?11????????f');
 
 -- --------------------------------------------------------
 
@@ -202,12 +157,6 @@ ALTER TABLE `sched`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `schedules`
---
-ALTER TABLE `schedules`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `semester`
 --
 ALTER TABLE `semester`
@@ -234,12 +183,6 @@ ALTER TABLE `reserve`
 --
 ALTER TABLE `sched`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
-
---
--- AUTO_INCREMENT for table `schedules`
---
-ALTER TABLE `schedules`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=107;
 
 --
 -- AUTO_INCREMENT for table `semester`

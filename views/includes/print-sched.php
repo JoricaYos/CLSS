@@ -1,4 +1,4 @@
-<?php include ($_SERVER['DOCUMENT_ROOT'] . '/controllers/logged_checker.php'); ?>
+<?php include($_SERVER['DOCUMENT_ROOT'] . '/controllers/logged_checker.php'); ?>
 
 <?php
 $title = isset($_GET['title']) ? htmlspecialchars($_GET['title']) : 'Laboratory Schedule';
@@ -16,6 +16,7 @@ $lab = isset($_GET['lab']) ? htmlspecialchars($_GET['lab']) : 'lab1';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/table.css">
+    <link rel="stylesheet" href="../../css/calendar.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -62,27 +63,6 @@ $lab = isset($_GET['lab']) ? htmlspecialchars($_GET['lab']) : 'lab1';
         .approval-section .right {
             text-align: center;
         }
-
-        #calendar .fc-event-title,
-        #calendar .fc-event-time {
-            font-size: 12px;
-            /* Reduce font size */
-            white-space: nowrap;
-            /* Prevent text wrapping */
-            overflow: hidden;
-            text-overflow: ellipsis;
-            /* Show ellipsis if text overflows */
-        }
-
-        .fc .fc-timegrid-event-harness {
-            padding: 2px;
-            /* Reduce padding */
-        }
-
-        .fc .fc-daygrid-event {
-            margin: 1px;
-            /* Reduce margin */
-        }
     </style>
 </head>
 
@@ -116,12 +96,13 @@ $lab = isset($_GET['lab']) ? htmlspecialchars($_GET['lab']) : 'lab1';
                     <br><br><br>
                     <div class="approval-section">
                         <div class="left">
-                            <p>Prepared by: <span style="font-weight: bold; text-decoration: underline;">Name
-                                    here</span><br><span style="font-weight: bold;">Position dari</span></p>
+                            <p>Prepared by: <span style="font-weight: bold; text-decoration: underline;">Mr. Joshua
+                                    Keith Pasco</span><br><span style="font-weight: bold;">Laboratory-Incharge</span>
+                            </p>
                         </div>
                         <div class="right">
-                            <p>Approved by: <span style="font-weight: bold; text-decoration: underline;">NAME
-                                    here</span><br><span style="font-weight: bold;">Position dari</span></p>
+                            <p>Approved by: <span style="font-weight: bold; text-decoration: underline;">Mrs. Daisa O.
+                                    Gupit, MIT</span><br><span style="font-weight: bold;">CCIS Dean</span></p>
                         </div>
                     </div>
                 </div>

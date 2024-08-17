@@ -112,53 +112,23 @@
                 }
             });
         });
-    </script>
 
-    <!-- PHP to be transfered pa -->
-    <?php
-    include ($_SERVER['DOCUMENT_ROOT'] . '/models/database.php');
-
-    function getSchedulesCount($lab)
-    {
-        global $conn;
-        $sql = "SELECT COUNT(*) AS count FROM sched WHERE lab = '$lab'";
-        $result = $conn->query($sql);
-        if (!$result) {
-            echo "Error: " . $conn->error;
-            return 0;
-        }
-        $row = $result->fetch_assoc();
-        return $row['count'];
-    }
-
-    function getReservationsCount($lab)
-    {
-        global $conn;
-        $sql = "SELECT COUNT(*) AS count FROM reserve WHERE lab = '$lab'";
-        $result = $conn->query($sql);
-        if (!$result) {
-            echo "Error: " . $conn->error;
-            return 0;
-        }
-        $row = $result->fetch_assoc();
-        return $row['count'];
-    }
-    $count_lab1_schedule = getSchedulesCount('lab1');
-    $count_lab2_schedule = getSchedulesCount('lab2');
-    $count_lab3_schedule = getSchedulesCount('lab3');
-    $count_lab4_schedule = getSchedulesCount('lab4');
-
-    $count_lab1_reservation = getReservationsCount('lab1');
-    $count_lab2_reservation = getReservationsCount('lab2');
-    $count_lab3_reservation = getReservationsCount('lab3');
-    $count_lab4_reservation = getReservationsCount('lab4');
-    ?>
-
-
-    <!-- barchart jabaskrep -->
-    <script>
         var ctx = document.getElementById('myChart').getContext('2d');
         var myChart;
+        var counts;
+
+        $.ajax({
+            url: 'get_counts.php',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                counts = data;
+                createChart(true, true);
+            },
+            error: function() {
+                console.log('Error fetching count data');
+            }
+        });
 
         function createChart(showSchedules, showReservations) {
             if (myChart) {
@@ -169,7 +139,7 @@
             if (showSchedules) {
                 datasets.push({
                     label: 'Schedules',
-                    data: [<?php echo $count_lab1_schedule; ?>, <?php echo $count_lab2_schedule; ?>, <?php echo $count_lab3_schedule; ?>, <?php echo $count_lab4_schedule; ?>],
+                    data: [counts.schedules.lab1, counts.schedules.lab2, counts.schedules.lab3, counts.schedules.lab4],
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.5)',
                         'rgba(54, 162, 235, 0.5)',
@@ -188,7 +158,7 @@
             if (showReservations) {
                 datasets.push({
                     label: 'Reservations',
-                    data: [<?php echo $count_lab1_reservation; ?>, <?php echo $count_lab2_reservation; ?>, <?php echo $count_lab3_reservation; ?>, <?php echo $count_lab4_reservation; ?>],
+                    data: [counts.reservations.lab1, counts.reservations.lab2, counts.reservations.lab3, counts.reservations.lab4],
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.8)',
                         'rgba(54, 162, 235, 0.8)',
@@ -225,8 +195,6 @@
                 }
             });
         }
-
-        createChart(true, true);
 
         document.getElementById('chartSelector').addEventListener('change', function () {
             var selectedValue = this.value;

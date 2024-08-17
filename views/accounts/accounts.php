@@ -1,10 +1,10 @@
 <?php
-include ($_SERVER['DOCUMENT_ROOT'] . '/controllers/logged_checker.php');
+include($_SERVER['DOCUMENT_ROOT'] . '/controllers/logged_checker.php');
 
 if (!isset($_SESSION['role']) || ($_SESSION['role'] !== 'Admin' && $_SESSION['role'] !== 'Custodian')) {
     header("Location: ../profile/profile.php");
     exit();
-  }
+}
 ?>
 
 <!doctype html>
@@ -78,7 +78,7 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] !== 'Admin' && $_SESSION['ro
 
 <body style="background-color: #EBF4F6">
     <div class="wrapper d-flex align-items-stretch">
-        <?php include ($_SERVER['DOCUMENT_ROOT'] . '/views/includes/nav.php'); ?>
+        <?php include($_SERVER['DOCUMENT_ROOT'] . '/views/includes/nav.php'); ?>
         <div id="content" class="p-4 p-md-5 pt-5">
             <?php include '../includes/user-container.php'; ?>
             <div class="row mt-4">
