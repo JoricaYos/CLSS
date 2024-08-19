@@ -1,87 +1,93 @@
-<?php include ($_SERVER['DOCUMENT_ROOT'] . '/controllers/logged_checker.php'); ?>
+<?php include($_SERVER['DOCUMENT_ROOT'] . '/controllers/logged_checker.php'); ?>
 <!doctype html>
 <html lang="en">
 
 <head>
-    <title>Computer lab 1</title>
-    <meta charset="utf-8">
-    <link rel="icon" href="../../assets/smcc-logo.png" type="image/png">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Schedules</title>
+  <meta charset="utf-8">
+  <link rel="icon" href="../../assets/smcc-logo.png" type="image/png">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="../../css/style.css">
-    <link rel="stylesheet" href="../../css/table.css">
-    <link rel="stylesheet" href="../../css/calendar.css">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/table.css">
+  <link rel="stylesheet" href="../../css/calendar.css">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 </head>
 
 <body style="background-color: #EBF4F6">
-    <div class="wrapper d-flex align-items-stretch">
+  <div class="wrapper d-flex align-items-stretch">
 
-        <!-- sidebar / nav diri -->
-        <?php include ($_SERVER['DOCUMENT_ROOT'] . '/views/includes/nav.php'); ?>
-        <!-- sidebar / nav diri -->
+    <!-- sidebar / nav diri -->
+    <?php include($_SERVER['DOCUMENT_ROOT'] . '/views/includes/nav.php'); ?>
+    <!-- sidebar / nav diri -->
 
-        <div id="content" class="p-4 p-md-5 pt-5">
-            <?php include '../includes/user-container.php'; ?>
-            <div class="row mt-4">
-                <div class="col-md-12">
-                    <p>Currently Viewing</p>
-                    <h1 class="text-left">Computer Laboratory 2</h1>
-                    <br>
-                    <?php if ($_SESSION['role'] != 'student'): ?>
-                        <button id="addScheduleBtn" class="btn mb-3" style="background-color: #2F48A1; color: white">Add
-                            Schedule</button>
-                        <button id="addReservationBtn" class="btn btn-success mb-3 ml-2">Add Reservation</button>
-                    <?php endif; ?>
-                    <?php if ($_SESSION['role'] != 'Instructor' && $_SESSION['role'] != 'student' && $_SESSION['role'] != 'Dean/Principal'): ?>
-                        <button id="printScheduleBtn" class="btn btn-primary mb-3 ml-2">Print Schedule</button>
-                    <?php endif; ?>
-                </div>
-            </div>
-            <div id="calendar"></div>
+    <div id="content" class="p-4 p-md-5 pt-5">
+      <?php include '../includes/user-container.php'; ?>
+      <div class="row mt-4">
+        <div class="col-md-12">
+          <p>Currently Viewing</p>
+          <h1 class="text-left">Computer Laboratory Schedules</h1>
+          <div class="py-3"></div>
+          <select id="labSelector" class="form-control mb-3" style="width: auto;">
+            <option value="lab1" selected>Laboratory 1</option>
+            <option value="lab2">Laboratory 2</option>
+            <option value="lab3">Laboratory 3</option>
+            <option value="lab4">Laboratory 4</option>
+          </select>
+          <?php if ($_SESSION['role'] != 'student'): ?>
+            <button id="addScheduleBtn" class="btn mb-3" style="background-color: #2F48A1; color: white">Add
+              Schedule</button>
+            <button id="addReservationBtn" class="btn btn-success mb-3 ml-2">Add Reservation</button>
+          <?php endif; ?>
+          <?php if ($_SESSION['role'] != 'Instructor' && $_SESSION['role'] != 'student' && $_SESSION['role'] != 'Dean/Principal'): ?>
+            <button id="printScheduleBtn" class="btn btn-primary mb-3 ml-2">Print Schedule</button>
+          <?php endif; ?>
         </div>
+      </div>
+      <div id="calendar"></div>
     </div>
+  </div>
 
-    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
-    <script src="../../js/popper.js"></script>
-    <script src="../../js/bootstrap.min.js"></script>
-    <script src="../../js/main.js"></script>
-    <script src="../../js/table.js"></script>
+  <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+  <script src="../../js/popper.js"></script>
+  <script src="../../js/bootstrap.min.js"></script>
+  <script src="../../js/main.js"></script>
+  <script src="../../js/table.js"></script>
 
-    <script>
-        function formatTime(time24) {
-            const [hours, minutes] = time24.split(':');
-            let period = 'AM';
-            let hours12 = parseInt(hours, 10);
+  <script>
+    function formatTime(time24) {
+      const [hours, minutes] = time24.split(':');
+      let period = 'AM';
+      let hours12 = parseInt(hours, 10);
 
-            if (hours12 >= 12) {
-                period = 'PM';
-                if (hours12 > 12) {
-                    hours12 -= 12;
-                }
-            }
-            if (hours12 === 0) {
-                hours12 = 12;
-            }
-
-            return `${hours12}:${minutes} ${period}`;
+      if (hours12 >= 12) {
+        period = 'PM';
+        if (hours12 > 12) {
+          hours12 -= 12;
         }
-    </script>
+      }
+      if (hours12 === 0) {
+        hours12 = 12;
+      }
 
-<script>
+      return `${hours12}:${minutes} ${period}`;
+    }
+  </script>
+
+  <script>
     document.addEventListener('DOMContentLoaded', function () {
       var calendarEl = document.getElementById('calendar');
       var labSelector = document.getElementById('labSelector');
-      var currentLab = 'lab2';
+      var currentLab = 'lab1';
 
       var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'timeGridWeek',
@@ -157,6 +163,12 @@
       });
 
       calendar.render();
+
+      labSelector.addEventListener('change', function () {
+        currentLab = this.value;
+        calendar.removeAllEventSources();
+        calendar.addEventSource(`../laboratories/get_events.php?lab=${currentLab}`);
+      });
 
 
       function populatePersonnelDropdown() {

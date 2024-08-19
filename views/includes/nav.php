@@ -28,15 +28,7 @@
                 </li>
             <?php endif; ?>
             <li>
-                <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                    <i class="fas fa-calendar-alt"></i> SCHEDULES
-                </a>
-                <ul class="collapse list-unstyled" id="homeSubmenu">
-                    <li><a href="/views/laboratories/lab1.php">Computer lab 1</a></li>
-                    <li><a href="/views/laboratories/lab2.php">Computer lab 2</a></li>
-                    <li><a href="/views/laboratories/lab3.php">Computer lab 3</a></li>
-                    <li><a href="/views/laboratories/lab4.php">Computer lab 4</a></li>
-                </ul>
+                <a href="/views/laboratories/lab.php"><i class="fas fa-calendar-alt"></i> SCHEDULES</a>
             </li>
             <?php if ($_SESSION['role'] == 'Admin' || $_SESSION['role'] == 'Custodian'): ?>
                 <li>

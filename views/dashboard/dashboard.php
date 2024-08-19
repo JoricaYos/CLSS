@@ -1,4 +1,4 @@
-<?php include ($_SERVER['DOCUMENT_ROOT'] . '/controllers/logged_checker.php'); ?>
+<?php include($_SERVER['DOCUMENT_ROOT'] . '/controllers/logged_checker.php'); ?>
 
 <!doctype html>
 <html lang="en">
@@ -18,13 +18,49 @@
 
     <!-- barChaaart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .card-img-top {
+            padding: 10px;
+            width: 100px;
+            height: 100px;
+        }
+
+        .card {
+            border-radius: 10px;
+        }
+
+        .table-responsive {
+            overflow-y: auto;
+        }
+
+        .table-responsive thead th {
+            position: sticky;
+            top: 0;
+            background-color: #071952; 
+            color: white;
+            z-index: 1;
+        }
+
+        #reservationsCard {
+            height: 100%;
+        }
+
+        #reservationsCard .card-body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #reservationsCard .table-responsive {
+            flex-grow: 1;
+        }
+    </style>
 </head>
 
 <body style="background-color: #EBF4F6">
 
     <div class="wrapper d-flex align-items-stretch">
         <!-- Sidebar diri -->
-        <?php include ($_SERVER['DOCUMENT_ROOT'] . '/views/includes/nav.php'); ?>
+        <?php include($_SERVER['DOCUMENT_ROOT'] . '/views/includes/nav.php'); ?>
         <!-- Sidebar diri -->
 
         <!-- Main Content diri -->
@@ -46,6 +82,16 @@
                         <p class="text-left">Your Schedules</p>
                     </div>
                 </div>
+                <div class="row py-4">
+                    <div class="col-md-2">
+                        <select id="semesterFilter" class="form-control">
+                            <option value="all">Show All</option>
+                            <option value="1">1st Semester</option>
+                            <option value="2">2nd Semester</option>
+                        </select>
+                    </div>
+                </div>
+
                 <table id="scheduleTable" class="table table-bordered text-center">
                     <thead style="background-color: #071952; color: white">
                         <tr>
@@ -59,11 +105,53 @@
                     <tbody style="background-color: white;">
                     </tbody>
                 </table>
-                <div class="py-5"></div>
             </div>
 
+            <div class="row mt-4">
+                <div class="col-md-2">
+                    <div class="card">
+                        <img src="../../assets/schedule.png" class="card-img-top" alt="Image 1">
+                        <div class="card-body">
+                            <h4 class="card-title" id="scheduleCount">0</h4>
+                            <h6 class="card-subtitle mb-2 text-muted">Schedules</h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="card">
+                        <img src="../../assets/reserve.png" class="card-img-top" alt="Image 2">
+                        <div class="card-body">
+                        <h4 class="card-title" id="reserveCount">0</h4>
+                            <h6 class="card-subtitle mb-2 text-muted">Reservations</h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="card" id="reservationsCard">
+                        <div class="card-body">
+                        <h6 class="card-subtitle mb-2">Your Reservations</h6>
+                            <div class="table-responsive">
+                                <table class="table text-center  table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Date</th>
+                                            <th>Time</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="reservationsList">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="py-4"></div>
+
             <?php if ($_SESSION['role'] == 'Admin'): ?>
-                <div class="row">
+                <div class="row py-4">
                     <div class="col-md-2">
                         <select id="chartSelector" class="form-control">
                             <option value="both">Schedules & Reservations</option>
@@ -72,7 +160,6 @@
                         </select>
                     </div>
                 </div>
-                <div class="py-2"></div>
                 <div><canvas id="myChart"></canvas></div>
                 <div class="py-5"></div>
             <?php endif; ?>
@@ -90,26 +177,126 @@
 
     <script>
         $(document).ready(function () {
-            $.ajax({
-                url: 'get_personnel_sched.php',
-                type: 'GET',
-                dataType: 'json',
-                success: function (data) {
-                    var tableBody = $('#scheduleTable tbody');
-                    $.each(data, function (i, item) {
-                        var row = $('<tr>').append(
-                            $('<td>').text(item.subject),
-                            $('<td>').text(item.semester),
-                            $('<td>').text(item.lab),
-                            $('<td>').text(item.day),
-                            $('<td>').text(item.time)
-                        );
-                        tableBody.append(row);
+            var allSchedules = [];
+
+            function fetchSchedules() {
+                $.ajax({
+                    url: 'get_personnel_sched.php',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        allSchedules = data;
+                        displaySchedules(allSchedules);
+                        updateScheduleCount(allSchedules.length);
+                        adjustReservationsCardHeight();
+                    },
+                    error: function () {
+                        console.log('Error fetching schedule data');
+                    }
+                });
+            }
+
+            function displaySchedules(schedules) {
+                var tableBody = $('#scheduleTable tbody');
+                tableBody.empty();
+                $.each(schedules, function (i, item) {
+                    var row = $('<tr>').append(
+                        $('<td>').text(item.subject),
+                        $('<td>').text(item.semester),
+                        $('<td>').text(item.lab),
+                        $('<td>').text(item.day),
+                        $('<td>').text(item.time)
+                    );
+                    tableBody.append(row);
+                });
+            }
+
+            function updateScheduleCount(count) {
+                $('#scheduleCount').text(count);
+            }
+
+            $('#semesterFilter').on('change', function () {
+                var selectedSemester = $(this).val();
+                var filteredSchedules;
+
+                if (selectedSemester === 'all') {
+                    filteredSchedules = allSchedules;
+                } else {
+                    filteredSchedules = allSchedules.filter(function (schedule) {
+                        return schedule.semester === (selectedSemester === '1' ? '1st Semester' : '2nd Semester');
                     });
-                },
-                error: function () {
-                    console.log('Error fetching schedule data');
                 }
+
+                displaySchedules(filteredSchedules);
+                updateScheduleCount(filteredSchedules.length);
+            });
+
+            fetchSchedules();
+
+            function fetchRecentReservations() {
+                $.ajax({
+                    url: 'get_reserve.php',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        displayRecentReservations(data);
+                        updateReserveCount(data.length);
+                    },
+                    error: function () {
+                        console.log('Error fetching recent reservations');
+                    }
+                });
+            }
+
+            function updateReserveCount(count) {
+                $('#reserveCount').text(count);
+            }
+
+
+            function adjustReservationsCardHeight() {
+                var maxHeight = 0;
+                $('.col-md-2 .card').each(function () {
+                    var height = $(this).outerHeight();
+                    if (height > maxHeight) {
+                        maxHeight = height;
+                    }
+                });
+
+                $('#reservationsCard').height(maxHeight);
+
+                var cardBody = $('#reservationsCard .card-body');
+                var tableResponsive = cardBody.find('.table-responsive');
+                var availableHeight = cardBody.height() - (tableResponsive.position().top - cardBody.position().top);
+                tableResponsive.css('max-height', availableHeight + 'px');
+            }
+
+            function displayRecentReservations(reservations) {
+                var reservationsList = $('#reservationsList');
+                reservationsList.empty();
+
+                if (reservations.length === 0) {
+                    reservationsList.append('<tr><td colspan="3">No reservations found.</td></tr>');
+                } else {
+                    $.each(reservations, function (i, reservation) {
+                        var reservationHtml =
+                            '<tr>' +
+                            '<td>' + reservation.title + '</td>' +
+                            '<td>' + reservation.start_date + '</td>' +
+                            '<td>' + reservation.start_time + ' - ' + reservation.end_time + '</td>' +
+                            '</tr>';
+                        reservationsList.append(reservationHtml);
+                    });
+                }
+
+                adjustReservationsCardHeight();
+            }
+
+            $(window).on('load resize', adjustReservationsCardHeight);
+
+            fetchRecentReservations();
+
+            $(window).on('load', function () {
+                setTimeout(adjustReservationsCardHeight, 100);
             });
         });
 
@@ -121,11 +308,11 @@
             url: 'get_counts.php',
             type: 'GET',
             dataType: 'json',
-            success: function(data) {
+            success: function (data) {
                 counts = data;
                 createChart(true, true);
             },
-            error: function() {
+            error: function () {
                 console.log('Error fetching count data');
             }
         });
