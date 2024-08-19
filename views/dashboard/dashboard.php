@@ -36,7 +36,7 @@
         .table-responsive thead th {
             position: sticky;
             top: 0;
-            background-color: #071952; 
+            background-color: #071952;
             color: white;
             z-index: 1;
         }
@@ -82,7 +82,7 @@
                         <p class="text-left">Your Schedules</p>
                     </div>
                 </div>
-                <div class="row py-4">
+                <div class="row py-2">
                     <div class="col-md-2">
                         <select id="semesterFilter" class="form-control">
                             <option value="all">Show All</option>
@@ -90,6 +90,9 @@
                             <option value="2">2nd Semester</option>
                         </select>
                     </div>
+                </div>
+                <div class="py-2">
+                    <button id="printScheduleButton" class="btn btn-primary">Print Schedule</button>
                 </div>
 
                 <table id="scheduleTable" class="table table-bordered text-center">
@@ -121,7 +124,7 @@
                     <div class="card">
                         <img src="../../assets/reserve.png" class="card-img-top" alt="Image 2">
                         <div class="card-body">
-                        <h4 class="card-title" id="reserveCount">0</h4>
+                            <h4 class="card-title" id="reserveCount">0</h4>
                             <h6 class="card-subtitle mb-2 text-muted">Reservations</h6>
                         </div>
                     </div>
@@ -129,7 +132,7 @@
                 <div class="col-md-8">
                     <div class="card" id="reservationsCard">
                         <div class="card-body">
-                        <h6 class="card-subtitle mb-2">Your Reservations</h6>
+                            <h6 class="card-subtitle mb-2">Your Reservations</h6>
                             <div class="table-responsive">
                                 <table class="table text-center  table-hover">
                                     <thead>
@@ -252,7 +255,6 @@
                 $('#reserveCount').text(count);
             }
 
-
             function adjustReservationsCardHeight() {
                 var maxHeight = 0;
                 $('.col-md-2 .card').each(function () {
@@ -298,104 +300,112 @@
             $(window).on('load', function () {
                 setTimeout(adjustReservationsCardHeight, 100);
             });
-        });
 
-        var ctx = document.getElementById('myChart').getContext('2d');
-        var myChart;
-        var counts;
+            <?php if ($_SESSION['role'] == 'Admin'): ?>
+                var ctx = document.getElementById('myChart').getContext('2d');
+                var myChart;
+                var counts;
 
-        $.ajax({
-            url: 'get_counts.php',
-            type: 'GET',
-            dataType: 'json',
-            success: function (data) {
-                counts = data;
-                createChart(true, true);
-            },
-            error: function () {
-                console.log('Error fetching count data');
-            }
-        });
-
-        function createChart(showSchedules, showReservations) {
-            if (myChart) {
-                myChart.destroy();
-            }
-
-            var datasets = [];
-            if (showSchedules) {
-                datasets.push({
-                    label: 'Schedules',
-                    data: [counts.schedules.lab1, counts.schedules.lab2, counts.schedules.lab3, counts.schedules.lab4],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.5)',
-                        'rgba(54, 162, 235, 0.5)',
-                        'rgba(255, 206, 86, 0.5)',
-                        'rgba(75, 192, 192, 0.5)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)'
-                    ],
-                    borderWidth: 1
-                });
-            }
-            if (showReservations) {
-                datasets.push({
-                    label: 'Reservations',
-                    data: [counts.reservations.lab1, counts.reservations.lab2, counts.reservations.lab3, counts.reservations.lab4],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.8)',
-                        'rgba(54, 162, 235, 0.8)',
-                        'rgba(255, 206, 86, 0.8)',
-                        'rgba(75, 192, 192, 0.8)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)'
-                    ],
-                    borderWidth: 1
-                });
-            }
-
-            myChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Computer lab 1', 'Computer lab 2', 'Computer lab 3', 'Computer lab 4'],
-                    datasets: datasets
-                },
-                options: {
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
+                $.ajax({
+                    url: 'get_counts.php',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        counts = data;
+                        createChart(true, true);
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
+                    error: function () {
+                        console.log('Error fetching count data');
                     }
-                }
-            });
-        }
+                });
 
-        document.getElementById('chartSelector').addEventListener('change', function () {
-            var selectedValue = this.value;
-            switch (selectedValue) {
-                case 'both':
-                    createChart(true, true);
-                    break;
-                case 'schedules':
-                    createChart(true, false);
-                    break;
-                case 'reservations':
-                    createChart(false, true);
-                    break;
-            }
+                function createChart(showSchedules, showReservations) {
+                    if (myChart) {
+                        myChart.destroy();
+                    }
+
+                    var datasets = [];
+                    if (showSchedules) {
+                        datasets.push({
+                            label: 'Schedules',
+                            data: [counts.schedules.lab1, counts.schedules.lab2, counts.schedules.lab3, counts.schedules.lab4],
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.5)',
+                                'rgba(54, 162, 235, 0.5)',
+                                'rgba(255, 206, 86, 0.5)',
+                                'rgba(75, 192, 192, 0.5)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)'
+                            ],
+                            borderWidth: 1
+                        });
+                    }
+                    if (showReservations) {
+                        datasets.push({
+                            label: 'Reservations',
+                            data: [counts.reservations.lab1, counts.reservations.lab2, counts.reservations.lab3, counts.reservations.lab4],
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.8)',
+                                'rgba(54, 162, 235, 0.8)',
+                                'rgba(255, 206, 86, 0.8)',
+                                'rgba(75, 192, 192, 0.8)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)'
+                            ],
+                            borderWidth: 1
+                        });
+                    }
+
+                    myChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['Computer lab 1', 'Computer lab 2', 'Computer lab 3', 'Computer lab 4'],
+                            datasets: datasets
+                        },
+                        options: {
+                            plugins: {
+                                legend: {
+                                    display: false
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                }
+
+                $('#chartSelector').on('change', function () {
+                    var selectedValue = this.value;
+                    switch (selectedValue) {
+                        case 'both':
+                            createChart(true, true);
+                            break;
+                        case 'schedules':
+                            createChart(true, false);
+                            break;
+                        case 'reservations':
+                            createChart(false, true);
+                            break;
+                    }
+                });
+            <?php endif; ?>
+
+            $('#printScheduleButton').on('click', function () {
+                var selectedSemester = $('#semesterFilter').val();
+                var url = '../includes/print_sched_list.php?semester=' + selectedSemester;
+                window.open(url, '_blank');
+            });
         });
     </script>
 </body>

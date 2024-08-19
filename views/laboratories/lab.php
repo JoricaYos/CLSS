@@ -49,7 +49,6 @@
             <button id="addReservationBtn" class="btn btn-success mb-3 ml-2">Add Reservation</button>
           <?php endif; ?>
           <?php if ($_SESSION['role'] != 'Instructor' && $_SESSION['role'] != 'student' && $_SESSION['role'] != 'Dean/Principal'): ?>
-            <button id="printScheduleBtn" class="btn btn-primary mb-3 ml-2">Print Schedule</button>
           <?php endif; ?>
         </div>
       </div>
@@ -146,23 +145,137 @@
               }
             });
           } else if (info.event.extendedProps.type === 'reservation') {
-            Swal.fire({
-              title: 'Reservation Details',
-              html: `
-          <div style="text-align: left;">
-            <p><i class="fas fa-bookmark" style="width: 20px;"></i> <strong>Title:</strong> ${info.event.title}</p>
-            <p><i class="fas fa-calendar" style="width: 20px;"></i> <strong>Date:</strong> ${info.event.start.toLocaleDateString()}</p>
-            <p><i class="fas fa-clock" style="width: 20px;"></i> <strong>Start Time:</strong> ${formatTime(info.event.start.toTimeString().split(' ')[0])}</p>
-            <p><i class="fas fa-hourglass-end" style="width: 20px;"></i> <strong>End Time:</strong> ${formatTime(info.event.end.toTimeString().split(' ')[0])}</p>
-          </div>
-        `,
-              icon: 'info'
+            $.ajax({
+              url: 'get_reservation_details.php',
+              type: 'GET',
+              data: { id: info.event.id.split('_')[1] },
+              dataType: 'json',
+              success: function (data) {
+                console.log(data);
+
+                let showEditDeleteButtons = data.personnel_id == data.current_user;
+
+                let swalConfig = {
+                  title: 'Reservation Details',
+                  html: `
+            <div style="text-align: left;">
+              <p><i class="fas fa-bookmark" style="width: 20px;"></i> <strong>Title:</strong> ${data.title}</p>
+              <p><i class="fas fa-calendar" style="width: 20px;"></i> <strong>Date:</strong> ${info.event.start.toLocaleDateString()}</p>
+              <p><i class="fas fa-clock" style="width: 20px;"></i> <strong>Start Time:</strong> ${formatTime(info.event.start.toTimeString().split(' ')[0])}</p>
+              <p><i class="fas fa-hourglass-end" style="width: 20px;"></i> <strong>End Time:</strong> ${formatTime(info.event.end.toTimeString().split(' ')[0])}</p>
+            </div>
+          `,
+                  icon: 'info',
+                  showCloseButton: true,
+                  showCancelButton: showEditDeleteButtons,
+                  cancelButtonText: 'Close',
+                };
+
+                if (showEditDeleteButtons) {
+                  swalConfig.showDenyButton = true;
+                  swalConfig.confirmButtonText = 'Edit';
+                  swalConfig.denyButtonText = 'Delete';
+                } else {
+                  swalConfig.confirmButtonText = 'Close';
+                }
+
+                Swal.fire(swalConfig).then((result) => {
+                  if (result.isConfirmed && showEditDeleteButtons) {
+                    editReservation(info.event.id.split('_')[1]);
+                  } else if (result.isDenied && showEditDeleteButtons) {
+                    deleteReservation(info.event.id.split('_')[1]);
+                  }
+                });
+              },
+              error: function () {
+                Swal.fire('Error', 'Failed to fetch reservation details', 'error');
+              }
             });
           }
         }
       });
 
       calendar.render();
+
+      function editReservation(id) {
+        $.ajax({
+          url: 'get_reservation_details.php',
+          type: 'GET',
+          data: { id: id },
+          dataType: 'json',
+          success: function (data) {
+            Swal.fire({
+              title: 'Edit Reservation',
+              html: `
+          <input id="edit-title" class="swal2-input" placeholder="Title" value="${data.title}">
+          <input id="edit-date" class="swal2-input" type="date" value="${data.start_date}">
+          <input id="edit-start-time" class="swal2-input" type="time" value="${data.start_time}">
+          <input id="edit-end-time" class="swal2-input" type="time" value="${data.end_time}">
+        `,
+              focusConfirm: false,
+              preConfirm: () => {
+                return {
+                  title: document.getElementById('edit-title').value,
+                  date: document.getElementById('edit-date').value,
+                  startTime: document.getElementById('edit-start-time').value,
+                  endTime: document.getElementById('edit-end-time').value
+                }
+              }
+            }).then((result) => {
+              if (result.isConfirmed) {
+                $.ajax({
+                  url: 'update_reservation.php',
+                  type: 'POST',
+                  data: {
+                    id: id,
+                    title: result.value.title,
+                    date: result.value.date,
+                    startTime: result.value.startTime,
+                    endTime: result.value.endTime
+                  },
+                  success: function (response) {
+                    Swal.fire('Updated!', 'Reservation has been updated.', 'success');
+                    calendar.refetchEvents();
+                  },
+                  error: function () {
+                    Swal.fire('Error', 'Failed to update reservation', 'error');
+                  }
+                });
+              }
+            });
+          },
+          error: function () {
+            Swal.fire('Error', 'Failed to fetch reservation details', 'error');
+          }
+        });
+      }
+
+      function deleteReservation(id) {
+        Swal.fire({
+          title: 'Are you sure?',
+          text: "You won't be able to revert this!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            $.ajax({
+              url: 'delete_reservation.php',
+              type: 'POST',
+              data: { id: id },
+              success: function (response) {
+                Swal.fire('Deleted!', 'Reservation has been deleted.', 'success');
+                calendar.refetchEvents();
+              },
+              error: function () {
+                Swal.fire('Error', 'Failed to delete reservation', 'error');
+              }
+            });
+          }
+        });
+      }
 
       labSelector.addEventListener('change', function () {
         currentLab = this.value;
@@ -499,12 +612,6 @@
           }
         });
       }
-
-      document.getElementById('printScheduleBtn').addEventListener('click', function () {
-        const title = encodeURIComponent(`Computer ${currentLab.charAt(3)} Laboratory Schedule`);
-        const lab = currentLab;
-        window.location.href = `../includes/print-sched.php?title=${title}&lab=${lab}`;
-      });
     });
   </script>
 </body>

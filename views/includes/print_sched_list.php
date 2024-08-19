@@ -1,9 +1,46 @@
-<?php include($_SERVER['DOCUMENT_ROOT'] . '/controllers/logged_checker.php'); ?>
-
 <?php
-$title = isset($_GET['title']) ? htmlspecialchars($_GET['title']) : 'Laboratory Schedule';
-$lab = isset($_GET['lab']) ? htmlspecialchars($_GET['lab']) : 'lab1';
+include($_SERVER['DOCUMENT_ROOT'] . '/controllers/logged_checker.php');
+include($_SERVER['DOCUMENT_ROOT'] . '/models/database.php');
+
+$semester = isset($_GET['semester']) ? $_GET['semester'] : 'all';
+$personnel_id = $_SESSION['id'];
+
+$query = "SELECT subject, semester, lab, day, start_time, end_time FROM sched WHERE personnel_id = ?";
+if ($semester !== 'all') {
+    $query .= " AND semester = ?";
+}
+$query .= " ORDER BY semester, CASE day
+    WHEN 'Monday' THEN 1
+    WHEN 'Tuesday' THEN 2
+    WHEN 'Wednesday' THEN 3
+    WHEN 'Thursday' THEN 4
+    WHEN 'Friday' THEN 5
+    WHEN 'Saturday' THEN 6
+    WHEN 'Sunday' THEN 7
+    END, start_time";
+
+$stmt = $conn->prepare($query);
+if ($semester !== 'all') {
+    $stmt->bind_param("is", $personnel_id, $semester);
+} else {
+    $stmt->bind_param("i", $personnel_id);
+}
+$stmt->execute();
+$result = $stmt->get_result();
+
+$schedules = array();
+while ($row = $result->fetch_assoc()) {
+    $start = date("g:i A", strtotime($row['start_time']));
+    $end = date("g:i A", strtotime($row['end_time']));
+    $row['time'] = $start . ' - ' . $end;
+    $row['semester'] = $row['semester'] == '1' ? '1st Semester' : '2nd Semester';
+    $schedules[] = $row;
+}
+
+$stmt->close();
+$conn->close();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,9 +64,6 @@ $lab = isset($_GET['lab']) ? htmlspecialchars($_GET['lab']) : 'lab1';
 
     <style>
         @media print {
-            @page {
-                size: landscape;
-            }
 
             body * {
                 visibility: hidden;
@@ -39,6 +73,17 @@ $lab = isset($_GET['lab']) ? htmlspecialchars($_GET['lab']) : 'lab1';
             #content * {
                 visibility: visible;
             }
+
+            @page {
+                size: landscape;
+                margin: 0mm;
+            }
+
+            body {
+
+                margin: 1cm;
+            }
+
 
             #content {
                 position: absolute;
@@ -66,9 +111,9 @@ $lab = isset($_GET['lab']) ? htmlspecialchars($_GET['lab']) : 'lab1';
     </style>
 </head>
 
-<body style="background-color: #EBF4F6">
+<body>
     <div class="pl-5">
-        <button id="printButton" class="btn btn-primary mt-3 px-4 py-2">Print Calendar</button>
+        <button id="printButton" class="btn btn-primary mt-3 px-4 py-2">Print Schedule</button>
     </div>
 
     <div class="wrapper d-flex align-items-stretch justify-content-center">
@@ -87,17 +132,44 @@ $lab = isset($_GET['lab']) ? htmlspecialchars($_GET['lab']) : 'lab1';
                     <img src="../../assets/iso.jpg" alt="Second Image" style="width: 110px; height: 70px;">
                 </div>
             </div>
-            <br>
-            <h4 id="lab-schedule-title" style="text-align: center;"><?php echo $title; ?></h4>
-            <br>
+
+            <h2 class="mb-4 text-center">Class Schedules</h2>
+            <table class="table table-bordered text-center">
+                <thead>
+                    <tr>
+                        <th>SUBJECT</th>
+                        <?php if ($semester === 'all'): ?>
+                            <th>SEMESTER</th>
+                        <?php endif; ?>
+                        <th>LABORATORY</th>
+                        <th>DAY</th>
+                        <th>TIME</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($schedules as $schedule): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($schedule['subject']); ?></td>
+                            <?php if ($semester === 'all'): ?>
+                                <td><?php echo htmlspecialchars($schedule['semester']); ?></td>
+                            <?php endif; ?>
+                            <td><?php echo htmlspecialchars($schedule['lab']); ?></td>
+                            <td><?php echo htmlspecialchars($schedule['day']); ?></td>
+                            <td><?php echo htmlspecialchars($schedule['time']); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+
             <div class="row">
                 <div class="col-md-12">
                     <div id="calendar"></div>
                     <br><br><br>
                     <div class="approval-section">
                         <div class="left">
-                            <p>Prepared by: <span style="font-weight: bold; text-decoration: underline;">Mr. Joshua
-                                    Keith Pasco</span><br><span style="font-weight: bold;">Laboratory-Incharge</span>
+                            <p>Prepared by: <span
+                                    style="font-weight: bold; text-decoration: underline;"><?php echo htmlspecialchars($_SESSION['name']); ?></span><br><span
+                                    style="font-weight: bold;"><?php echo htmlspecialchars($_SESSION['role']); ?></span>
                             </p>
                         </div>
                         <div class="right">
@@ -115,52 +187,11 @@ $lab = isset($_GET['lab']) ? htmlspecialchars($_GET['lab']) : 'lab1';
     <script src="../../js/bootstrap.min.js"></script>
     <script src="../../js/main.js"></script>
     <script src="../../js/table.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'timeGridWeek',
-                dayMaxEvents: true,
-                height: 'auto',
-                width: '500px',
-                contentHeight: 'auto',
-                slotDuration: '00:30:00',
-                slotMinTime: '08:00:00',
-                slotMaxTime: '21:00:00',
-                events: 'get_sched.php?lab=<?php echo $lab; ?>',
-                headerToolbar: {
-                    left: '',
-                    center: '',
-                    right: ''
-                },
-                allDaySlot: false,  
-                dayHeaderFormat: { weekday: 'short' }, 
-            });
-            calendar.render();
-        });
-
-    </script>
 
     <script>
-        $('#printButton').click(function () {
-            html2canvas(document.querySelector('#content')).then(canvas => {
-                const { jsPDF } = window.jspdf;
-                var imgData = canvas.toDataURL('image/png');
-                var doc = new jsPDF('landscape');
-                var imgWidth = doc.internal.pageSize.getWidth();
-                var imgHeight = canvas.height * imgWidth / canvas.width;
-                doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-                doc.save('calendar.pdf');
-            });
+        document.getElementById('printButton').addEventListener('click', function () {
+            window.print();
         });
-
-        window.onbeforeprint = function () {
-            document.getElementById('printButton').style.display = 'none';
-        };
-
-        window.onafterprint = function () {
-            document.getElementById('printButton').style.display = 'block';
-        };
     </script>
 </body>
 
