@@ -134,12 +134,12 @@
                         <div class="card-body">
                             <h6 class="card-subtitle mb-2">Your Reservations</h6>
                             <div class="table-responsive">
-                                <table class="table text-center  table-hover">
+                                <table class="table text-center table-hover table-bordered">
                                     <thead>
                                         <tr>
-                                            <th>Title</th>
-                                            <th>Date</th>
-                                            <th>Time</th>
+                                            <th><i class="fas fa-bookmark"></i> Title</th>
+                                            <th><i class="fas fa-calendar-week"></i> Date</th>
+                                            <th><i class="fas fa-clock"></i> Time</th>
                                         </tr>
                                     </thead>
                                     <tbody id="reservationsList">
