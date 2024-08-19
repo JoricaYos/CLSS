@@ -583,7 +583,7 @@
         });
       });
 
-      function submitReservation(data) {
+      function submitReservation(data, force = false) {
         const startTime = data.start_time;
         const endTime = data.end_time;
         const minTime = '08:00';
@@ -597,17 +597,35 @@
         $.ajax({
           url: 'submit_reservation.php',
           type: 'POST',
-          data: { ...data, lab: currentLab },
+          data: { ...data, lab: currentLab, force: force },
           dataType: 'json',
           success: function (response) {
+            console.log('Server response:', response);
             if (response.status === 'success') {
               Swal.fire('Success', response.message, 'success');
               calendar.refetchEvents();
+            } else if (response.status === 'conflict' && !force) {
+              Swal.fire({
+                title: 'Reservation Conflict',
+                text: "This reservation conflicts with an existing reservation / schedule. Do you want to add it anyway?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, add it!',
+                cancelButtonText: 'No, cancel'
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  submitReservation(data, true);
+                }
+              });
             } else {
               Swal.fire('Error', response.message, 'error');
             }
           },
-          error: function () {
+          error: function (xhr, status, error) {
+            console.error('AJAX error:', status, error);
+            console.log('Response:', xhr.responseText);
             Swal.fire('Error', 'An error occurred while submitting the reservation', 'error');
           }
         });
