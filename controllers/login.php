@@ -24,7 +24,7 @@ if ($result->num_rows > 0) {
             if ($row['role'] == 'Admin' || $row['role'] == 'Instructor' || $row['role'] == 'Dean/Principal' || $row['role'] == 'Custodian') {
                 header("Location: ../views/dashboard/dashboard.php");
             } else {
-                header("Location: ../views/laboratories/lab1.php");
+                header("Location: ../views/laboratories/lab.php");
             }
             exit();
         } else {

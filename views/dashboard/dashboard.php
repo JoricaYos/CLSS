@@ -59,21 +59,42 @@
 <body style="background-color: #EBF4F6">
 
     <div class="wrapper d-flex align-items-stretch">
+
         <!-- Sidebar diri -->
         <?php include($_SERVER['DOCUMENT_ROOT'] . '/views/includes/nav.php'); ?>
         <!-- Sidebar diri -->
 
         <!-- Main Content diri -->
         <div id="content" class="p-4 p-md-5 pt-5">
+
             <?php include '../includes/user-container.php'; ?>
+
             <div class="row mt-4">
                 <div class="col-md-8">
-                    <h1 class="text-left">Hello
-                        <?php echo htmlspecialchars(current(explode(' ', $_SESSION['name']))); ?>,
+                    <h1 class="text-left">
+                        <?php
+                        date_default_timezone_set('Asia/Manila');
+                        $hour = date('H');
+
+                        if ($hour >= 5 && $hour < 12) {
+                            $greeting = "Good morning";
+                        } elseif ($hour >= 12 && $hour < 17) {
+                            $greeting = "Good afternoon";
+                        } elseif ($hour >= 17 && $hour < 21) {
+                            $greeting = "Good evening";
+                        } else {
+                            $greeting = "Good night";
+                        }
+
+                        $firstName = htmlspecialchars(current(explode(' ', $_SESSION['name'])));
+
+                        echo "$greeting, $firstName!";
+                        ?>
                     </h1>
                     <p>This is what we've got for you today.</p>
                 </div>
             </div>
+
             <div class="py-3"></div>
 
             <div>
@@ -82,6 +103,7 @@
                         <p class="text-left">Your Schedules</p>
                     </div>
                 </div>
+
                 <div class="row py-2">
                     <div class="col-md-2">
                         <select id="semesterFilter" class="form-control">
@@ -91,6 +113,7 @@
                         </select>
                     </div>
                 </div>
+
                 <div class="py-2">
                     <button id="printScheduleButton" class="btn btn-primary">Print Schedule</button>
                 </div>
@@ -108,9 +131,11 @@
                     <tbody style="background-color: white;">
                     </tbody>
                 </table>
+
             </div>
 
             <div class="row mt-4">
+
                 <div class="col-md-2">
                     <div class="card">
                         <img src="../../assets/schedule.png" class="card-img-top" alt="Image 1">
@@ -120,6 +145,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="col-md-2">
                     <div class="card">
                         <img src="../../assets/reserve.png" class="card-img-top" alt="Image 2">
@@ -129,6 +155,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="col-md-8">
                     <div class="card" id="reservationsCard">
                         <div class="card-body">
@@ -149,11 +176,13 @@
                         </div>
                     </div>
                 </div>
+
             </div>
 
             <div class="py-4"></div>
 
             <?php if ($_SESSION['role'] == 'Admin'): ?>
+
                 <div class="row py-4">
                     <div class="col-md-2">
                         <select id="chartSelector" class="form-control">
@@ -163,9 +192,13 @@
                         </select>
                     </div>
                 </div>
+
                 <div><canvas id="myChart"></canvas></div>
+
                 <div class="py-5"></div>
+
             <?php endif; ?>
+
         </div>
 
     </div>
@@ -202,17 +235,23 @@
             function displaySchedules(schedules) {
                 var tableBody = $('#scheduleTable tbody');
                 tableBody.empty();
-                $.each(schedules, function (i, item) {
-                    var row = $('<tr>').append(
-                        $('<td>').text(item.subject),
-                        $('<td>').text(item.semester),
-                        $('<td>').text(item.lab),
-                        $('<td>').text(item.day),
-                        $('<td>').text(item.time)
-                    );
-                    tableBody.append(row);
-                });
+
+                if (schedules.length === 0) {
+                    tableBody.append('<tr><td colspan="5">No schedules found.</td></tr>');
+                } else {
+                    $.each(schedules, function (i, item) {
+                        var row = $('<tr>').append(
+                            $('<td>').text(item.subject),
+                            $('<td>').text(item.semester),
+                            $('<td>').text(item.lab),
+                            $('<td>').text(item.day),
+                            $('<td>').text(item.time)
+                        );
+                        tableBody.append(row);
+                    });
+                }
             }
+
 
             function updateScheduleCount(count) {
                 $('#scheduleCount').text(count);
@@ -408,6 +447,7 @@
             });
         });
     </script>
+    
 </body>
 
 </html>

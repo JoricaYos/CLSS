@@ -44,7 +44,7 @@
             <option value="lab4">Laboratory 4</option>
           </select>
           <?php if ($_SESSION['role'] != 'student'): ?>
-            <button id="addScheduleBtn" class="btn mb-3" style="background-color: #2F48A1; color: white">Add
+            <button id="addScheduleBtn" class="btn mb-3" style="background-color: #071952; color: white">Add
               Schedule</button>
             <button id="addReservationBtn" class="btn btn-success mb-3 ml-2">Add Reservation</button>
           <?php endif; ?>
