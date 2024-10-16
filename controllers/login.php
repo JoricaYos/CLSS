@@ -21,6 +21,8 @@ if ($result->num_rows > 0) {
             $_SESSION['img'] = $row['img'];
             $_SESSION['password'] = $row['password'];
 
+
+            // condition for logging in, based on what role the account was logged in (navigates depending on the account role)
             if ($row['role'] == 'Admin' || $row['role'] == 'Instructor' || $row['role'] == 'Dean/Principal' || $row['role'] == 'Custodian') {
                 header("Location: ../views/dashboard/dashboard.php");
             } else {

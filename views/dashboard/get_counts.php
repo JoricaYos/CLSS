@@ -1,5 +1,5 @@
 <?php
-include ($_SERVER['DOCUMENT_ROOT'] . '/models/database.php');
+include($_SERVER['DOCUMENT_ROOT'] . '/models/database.php');
 
 function getSchedulesCount($lab)
 {

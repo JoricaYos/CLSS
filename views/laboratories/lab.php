@@ -46,7 +46,7 @@
           <?php if ($_SESSION['role'] != 'student'): ?>
             <button id="addScheduleBtn" class="btn mb-3" style="background-color: #071952; color: white">Add
               Schedule</button>
-            <button id="addReservationBtn" class="btn btn-success mb-3 ml-2">Add Reservation</button>
+            <!-- <button id="addReservationBtn" class="btn btn-success mb-3 ml-2">Add Reservation</button> -->
           <?php endif; ?>
           <?php if ($_SESSION['role'] != 'Instructor' && $_SESSION['role'] != 'student' && $_SESSION['role'] != 'Dean/Principal'): ?>
           <?php endif; ?>

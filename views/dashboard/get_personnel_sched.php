@@ -5,6 +5,7 @@ include($_SERVER['DOCUMENT_ROOT'] . '/models/database.php');
 
 $personnel_id = $_SESSION['id'];
 
+//placement of days (first to last)
 $dayOrder = [
     'Monday' => 1,
     'Tuesday' => 2,
@@ -15,6 +16,7 @@ $dayOrder = [
     'Sunday' => 7
 ];
 
+//replaced lab data to  ...
 $labNames = [
     'lab1' => 'Computer Laboratory 1',
     'lab2' => 'Computer Laboratory 2',

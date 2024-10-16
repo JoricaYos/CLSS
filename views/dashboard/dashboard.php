@@ -69,6 +69,8 @@
 
             <?php include '../includes/user-container.php'; ?>
 
+
+            <!-- welcome message (based on what the current time is) -->
             <div class="row mt-4">
                 <div class="col-md-8">
                     <h1 class="text-left">
@@ -447,7 +449,7 @@
             });
         });
     </script>
-    
+
 </body>
 
 </html>

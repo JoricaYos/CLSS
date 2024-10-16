@@ -46,10 +46,9 @@
                   <input type="password" name="password" id="password" class="form-control" placeholder="***********">
                 </div>
                 <input name="login" id="login" class="btn btn-block login-btn mb-4" type="submit" value="Login">
-                <a href="views/registration/register.php" class="btn btn-secondary btn-block mb-4">Register</a>
               </form>
               <div class="login-card-footer-nav">
-                <span>Saint Michael College of Caraga</span>
+                <span>Saint Michael College of Caraga ashdhas</span>
               </div>
             </div>
           </div>

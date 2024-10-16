@@ -119,8 +119,8 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] !== 'Admin' && $_SESSION['ro
               </select>
               <button id="addScheduleBtn" class="btn mb-3" style="background-color: #0B206A; color: white">Add
                 Schedule</button>
-              <button id="addReservationBtn" class="btn mb-3 ml-2" style="background-color: #106825; color: white;">Add
-                Reservation</button>
+              <!-- <button id="addReservationBtn" class="btn mb-3 ml-2" style="background-color: #106825; color: white;">Add
+                Reservation</button> -->
               <button id="printScheduleBtn" class="btn btn-primary mb-3 ml-2">Print Schedule</button>
             </div>
           </div>
